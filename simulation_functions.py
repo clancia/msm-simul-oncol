@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 from scipy.stats import gamma, norm, uniform, bernoulli
 from math import exp
+import patsy
+import statsmodels.api as sm
 
 # define inverse logit (expit) function
 def expit(x): return(exp(x)/(1 + exp(x)))
@@ -123,3 +125,46 @@ def sim_n(T, k, gam, theta, n = 1000, lower=0, upper=float("inf"), prop=1):
     df = df.sort_index()
     return(df)
 
+# for the IPW method we need to append weights to the data.
+# The weights are calcualted using the same method as 
+# those sent to use by Vanessa Didelez
+def get_weights(df):
+
+    # only need data when A is not 1 yet
+    df["Ladj"] = df["L"] - 500
+    df["As"] = df.groupby(level="patid")['A'].cumsum()
+    df2 = df[df["As"] <= 1].copy(deep=True)
+    df2 = df2.reset_index()
+    df2 = df2[df2["visit"] % 5 == 0] # only need actual visits
+
+    # numerator
+    f = "A ~ visit"
+    y, X = patsy.dmatrices(f, df2, return_type = "dataframe")
+    n_logit = sm.Logit(y, X, missing="raise")
+    n_result = n_logit.fit(disp=0, maxiter=100)
+    df2["pn"] = n_result.predict()
+    
+    # denominator
+    f = "A ~ visit + Ladj"
+    y, X = patsy.dmatrices(f, df2, return_type = "dataframe")
+    d_logit = sm.Logit(y, X, missing="raise")
+    d_result = d_logit.fit(disp=0, maxiter=100)
+    df2["pd"] = d_result.predict()
+
+    # if A == 0, change probabilities to 1 - prob
+    df2['pn2'] = np.where(df2['A']==0, (1 - df2["pn"]), df2["pn"])
+    df2['pd2'] = np.where(df2['A']==0, (1 - df2["pd"]), df2["pd"])
+
+    # construct stabilized weights, don't forget to group by
+    df2['cpn'] = df2.groupby(level=0)['pn2'].cumprod()
+    df2['cpd'] = df2.groupby(level=0)['pd2'].cumprod()
+    df2['sw'] = df2['cpn']/df2['cpd']
+    
+    # set index
+    df2 = df2.set_index(['patid', 'visit'])
+
+    #combine df and df2
+    df["sw"] = np.nan
+    df.loc[df2.index, "sw"] = df2["sw"]
+    df["sw"] = df["sw"].fillna(method="pad")
+    return(df)
