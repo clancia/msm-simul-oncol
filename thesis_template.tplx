@@ -1,0 +1,26 @@
+((*- extends 'article.tplx' -*))
+
+((* block author *))
+\author{Tomas D. Morley}
+((* endblock author *))
+
+((* block title *))
+\title{Inverse Probability of Treatment Weighting Under Violations of Positivity: Draft 2}
+((* endblock title *))
+
+((* block packages *))
+((( super() )))
+\usepackage[round]{natbib}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+((* endblock packages *))
+
+((* block bibliography *))
+\bibliographystyle{plainnat}
+\bibliography{thesis}
+((* endblock bibliography *))
+
+
+

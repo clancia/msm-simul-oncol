@@ -1,0 +1,3 @@
+First change to directory and then do
+
+jupyter nbconvert --to=latex Thesis_Draft1.ipynb
