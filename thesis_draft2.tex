@@ -973,14 +973,15 @@ thesis, is the positivity assumption. MSMs are used to estimate average
 causal effects in the study population, and one must therefore be able
 to estimate the average causal effect in every subset of the population
 defined by the confounders \citet{Cole2008}. The positivity assumption
-requires that there be exposed and unexposed subjects in every strata of
-the confounding covariates. For example, when treatment is Zidovudine,
-there must be a positive probability of some patients being exposed and
-unexposed at every level of CD4 count. Positivity can be expressed
-formally as \(Pr(A=a\ |\ L) > 0\) for all \(a \in A\), which extends
-straightforwardly to the time dependent case where the positivity
-assumption must hold at every time step conditonal on previous
-treatment, time dependent confounders and any baseline covaraiates:
+requires that there be exposed and unexposed individuals in every strata
+of the confounding covariates. For example, when treatment is Zidovudine
+and CD4 count is the confounder, there must be a positive probability of
+some patients being exposed and unexposed at every level of CD4 count.
+Positivity can be expressed formally as \(Pr(A=a\ |\ L) > 0\) for all
+\(a \in A\), which extends straightforwardly to the time dependent case
+where the positivity assumption must hold at every time step conditonal
+on previous treatment, time dependent confounders and any baseline
+covaraiates:
 
 \[Pr(A_{it}=a_{it}\ |\ L_{it}, A_{i, t-1}, V_{i0}) > 0\]
 
@@ -1009,17 +1010,17 @@ treatment within a certain strata as defined by the covariates. For
 example, \citet{Cole2008} studies positivity violations in individuals
 in strata defined by CD4 count and viral load. By increasing the levels
 of CD4 count the chances of random zeroes also increases and
-\citet{Cole2008} show that the IPTW rapidly lose their stability with
-the consequence that causal effects are no longer estimable. Researchers
-applying IPTW methods must actively check for that there are both
-treated and untreated individuals at every level of their covariates
-within cells defined by their covariates because parametric methods will
-smooth over positivity violations. In general parametric models will not
-provide any indication of this violation. Increasingly refined
-covariates are attractive because they provide better control of
-confounding, but the point that \citet{Cole2008} are making is that this
-control needs to be traded off against increased occurence of random
-zeroes and subsequent instability of IPT weights.
+\citet{Cole2008} show that the IPT weights rapidly lose their stability
+with the consequence that causal effects are no longer estimable.
+Researchers applying IPTW methods must actively check that there are
+both treated and untreated individuals at every level of their
+covariates within cells defined by their covariates because parametric
+methods will smooth over positivity violations and not provide any
+indication of nonpositivity. Increasingly refined covariates are
+attractive because they provide better control of confounding, but the
+point that \citet{Cole2008} make is that this control needs to be traded
+off against increased occurence of random zeroes and subsequent
+instability of IPT weights.
 
 More relevant to this thesis are violations of the positivity assumption
 due to structural zeroes. These occur when an individual cannot possibly
@@ -1038,10 +1039,9 @@ structural zeroes arise in the context of rates of preterm birth and
 racial segregation, whereas \citet{Cheng2010} find structural zeroes in
 the context of fetal position and perinatal outcomes. Our motivating
 example is most closely related to liver disease as a contraindication,
-except that the clinical protocols insist patients with low CD4 count
-always be treated rather than never be treated as was the case in the
-liver disease example. And as these examples suggests our context is not
-unique and our results are relevant to other areas of epidemiology.
+except that the clinical protocols require that patients with low CD4
+count always be treated instead of never being treated, as in the case
+in the liver disease example.
 
 Although in many epidemiological settings the positivity assumption is
 guaranteed by experimental design, studying positivity violations is
