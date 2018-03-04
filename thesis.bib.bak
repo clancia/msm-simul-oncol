@@ -27,7 +27,15 @@
   publisher     = {Cambridge university press},
   year          = {2009},
   author        = {Pearl, Judea},
+  __markedentry = {[morle001:]},
+}
+
+@Misc{Robins2000,
+  author        = {Robins, James M and Hernan, Miguel Angel and Brumback, Babette},
+  title         = {Marginal structural models and causal inference in epidemiology},
+  year          = {2000},
   __markedentry = {[morle001:6]},
+  publisher     = {LWW},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
