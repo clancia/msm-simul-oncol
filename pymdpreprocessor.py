@@ -9,7 +9,7 @@ stored in cell metadata
 #
 #-----------------------------------------------------------------------------
 
-from IPython.nbconvert.preprocessors import *
+from nbconvert.preprocessors import *
 import re
 
 class PyMarkdownPreprocessor(Preprocessor):

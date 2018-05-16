@@ -5,7 +5,7 @@
 ((* endblock author *))
 
 ((* block title *))
-\title{Inverse Probability of Treatment Weighting Under Violations of Positivity: Draft 2}
+\title{Inverse Probability of Treatment Weighting Under Violations of Positivity}
 ((* endblock title *))
 
 ((* block packages *))
