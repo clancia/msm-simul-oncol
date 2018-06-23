@@ -443,45 +443,39 @@ models}\label{marginal-structural-models}
 Marginal structural models (MSMs) are a class of models for the
 estimation of causal effects from observational data \citet{Robins2000}.
 This section explains the central concepts behind marginal structural
-models including causality and confounding, time dependent confounding
-and inverse probability weighting.
+modelsand introduces the notation that will be used in this thesis.
 
-    \subsubsection{Causality and
-confounding}\label{causality-and-confounding}
+    \subsubsection{Causality and confounding (600
+words)}\label{causality-and-confounding-600-words}
 
 In the counterfactual framework (\citet{Neyman1923}, \citet{Rubin1978},
 \citet{Robins1986}) the causal effect of treatment \(A\) on outcome
-\(Y\) for one subject is defined as the difference between that subjects
-outcome had they been exposed and the outcome had they, contrary to
-fact, remained unexposed to \(A\). If we denote the outcome when exposed
-as \(Y_{a=1}\) and the outcome when not exposed as \(Y_{a=0}\) then the
-causal effect for one subject can be calculated as
-\(Y_{a=1} - Y_{a=0}\). For example, suppose a subject with a headache
+\(Y\) for one subject is defined as the difference between that
+subject's outcome had they been exposed and the same subject's outcome
+had they, contrary to fact, remained unexposed to \(A\). If we denote
+the outcome when exposed as \(Y_{a=1}\) and the outcome when not exposed
+as \(Y_{a=0}\) then the causal effect for one subject can be calculated
+as \(Y_{a=1} - Y_{a=0}\). For example, suppose a subject with a headache
 takes ibuprofen, a popular treatment for headaches. After a suitable
-amount of time, say thirty minutes, the headache either remains
-\(Y_{a=1} = 1\) or has passed \(Y_{a=1} = 0\). Regardless of the outcome
-we do not know how things would have turned out if, counter to fact, the
-subject had not taken the ibuprofen. As a result we don't observe
-\(Y_{a=0}\) which is the counterfactual outcome. \linebreak
+amount of time, say one hour, the headache either remains
+\(Y_{a=1} = 1\) or has passed \(Y_{a=1} = 0\). The outcome had the
+subject not taken ibuprofen is the counterfactual outcome. In other
+words, we don't observe \(Y_{a=0}\). \linebreak
 
-Often we are interested in the average causal effect in a population
-rather than one subject. For example, suppose sixty subjects are
-suffering from a headache and every subject was given ibuprofen. After
-thirty minutes each subject will either have a headache (\(Y = 1\)) or
-their headache will have passed (\(Y = 0\)). The average outcome across
-all subjects is \(\mathbb{E}(Y_{a = 1})\) or equivalently when \(Y\) is
-a dichotomous variable, \(\mathbb{P}(Y_{a = 1})\). The relevant causal
-comparison would be between \(\mathbb{P}(Y_{a = 1})\) and
-\(\mathbb{P}(Y_{a = 0})\), the latter being counterfactual as no
-patients were unexposed. \linebreak 
-
-In the example with a single subject the quantity \(Y_{a=0}\) is
-counterfactual and not observed. In the example with sixty subjects we
-do not observe the quantity \(Y_{a=0}\) for any subject and consequently
-we don't observe the quantity \(\mathbb{P}(Y_{a = 0})\). Instead, in
-both experimental and observational settings, subjects exposed to
-treatment are typically compared to subjects who are unexposed to
-treatment. \linebreak
+Often we are interested in the average causal effect for a population
+rather than for one subject. Suppose sixty subjects are suffering from a
+headache and every subject was given ibuprofen. After one hour each
+subject will either have a headache (\(Y_{a=1} = 1\)) or their headache
+will have passed (\(Y_{a=1} = 0\)). The average outcome across all
+subjects is \(\mathbb{E}(Y_{a = 1})\) or equivalently when \(Y\) is a
+dichotomous variable, \(\mathbb{P}(Y_{a = 1})\). The relevant causal
+comparison is between \(\mathbb{P}(Y_{a = 1})\) and
+\(\mathbb{P}(Y_{a = 0})\), the latter being counterfactual as all sixty
+subjects were exposed. We do not observe the quantity \(Y_{a=0}\) for
+any subject and consequently we do not observe the quantity
+\(\mathbb{P}(Y_{a = 0})\). Instead, in both experimental and
+observational settings, subjects exposed to treatment are typically
+compared to subjects who are unexposed to treatment. \linebreak
 
 For example, if the first thirty headache sufferers are exposed to
 ibuprofen we would ideally compare the quantity
@@ -503,35 +497,21 @@ the comparison between \(\mu_{A=1}\) and \(\mu_{B=0}\) will have a
 causal interpretation if \(\mu_{A=0} = \mu_{B=0}\). If
 \(\mu_{A=0} \neq \mu_{B=0}\) then being a member of group \(A\) alters
 the probability of having a headache even in the counterfactual case
-that the the subjects from group A are unexposed. If the first thirty
-subjects had all been female and the last thirty subjects had all been
-male and we expect these populations to differ then.
-
-A comparison between If \(\mu_{B=0} \neq \mu_{A=0}\) there is a
-difference between these two groups other than treatment and
+that the the subjects from group A are unexposed. In other words being a
+member of group A affects the probability that \(Y = 1\) regardless of
+whether the subject received treatment. In which case
 \(\mu_{A=1} - \mu_{B=0}\), a measure of association, is confounded for
 \(\mu_{A=1} - \mu_{A=0}\), a measure of effect (\citet{Greenland1999}).
-For example, if the first thirty subjects were all female and the last
-thirty subjects were all male then we might thinkall the exposed
-subjects also drank a glass of water, represented by a dichotomous
-variable \(L\), and we have reason to believe that the glass of water
-would also relieve the headaches then this would explain the
-confounding. It might equally represent baseline covariates such as age
-or sex which we denote as \(V\).
-
-When \(\mu_{B=0} = \mu_{A=0}\) there is no confounding and the group to
-which each patient belongs does not alter the result. In this case we
-say that the subjects are exchangeable in the sense that membership to
-the exposed group does not imply that any other factors differ between
-the two groups. In other words the distribution of the counterfactual
-variable does not depend on the group itself. In other words the
-distribution of the potential outcomes is independent of the group to
-which they belong. The distribution of potential outcomes is independent
-of observed exposure. The fact that a subject belongs to the group
-\(A = 1\) in no way constrains the set of potential outcomes \(Y_a\). In
-this sense subjects are exchangeable because if they were placed in the
-unexposed group the distribution of their potential outcomes would
-remain unchanged.
+For instance, if the first thirty subjects who make up group A are all
+female and the last thirty subjects that make up group B are all male,
+we might expect the probability of having a headache to differ between
+the two groups regardless of the treatment they receive. In this case
+\(\mu_{A=1} - \mu_{B=0}\) is confounded for \(\mu_{A=1} - \mu_{A=0}\) by
+sex. Subjects are not exchangeable because the distribution of their
+potential outcomes is not independent of the treatment they receive. A
+subject from group B cannot be viewed as an analogue of a subject from
+group A under different treatment. Exchangeability implies that there
+are no unmeasured confounders.
 
     \subsubsection{Time dependent
 confounding}\label{time-dependent-confounding}
