@@ -289,32 +289,11 @@
     
     \newpage
 
-\section{Abstract}\label{abstract}
-
-This thesis studies the performance of the inverse probability of
-treatment weighted (IPTW) for marginal structural models under
-violations of the positivity assumption. To our knowledge the
-performance of MSMs under violations of this assumption has not been
-systematically studied in the literature. We employ the simulation
-algorithm of \citet{Havercroft2012} to generate data from a typical
-longitudinal setting. By exploiting the design of this algorithm it is
-possible to introduce positivity violations that are propagated through
-patient histories and study the effect of these violations on the
-ability of a marginal structural model to recover the true parameters.
-Our results suggest that even small violations of the positivity
-assumption can have a large impact on the performance of the estimation.
-
-    \newpage
-
-\section{Acknowledgements}\label{acknowledgements}
-
-    \newpage
-
 \tableofcontents{}
 
     \newpage
 
-\section{Section 1: Introduction}\label{section-1-introduction}
+\section{Introduction}\label{introduction}
 
 Marginal structural models (MSMs) are a popular class of models for
 performing causal inference in the presence of time dependent
@@ -329,7 +308,7 @@ being predictors of the outcome of interest. In a longitudinal setting
 this is further complicated when the confounder itself is determined by
 earlier treatment. One consequence is that regression adjustment methods
 do not control for confounding in the longitudinal case and other
-techniques are required.
+techniques are required. \linebreak
 
 The Inverse probability of treatment weighting (IPTW) estimator is a
 technique which leads to consistent estimates in the presence of has
@@ -342,7 +321,7 @@ example, when there is missing data weights can be used to create a
 pseudo-population in which there is no missingness. In the context of
 MSMs, the IPT weights relate to a pseudo-population in which there is no
 longer any confounding between the confounder and treatment and causal
-inferences can be made.
+inferences can be made. \linebreak
 
 Underlying the IPTW method for estimating MSMs are four assumptions: 1)
 consistency 2) exchangeability 3) positivity 4) and correct model
@@ -375,7 +354,7 @@ the literature from a simulation point of view. We quantify the bias and
 variance introduced due to positivity violations and hope to provide
 practical advice to researchers tempted to fit MSMs to overcome
 confounding without realising the potential consequences of positivity
-violations in their data.
+violations in their data. \linebreak
 
 Throughout this thesis we focus on clinical applications as examples. In
 the literature on marginal structural models the causal effect of
@@ -386,7 +365,7 @@ treatment while at the same time being a predictor of survival. As a
 result CD4 count is a confounder. In the longitudinal setting previous
 treatments influence CD4 count. As such studies often depend on
 protocols which means that poistivity in some levels of the confounder
-make this a suitable example for our purposes.
+make this a suitable example for our purposes. \linebreak 
 
 The structure of this thesis is as follows. In section 2 of part 1, the
 model considered in this thesis and its important aspects are explained.
@@ -396,36 +375,11 @@ comparisons are drawn with the static case. In part 4 we entertain
 violations of positivity in the data, this section represents the
 novelty in this thesis. Part 5 conducts a simulation study. Part 6
 includes a discussion, conclusions and suggestions for future work.
+\linebreak
 
 A second consequence is that simulating data from a specific marginal
 structural models is more challenging when the data is to exhibit time
 dependent confounding.
-
-    \subsection{Directed Acyclic Graphs: graphical representations of
-causality}\label{directed-acyclic-graphs-graphical-representations-of-causality}
-
-In this thesis we consider simulating from marginal structural models
-(MSMs), a class of models that can be used to estimate causal effects
-from observational data under time dependent confounding. Specifically,
-we consider the problem, common in medical research, of investigating
-the relationship between a binary treatment variable \(A\) and an
-outcome of interest \(Y\) in the presence of a covariate \(L\). One way
-of expressing the relationship between these three variables is through
-a graph such as the one shown in the left hand size of figure 1.
-
-A graph consists of a finite set of vertices \(\nu\) and a set of edges
-\(\epsilon\). The vertices of a graph correspond to a collection of
-random variables which follow a joint probability distribution
-\(P(\nu)\). Edges in \(\epsilon\) consist of pairs of distinct vertices
-and denote a certain relationship that holds between the variables
-\citet{Pearl2009}. The direction of the relationship is denoted by an
-arrow and in this thesis we consider only acyclic graphs which means
-that the relationship between two variables only proceeds in one
-direction, there are no feedback loops or mutual causation. The
-resulting directed acyclic graph (DAG) \(G = (\nu, \epsilon)\) shown in
-figure 1 can be represeted as a set of connections \({(A, Y), (L, Y)}\)
-where direction is from the first element of each pair to the second
-element.
 
     Allow for the joint determination of outcomes and treatment status or
 omitted variables related to both treatment status and outcomes (Angrist
@@ -437,20 +391,29 @@ happens, as U0 is a common ancestor of A through L and also Y, also that
 there is selection bias, and L is sufficient to adjust for confounding
 see Havercroft algorithm code page bottom.
 
+    \subsection{Outline}\label{outline}
+
+    \subsection{Software}\label{software}
+
+The simulations carried out in this thesis use the Python programming
+language.
+
     \subsection{Marginal structural
 models}\label{marginal-structural-models}
 
 Marginal structural models (MSMs) are a class of models for the
 estimation of causal effects from observational data \citet{Robins2000}.
 This section explains the central concepts behind marginal structural
-modelsand introduces the notation that will be used in this thesis.
+models and introduces the notation that will be used in this thesis.
+Marginal structural models use only observed data and a set of
+assumptions to investigate causal effects.
 
     \subsubsection{Causality and confounding (600
 words)}\label{causality-and-confounding-600-words}
 
 In the counterfactual framework (\citet{Neyman1923}, \citet{Rubin1978},
 \citet{Robins1986}) the causal effect of treatment \(A\) on outcome
-\(Y\) for one subject is defined as the difference between that
+\(Y\) for one subject can be defined as the difference between that
 subject's outcome had they been exposed and the same subject's outcome
 had they, contrary to fact, remained unexposed to \(A\). If we denote
 the outcome when exposed as \(Y_{a=1}\) and the outcome when not exposed
@@ -465,15 +428,15 @@ words, we don't observe \(Y_{a=0}\). \linebreak
 Often we are interested in the average causal effect for a population
 rather than for one subject. Suppose sixty subjects are suffering from a
 headache and every subject was given ibuprofen. After one hour each
-subject will either have a headache (\(Y_{a=1} = 1\)) or their headache
-will have passed (\(Y_{a=1} = 0\)). The average outcome across all
+subject will either have a headache (\(Y_{a=1}=1\)) or their headache
+will have passed (\(Y_{a=1}=0\)). The average outcome across all
 subjects is \(\mathbb{E}(Y_{a = 1})\) or equivalently when \(Y\) is a
 dichotomous variable, \(\mathbb{P}(Y_{a = 1})\). The relevant causal
-comparison is between \(\mathbb{P}(Y_{a = 1})\) and
-\(\mathbb{P}(Y_{a = 0})\), the latter being counterfactual as all sixty
-subjects were exposed. We do not observe the quantity \(Y_{a=0}\) for
-any subject and consequently we do not observe the quantity
-\(\mathbb{P}(Y_{a = 0})\). Instead, in both experimental and
+comparison is now between \(\mathbb{P}(Y_{a = 1})\) and
+\(\mathbb{P}(Y_{a = 0})\), the latter being the counterfactual had none
+of sixty subjects been exposed. We do not observe the quantity
+\(Y_{a=0}\) for any subject, and consequently we do not observe the
+quantity \(\mathbb{P}(Y_{a = 0})\). Instead, in both experimental and
 observational settings, subjects exposed to treatment are typically
 compared to subjects who are unexposed to treatment. \linebreak
 
@@ -499,45 +462,147 @@ causal interpretation if \(\mu_{A=0} = \mu_{B=0}\). If
 the probability of having a headache even in the counterfactual case
 that the the subjects from group A are unexposed. In other words being a
 member of group A affects the probability that \(Y = 1\) regardless of
-whether the subject received treatment. In which case
-\(\mu_{A=1} - \mu_{B=0}\), a measure of association, is confounded for
-\(\mu_{A=1} - \mu_{A=0}\), a measure of effect (\citet{Greenland1999}).
-For instance, if the first thirty subjects who make up group A are all
-female and the last thirty subjects that make up group B are all male,
-we might expect the probability of having a headache to differ between
-the two groups regardless of the treatment they receive. In this case
-\(\mu_{A=1} - \mu_{B=0}\) is confounded for \(\mu_{A=1} - \mu_{A=0}\) by
-sex. Subjects are not exchangeable because the distribution of their
-potential outcomes is not independent of the treatment they receive. A
-subject from group B cannot be viewed as an analogue of a subject from
-group A under different treatment. Exchangeability implies that there
-are no unmeasured confounders.
+whether the subject actually received treatment or not. For example, if
+every member of group A was given a glass of water and not in group B,
+then In which case \(\mu_{A=1} - \mu_{B=0}\), a measure of association,
+is confounded for \(\mu_{A=1} - \mu_{A=0}\), a measure of effect
+(\citet{Greenland1999}). For instance, if the first thirty subjects who
+make up group A are all female and the last thirty subjects that make up
+group B are all male, we might expect the probability of having a
+headache to differ between the two groups regardless of the treatment
+they receive. In this case \(\mu_{A=1} - \mu_{B=0}\) is confounded for
+\(\mu_{A=1} - \mu_{A=0}\) by sex. Subjects are not exchangeable because
+the distribution of their potential outcomes is not independent of the
+treatment they receive. A subject from group B cannot be viewed as an
+analogue of a subject from group A under different treatment.
+Exchangeability implies that there are no unmeasured
+confounders.\linebreak
 
-    \subsubsection{Time dependent
-confounding}\label{time-dependent-confounding}
+Explain how we condition on or control for confounding. Also give
+intuition for why it works within strata. The cause of within strata
+variability cannot be the strata itself. For example, the residual
+confoudning after controlling for sex cannot be the result if sex if all
+members of that strata are female. Hint at the idea of ever finer strata
+to set up positivity as a trade off with exchangeability. Lack of
+adjustment for a confounder will lead to bias but adjusting on a
+confounder will lead to .... selection bias!
 
-In the time dependent case observations are recorded on subjects at more
-than one point in time. For example, a subject with a headache might
-take ibuprofen in the first period t, but not the second hour t+1 and
-then again for two subsequent periods. We can denote the subjects
-history using an overhead bar \(\bar A = \{1, 0, 1, 1\}\) and their
-individual time points as \(A_t\). It is not possible to estimate the
-effect of a time dependent treatment on an outcome of interest because
-time dependent confounding factors will be both determinants of later
-treatment and will themselves be affected by earlier treatment
+The result of confounding is that the causal effect is mixed with the
+confounding. In other words, L may be the cause of A and Y or the cause
+may be mixed between A and L
+
+From one point of view causal problems are missing data problems
+(\citet{Edwards2015}, \citet{}, \citet{})
+
+    \subsubsection{Directed Acyclic Graphs: graphical representations of
+causality}\label{directed-acyclic-graphs-graphical-representations-of-causality}
+
+Causal relationships, like those described in the previous section, can
+be represented using graphs. A graph consists of a finite set of
+vertices \(\nu\) and a set of edges \(\epsilon\). The vertices of a
+graph correspond to a collection of random variables which follow a
+joint probability distribution \(P(\nu)\). Edges in \(\epsilon\) consist
+of pairs of distinct vertices and denote a certain relationship that
+holds between the variables \citet{Pearl2009}. The absence of an edge
+between two variables indicates that the variables are independent of
+one another. The direction of causal relationships is denoted by an
+arrow and is acyclic because causal relationships between two variables
+only proceed in one direction. There are no feedback loops or mutual
+causation because in a causal framework a variable cannot be a cause of
+itself directly or indirectly \citet{Hernan2004}.\linebreak
+
+For example, figure ? represents the time fixed case where interest lies
+in the causal relationship between treatment \(A\) and outcome \(Y\) but
+the relationship is confounded by \(L\). By contrast, the right hand
+side of figure ? s
+
+    \begin{figure}
+\begin{tikzpicture}
+
+% nodes %
+\node[text centered] (l0) {$L_0$};
+\node[below right = 2.5 of l0, text centered] (a0) {$A_0$};
+\node[below right = 2.5 and 5 of l0, text centered] (y) {$Y$};
+
+% edges %
+\draw[->, line width= 1] (a0) --  (y);
+\draw[->, line width= 1] (l0) --  (a0);
+\draw[->, line width= 1] (l0) --  (y);
+
+\end{tikzpicture}
+\caption{Causal graph}
+\end{figure}
+
+    \subsubsection{Time dependent confounding (500
+words)}\label{time-dependent-confounding-500-words}
+
+In longitudinal studies measurements are taken on the same subject at
+different points in time. At each time point \(t\) in a clinical trial,
+a subject may be prescribed treatment (\(A_{t}=1\)) or not
+(\(A_{t}=0\)). The treatment history of the subject at any point \(t\)
+is represented by the vector of all treatment decisions up to that point
+and denoted with an overhead bar
+\(\bar A_{t} = \{A_{1}, \hdots, A_{t-1}\}\). Time dependent confounders
+also change value over time. This opwhich change their value
+
+In this context confounding variables can also be time dependent meaning
+that their value changes over time. Just as in the time fixed case this
+can lead to biased results and needs to be adjusted for. What
+distinguishes the time dependent confounding case is that the confounder
+may itself be a function of previous treatment decisions. Measurments
+are typically taken at baseline and subsequent measurements are taken
+Just as in the time fixed case, confounding variables prevent causal
+analysis and need to be adjusted for. In the time dependent setting
+confounders can be fixed meaning that they have the same value in each
+time period, or they can be time dependent meaning that their value
+changes over time. The time dependen
+
+In many applications measurements are made on subjects at multiple
+points in time. Time dependent confounding differs from the time fixed
+case in that the value of the confounder can change over time. Just as
+in the time fixed case bias arises when adjustment is not made for the
+confounder. However, the confounder may be a function of past treatment
+and may themselves be determinants of future treatments
 (\citet{Robins2000a}).
 
-The time dependent case can be expressed clearly using causal graphs. A
-graph consists of a set V of vertices and a set E of edges that connect
-some pairs of vertices (\citet{Pearl2009}). Vertices represent variables
-and edges represent the relationships between variables. A causal graph
-is a directed acyclic graph in which the edges are directed and
-represent direct causal effects (\citet{Robins2000}). The graph is
-acyclic because in a causal framework, a variable cannot be a cause of
-itself directly or indirectly \citet{Hernan2004}. The left hand side of
-Figure ? shows a causal graph for the time fixed case that T = 0 while
-the right hand side shows the more complicated case where T = 1 and
-previous values of treatment of covariates affect future values.
+Set up the longitudinal/time dependent case.
+
+Explain why time dependent confounding is more difficult to deal with
+
+Define/explain what time dependent confounding is
+
+Give grahical representation
+
+Explain the problems it introduces
+
+Explain why normal methods cannot solve those problems
+
+Conclusion
+
+Time dependent data involves observations on the same subject at
+multiple points in time. For example, in a clinical trial individual
+subjects are measured at baseline and at subsequent points in time.
+Similar to the time fixed case, confounding variables can exist which
+prevent causal analysis. Unlike the time fixed case, it is not possible
+to estimate the causal effect of a treatment on an outcome of interest
+because time dependent confounding factors will be both determinants of
+later treatment and will themselves be affected by earlier treatment .
+In this section we describe several important characteristics of time
+dependent confounding using directed acyclic graphs.
+
+    For example, figure ? represents the time fixed case where a treatment
+variable \(A\) shows a simple relationship between three variables
+\(A\), \(L\) and \(Y\). represents the structural relationship between
+The resulting directed acyclic graph (DAG) \(G = (\nu, \epsilon)\) shown
+in figure 1 can be represeted as a set of connections
+\({(A, Y), (L, Y)}\) where direction is from the first element of each
+pair to the second element.
+
+Show the case where the current confounder is independent of past
+treatment.
+
+    We denote the subject's history using an overhead bar
+\(\bar A = \{1, 0, 1, 1\}\) and their individual time points as \(A_t\).
 
 Approaching time dependent confounding graphically makes clear why
 adjusting for or conditioning on time dependent confounders in a
@@ -547,14 +612,20 @@ adjustment for a variable \(L\) when the relationship between \(Y\) and
 \(A\) differs within strata of \(L\) will lead to biased estimation of
 the causal effect of \(A\) on \(Y\). On the other hand, conditioning on
 \(L\) may induce selection bias which also precludes the unbiased
-estimation of causal effects \citet{Hernan2004}. The nature of time
-dependent confounding drives the choice of the \citet{Havercroft2012}
-algorithm used to evaluate positivity violations in this paper and will
-be discussed further in what follows.
+estimation of causal effects \citet{Hernan2004}. The point is that by
+adjusting for \(L\) we induce bias . If there is a relationship between
+A and L then adjusting for L induces. There could also be mediation from
+A through L to Y. Selection bias means an association between A and U
+even if. Cite both Robins and Havercroft on the problems with time
+dependent confounding. Conditioning on a confounder induces a
+relationship between its parents A and U and hence A and Y. Why does
+this happen only in the time dependent case?
 
 The counterfactual framework remains intact but there are now very many
 histories per patient rather than one of a = 0 or a = 1 being
-countrfactual.
+counterfactual. Also means saturated models are not an option because
+they would be computationally intensive and so we use parametric models
+which also links to positivity.
 
     \paragraph{Inverse probability
 weighting}\label{inverse-probability-weighting}
@@ -576,11 +647,15 @@ Areas of application.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
+\tightlist
 \item
   Exchangeability
 \item
   Consistency
 \item
+  model mispecification
+\item
+  positivity.
 \end{enumerate}
 
 define what a causal effect is and how we go from the individual to the
@@ -1729,7 +1804,7 @@ of the covariate.
     
     
 \bibliographystyle{plainnat}
-\bibliography{thesis}
+\bibliography{references/library}
 
     
     \end{document}
