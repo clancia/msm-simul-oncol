@@ -511,18 +511,17 @@ only proceed in one direction. There are no feedback loops or mutual
 causation because in a causal framework a variable cannot be a cause of
 itself directly or indirectly \citet{Hernan2004}.\linebreak
 
-For example, figure ? represents the time fixed case where interest lies
-in the causal relationship between treatment \(A\) and outcome \(Y\) but
-the relationship is confounded by \(L\). By contrast, the right hand
-side of figure ? s
+For example, the left hand diagram of figure ? represents the time fixed
+case where interest lies in the causal relationship between treatment
+\(A\) and outcome \(Y\) but the relationship is confounded by \(L\).
 
     \begin{figure}
 \begin{tikzpicture}
 
 % nodes %
 \node[text centered] (l0) {$L_0$};
-\node[below right = 2.5 of l0, text centered] (a0) {$A_0$};
-\node[below right = 2.5 and 5 of l0, text centered] (y) {$Y$};
+\node[below = 3 of l0, text centered] (a0) {$A_0$};
+\node[below right = 1.5 and 5 of l0, text centered] (y) {$Y$};
 
 % edges %
 \draw[->, line width= 1] (a0) --  (y);
@@ -537,13 +536,57 @@ side of figure ? s
 words)}\label{time-dependent-confounding-500-words}
 
 In longitudinal studies measurements are taken on the same subject at
-different points in time. At each time point \(t\) in a clinical trial,
-a subject may be prescribed treatment (\(A_{t}=1\)) or not
-(\(A_{t}=0\)). The treatment history of the subject at any point \(t\)
-is represented by the vector of all treatment decisions up to that point
-and denoted with an overhead bar
-\(\bar A_{t} = \{A_{1}, \hdots, A_{t-1}\}\). Time dependent confounders
-also change value over time. This opwhich change their value
+different points in time. The right hand side of figure ? gives an
+example of this for two time periods (\(t = 0, 1\)). In the simplest
+situation time dependent confounding means that the confouding variables
+change in value over time. This is represented in figure ? where the
+confounding variable \(L\) takes the value \(L_0\) in the first period
+and \(L_1\) in the second period.
+
+Both the treatment decision \(A\) and the time dependent confounder
+\(L\) change over time. Their histories can be represented by the vector
+of all treatment decisions up to that point and denoted with an overhead
+bar \(\bar A_{t} = \{A_{1}, \hdots, A_{t-1}\}\).
+
+    \begin{figure}
+\begin{tikzpicture}
+
+% nodes %
+\node[text centered] (l0) {$L_0$};
+\node[below = 3 of l0, text centered] (a0) {$A_0$};
+\node[right = 3 of l0, text centered] (l1) {$L_1$};
+\node[right = 3 of a0, text centered] (a1) {$A_1$};
+\node[below right = 1.5 and 5 of l0, text centered] (y) {$Y$};
+
+% edges %
+
+%L0%
+\draw[->, line width= 1] (l0) --  (l1);
+\draw[->, line width= 1] (l0) --  (a0);
+\draw[->, line width= 1] (l0) --  (a1);
+\draw[->, line width= 1] (l0) --  (y);
+
+%A0%
+\draw[->, line width= 1] (a0) --  (a1);
+\draw[->, line width= 1] (a0) --  (y);
+
+%L1%
+\draw[->, line width= 1] (l1) --  (a1);
+\draw[->, line width= 1] (l1) --  (y);
+
+%A1%
+\draw[->, line width= 1] (a1) --  (y);
+
+\end{tikzpicture}
+\caption{Causal graph2}
+\end{figure}
+
+    What sets the where a subject receives a treatment decision \(A\) in two
+time periods, \(L\) At each time point \(t\) in a clinical trial, a
+subject may be prescribed treatment (\(A_{t}=1\)) or not (\(A_{t}=0\)).
+The treatment history of the subject at any point \(t\) is represented .
+Time dependent confounders also change value over time. This opwhich
+change their value
 
 In this context confounding variables can also be time dependent meaning
 that their value changes over time. Just as in the time fixed case this
@@ -588,15 +631,13 @@ to estimate the causal effect of a treatment on an outcome of interest
 because time dependent confounding factors will be both determinants of
 later treatment and will themselves be affected by earlier treatment .
 In this section we describe several important characteristics of time
-dependent confounding using directed acyclic graphs.
-
-    For example, figure ? represents the time fixed case where a treatment
-variable \(A\) shows a simple relationship between three variables
-\(A\), \(L\) and \(Y\). represents the structural relationship between
-The resulting directed acyclic graph (DAG) \(G = (\nu, \epsilon)\) shown
-in figure 1 can be represeted as a set of connections
-\({(A, Y), (L, Y)}\) where direction is from the first element of each
-pair to the second element.
+dependent confounding using directed acyclic graphs. For example, figure
+? represents the time fixed case where a treatment variable \(A\) shows
+a simple relationship between three variables \(A\), \(L\) and \(Y\).
+represents the structural relationship between The resulting directed
+acyclic graph (DAG) \(G = (\nu, \epsilon)\) shown in figure 1 can be
+represeted as a set of connections \({(A, Y), (L, Y)}\) where direction
+is from the first element of each pair to the second element.
 
 Show the case where the current confounder is independent of past
 treatment.
