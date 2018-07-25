@@ -398,8 +398,7 @@ see Havercroft algorithm code page bottom.
 The simulations carried out in this thesis use the Python programming
 language.
 
-    \subsection{Marginal structural
-models}\label{marginal-structural-models}
+    \section{Marginal structural models}\label{marginal-structural-models}
 
 Marginal structural models (MSMs) are a class of models for the
 estimation of causal effects from observational data \citet{Robins2000}.
@@ -417,7 +416,7 @@ longitudinal data and hence we discuss time dependent confounding and
 the extra bits required for this. In particular, we draw attention to
 the core parts of MSMs needed for this study - linking to positivity.
 
-    \subsubsection{Counterfactuals and
+    \subsection{Counterfactuals and
 causality}\label{counterfactuals-and-causality}
 
 In the counterfactual framework (\citet{Neyman1923}, \citet{Rubin1978},
@@ -447,83 +446,68 @@ comparison is now between \(\mathbb{P}(Y_{x = 1})\) and
 \(\mathbb{P}(Y_{x = 0})\), the latter being the counterfactual had none
 of sixty subjects been exposed. We do not observe the quantity
 \(Y_{x=0}\) for any subject, and consequently we do not observe the
-quantity \(\mathbb{P}(Y_{x = 0})\).
+quantity \(\mathbb{P}(Y_{x = 0})\). \linebreak
 
-From one point of view causal problems are missing data problems
-(\citet{Edwards2015}, \citet{Howe2015}, \citet{}) Instead, in both
-experimental and observational settings, subjects exposed to treatment
-are typically compared to subjects who are unexposed to treatment.
-\linebreak
+\subsection{Confounding}\label{confounding}
 
-\subsubsection{Confounding}\label{confounding}
-
-For example, if the first thirty headache sufferers are placed in group
-A and are exposed to ibuprofen we would ideally compare the quantity
+For example, if group A consists of thirty of the headache sufferers who
+all took ibuprofen, we would ideally compare the quantity
 \(\mathbb{P}(Y_{x = 1}|X = 1) = \mu_{A_{x = 1}}\) with the quantity
-\(\mathbb{P}(Y_{x = 0}|X = 1) = \mu_{A_{x = 0}}\). Notice a slight
-redundancy in notation. Subjects in group A received treatment and it
-makes sense to write \(\mathbb{P}(Y_{x = 0}|X = 1)\) because it
-represents a counterfactual; the counterfactual situation that the
-subject did not receive treatment \(Y_{x = 0}\) and yet belonged to
-group A (\(X = 1\)). In other words, conditioning on \(X = 1\)
-highlights the group to which the subject belongs and the redundancy is
-to also use \(A\) to reflect the group. As
-\(\mathbb{P}(Y_{x = 0}|X = 1)\) is unobserved, we could instead compute
+\(\mathbb{P}(Y_{x = 0}|X = 1) = \mu_{A_{x = 0}}\). As
+\(\mu_{A_{x = 0}}\) is not actually observed, we could instead compute
 the observable quantity \(\mathbb{P}(Y_{x = 0}|X = 0) = \mu_{B_{x=0}}\)
-from the last thirty subjects who were not exposed to treatment and
-belong to group B. \linebreak
-
-Replacing the comparison between \(\mu_{A_{x = 1}}\) and
+from the remaining thirty subjects who did not use ibuprofen and belong
+to group B. Replacing the comparison between \(\mu_{A_{x = 1}}\) and
 \(\mu_{A_{x = 0}}\) with the comparison between \(\mu_{A_{x = 1}}\) and
 \(\mu_{B_{x=0}}\) will have a causal interpretation if
-\(\mu_{A_{x = 0}} = \mu_{B_{x=0}}\). If
-\(\mu_{A_{x = 1}} \neq \mu_{B_{x=0}}\) then membership of group \(A\)
-alters the probability of having a headache even in the counterfactual
-case that the the subjects from group A are unexposed. In other words
-being a member of group A affects the probability that \(Y = 1\)
-regardless of whether the subject actually received treatment or not.
-For example, dehydration also causes headaches. If every member of group
-A received a glass of water with the ibuprofen then it may be the water
-that alleviates the headache or the ibuprofen or both. In this case
+\(\mu_{A_{x = 0}} = \mu_{B_{x=0}}\). In other words, if a subject from
+group B can be viewed as an analogue of a subject from group A had they,
+contrary to fact, not received ibuprofen. \linebreak
+
+If \(\mu_{A_{x = 1}} \neq \mu_{B_{x=0}}\) then the comparison
 \(\mu_{A_{x = 1}} - \mu_{B_{x=0}}\), a measure of association, is
 confounded for \(\mu_{A_{x = 1}} - \mu_{A_{x = 0}}\), a measure of
-causal effect (\citet{Greenland1999}). \linebreak
+causal effect (\citet{Greenland1999}). For example, if all the subjects
+in group A are male it would be reasonable to ask whether their sex
+influenced their decision to take ibuprofen. Suppose that males also
+tend to have headaches of a shorter duration so that at the end of one
+hour they are less likely to have a headache than females. The result is
+that both the decision to take ibuprofen and the probability of having a
+headache at the end of one hour are dependent on the sex of the subject.
+This obscures the causal effect of ibuprofen on headaches because there
+is a spurious association between \(X\) and \(Y\) through the subject's
+sex. We cannot establish whether the outcome is due to a causal
+relationship between ibuprofen and headache alleviation, a relationship
+between sex and headache alleviation or a mixture of the two. \linebreak
 
-Subjects are not exchangeable because the distribution of their
-potential outcomes is not independent of the treatment they receive. A
-subject from group B cannot be viewed as an analogue of a subject from
-group A under different treatment. Exchangeability implies that there
-are no unmeasured confounders.\linebreak
+Closely related to confounding, exchangeability is the assumption that
+the distribution of the counterfactual outcomes \(Y_{x}\) is independent
+of the actually observed treatment \(X\). When exchangeability holds,
+subjects from group A and group B are exchangeable in the sense that
+were they all to remain untreated the distribution of the counterfactual
+outcomes \(Y_{x}\) would be the same in the two groups
+\citet{Daniel2013}. Imagine exchanging a subject from group A with a
+subject from group B where both recieve the treatment prevailing in
+their new group. Under exchangeability, the average outcome in the two
+groups is unchanged \citet{HernanMA2018}. However, exchanging subjects
+between group A and group B introduces females into group A and males
+into group B. As males have a higher probability that \(Y = 0\),
+exchanging subjects changes the distribution of the counterfactuals. The
+relationship between confounding and exchangeability is why the
+assumption of exchangeability is also called the assumption of "no
+unmeasured confounding". \linebreak
 
-Explain how we condition on or control for confounding. Also give
-intuition for why it works within strata. The cause of within strata
-variability cannot be the strata itself. For example, the residual
-confoudning after controlling for sex cannot be the result if sex if all
-members of that strata are female. Hint at the idea of ever finer strata
-to set up positivity as a trade off with exchangeability. Lack of
-adjustment for a confounder will lead to bias but adjusting on a
-confounder will lead to .... selection bias!
+\begin{itemize}
+\tightlist
+\item
+  set-up why comparisons are possible within strata and then averages
+  across strata
+\item
+  Hint that the finer the confounding control the more accurate the
+  analysis but this has consequences for positivty.
+\end{itemize}
 
-The result of confounding is that the causal effect is mixed with the
-confounding. In other words, L may be the cause of A and Y or the cause
-may be mixed between A and L
-
-In other words, holding constant that every member of group A will drink
-a glass of water regardless of the treatment they receive, it would not
-be appropriate to compare these groups.
-
-Use the example that being female cannot be the cause of a difference
-between treated and nt treated if we make the comparison in the strata
-of all female. Fundementally we want to make a comparison between
-treated and untreated groups and be able to resolve the correct causal
-comparison in the population. We do this by comparing treated and
-untreated subjects within the same strata. For example, if both treated
-and untreated patients recived a glass of water then the difference in
-outcome between the two cannot be due to receiving a glass of water. The
-back door path allows a spurious association between A and Y not the
-causal effect we are trying to quantify.
-
-    \subsubsection{Directed Acyclic Graphs: graphical representations of
+    \subsection{Directed Acyclic Graphs: graphical representations of
 causality}\label{directed-acyclic-graphs-graphical-representations-of-causality}
 
 Causal relationships, like those described in the previous section, can
@@ -540,16 +524,15 @@ only proceed in one direction. There are no feedback loops or mutual
 causation because in a causal framework a variable cannot be a cause of
 itself directly or indirectly \citet{Hernan2004}.\linebreak
 
-For example, the left hand diagram of figure ? represents the time fixed
-case where interest lies in the causal relationship between treatment
-\(A\) and outcome \(Y\) but the relationship is confounded by \(L\).
-
-Graphs can also be used to illustrate adjustment and conditioning. For
-example, conditioning on L can be represented graphically by blocking
-the back door path from A to Y. there is a path from A to Y other than
-the causal one. Even in the situation, represented graphically in figure
-1 where there is only one causal arrow encoding a causal relationship
-between A and Y.
+For example, figure ? represents the case where interest lies in the
+causal relationship between treatment \(X\) and outcome \(Y\). There is
+a causal relstionship between \(X\) and \(Y\) as well as a causal
+relatiosnhip between both \(L\) and \(X\) and \(L\) and \(Y\). The
+spurious association between \(X\) and \(Y\) is shown graphically a
+"back door" between \(X\) and \(Y\) through \(L\). causal effects cannot
+be which carries the spurious correlation between \(X\) and \(Y\).
+Conditioning on \(L\) blocks this path allowing estimation of the purely
+causal effect between \(X\) and \(Y\)
 
     \begin{figure}
 \begin{tikzpicture}
@@ -568,8 +551,11 @@ between A and Y.
 \caption{Causal graph}
 \end{figure}
 
-    \subsubsection{Time dependent confounding (500
-words)}\label{time-dependent-confounding-500-words}
+    \subsection{Time dependent
+confounding}\label{time-dependent-confounding}
+
+Graphical methods are particularly useful for describing longitudinal
+data where multiple measurements are made on the same subject over time.
 
 In longitudinal studies measurements are taken on the same subject at
 different points in time. Interest is still in the causal effect of a
@@ -588,6 +574,10 @@ estimated of the causal effect of \(A\) on \(Y\).
 Explain why it is clear that adjustment is needed on L because spurious
 associations will still exist and then explain that this is fine in one
 situation but not in another.
+
+Link back to the headache example and explain why the baselines will be
+variables like age and sex and then switch to the canonical example of
+AZT, CDF and mortality among HIV patients.
 
 Just as in the time fixed case, adjustment on L\_0 and L\_1 will provide
 consisent estimates of the causal relationship because. We can adjust
@@ -761,12 +751,101 @@ counterfactual. Also means saturated models are not an option because
 they would be computationally intensive and so we use parametric models
 which also links to positivity.
 
-    \paragraph{Inverse probability
-weighting}\label{inverse-probability-weighting}
+    \subsection{Inverse Probability of Treatment
+Weighting}\label{inverse-probability-of-treatment-weighting}
 
-How it works and how it avoids the problems explained previously
+Inverse probability weighting is a technique that can consistently
+estimate the parameters of marginal structural models \citet{Robins2000}
 
-Areas of application.
+Inverse probability of treatment weighting is a technique that
+re-weights subject observations to a population where assignment of
+treatment is at random. An early example of this technique is the
+\citet{Horovitz1952} weighted estimator of the mean. In the context of
+marginal structural models, a weight is calculated for each subject
+which can be thought of informally as the inverse of the probability
+that a subject receives their own treatment \citet{Robins2000}. The
+result of applying these weights is to re-weight the data to create a
+pseudo-population in which treatment is independent of measured
+confounders \citet{Cole2008}. The resulting pseudo population no longer
+has a time dependent confounding problem and the causal relationship
+between A and Y can be estimated using naive methods like regression
+without adjusting for confounding because it is no longer present.
+Crucially, in the pseudo population the counterfactual probabilities are
+the same as in the true study population so that the causal RD, RR or OR
+are the same in both populations \citet{Robins2000}.
+
+\[w_{t,i} = \frac{1}{\prod_{\tau=0} ^ t p_{\tau} (A_{\tau, i}\ |\ \bar A_{\tau-1, i}, \bar L_{\tau, i})}\]
+
+stabilized weights
+\[sw_{it} = \frac{\prod_{\tau=0} ^ t p_{\tau} (A_{\tau, i}\ |\ \bar A_{\tau-1, i})} {\prod_{\tau=0} ^ t p_{\tau} (A_{\tau, i}\ |\ \bar A_{\tau-1, i}, \bar L_{\tau, i})}\]
+
+The use of IPTW is valid under the four assumptions of consistency,
+exchangeability, positivity and no misspecification of the model
+\citet{Cole2008}.
+
+Informally a patients weight through visit k is proportional to the
+inverse of the probability of having her own exposure history through
+visit k (Cole and Hernan 2008)
+
+In previous simulation studies unstabilized weights show substantial
+increase in SEs
+
+Explain why this method does appropriately adjust for \textbf{measured
+time varying} confounders affected by prioir exposure.
+
+The weight is informally proportional to the participants probability of
+receiving her own exposure history
+
+As these weights have high instability we need to stabilize them. The
+unstabilized weights can be driven by only a small number of
+observations. Under time dependent confounding it may still be possible
+to recover the causal effect of \(A\) on \(Y\) by the method of Inverse
+Probability of Treatment (IPT) weihting. How does this work?
+
+\begin{itemize}
+\tightlist
+\item
+  true weights are unknown but can be estimated from the data.
+\item
+  Robins(2000) - when there are no unmeasured confounders, we can
+  control for confounding using weights
+\item
+  weighting adjusts for confounding and selection bias due to mesured
+  time varying covariates affected by prior exposure.
+\item
+  \(A_t\) is no longer affected by \(L_t\), and crucially the causal
+  effect of \(\bar A\) on \(Y\) remains unchanged
+\item
+  quantify the degree to which treatment is statistically non-exogenous
+  through month \(t\)
+\end{itemize}
+
+lack of adjustment for L precludes unbiased estimation. This is because
+it introduces selection bias.
+
+Problem is that the weights will have very high variability, so we need
+to stabilize them otherwise they will affect the estimates. Explain all
+the little details about why it becomes more variable etc.
+
+No matter whether we use stabilized or unstabilized weights, under
+positivity violations the weights will be undefined.
+
+Conditions under which IPTW work are largely untestable (westreich 2012)
+
+Be more specific about what is contained in the weights. The denominator
+depends on the measured confounders \(L\) the numerator does not, but
+could contain baseline coefficients in the numerator to help stabilize
+the weights.
+
+weighted regression and MSM are equivalent.
+
+L0 and baseline values - make sure that B = baseline and L0 are either
+together, or have them clearly split. V is a variable predictive of A
+but not of Y - hence not a confounder No rebalancing the baseline
+covariates like gender or age (B), so if we want to see the effect of
+groups of basline If we do not condition on baselines like age then we
+break the link between age and treatment. So baselines must be in the
+condition. Areas of application.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -779,11 +858,22 @@ Areas of application.
 
     \paragraph{Assumptions}\label{assumptions}
 
+Link back each assumption to previous discussion for why it is
+important.
+
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Exchangeability
+\end{enumerate}
+
+\[Y_{x} \perp\!\!\!\perp X\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
 \item
   Consistency
 \item
@@ -878,12 +968,139 @@ Randomization ensures that missing values occur by chance. So the
 counterfactual values that we don't see for some observations are
 missing randomly and not due to confounding through a covariate.
 
-    An example of this distinction is the effect of Zidovudine on the
-survival of HIV-positive men. Of interest is the effect that Zidovudine
-has on survival. This is what we want to estimate and it is captured in
-the DAG in figure 1 as the edge connecting A and Y.
+    \subsection{Positivity}\label{positivity}
 
-importantly, changing the relationship between L and A, won;t change the
+The final assumption underlying MSMs, and the central topic of this
+thesis, is the positivity assumption. MSMs are used to estimate average
+causal effects in the study population, and one must therefore be able
+to estimate the average causal effect in every subset of the population
+defined by the confounders \citet{Cole2008}. The positivity assumption
+requires that there be exposed and unexposed individuals in every strata
+of the confounding covariates. For example, when treatment is Zidovudine
+and CD4 count is the confounder, there must be a positive probability of
+some patients being exposed and unexposed at every level of CD4 count.
+Positivity can be expressed formally as \(Pr(A=a\ |\ L) > 0\) for all
+\(a \in A\), which extends straightforwardly to the time dependent case
+where the positivity assumption must hold at every time step conditonal
+on previous treatment, time dependent confounders and any baseline
+covaraiates:
+
+\[Pr(A_{it}=a_{it}\ |\ L_{it}, A_{i, t-1}, V_{i0}) > 0\]
+
+Models for the risk \(P(Y=1\ |\ A=a, L=l)\) are commonly studied in
+epidemiological applications. Applying basic probability rules reveals
+that the risk can be re-written with the term \(Pr(A=a\ |\ L=l)\) in the
+denominator:
+
+\[P(Y=1\ |\ A=a, L=l) = \frac{P(Y=1, A=a, L=l)}{Pr(A=a, L=l)} = \frac{P(Y=1, A=a, L=l)}{Pr(A=a\ |\ L=l)Pr(L=l)}\]
+
+This model is only estimable when \(Pr(A=a\ |\ L=l) \neq 0\). Therefore,
+when positivity does not hold it is not possible to estimate the model.
+In the context of MSMs a similar problem emerges. Although weighting via
+IPTW allows naive estimation of (?) without including the confounders,
+the weights in (?) involved the term \(Pr(A=a\ |\ L=l)\) in the
+denominator. This means that the weights are inestimable whenever
+positivity is violated. In order to estimate the causal effect of \(A\)
+on \(Y\), weights must be estimable in every subset of the population
+otherwise the average causal effect in the study population cannot be
+estimated.
+
+In practice, positivity can arise when random zeroes or structural
+zeroes are present in some levels of the confounding covariates. Random
+zeroes arise when, by chance, no individuals or all individuals, receive
+treatment within a certain strata as defined by the covariates. For
+example, \citet{Cole2008} studies positivity violations in individuals
+in strata defined by CD4 count and viral load. By increasing the levels
+of CD4 count the chances of random zeroes also increases and
+\citet{Cole2008} show that the IPT weights rapidly lose their stability
+with the consequence that causal effects are no longer estimable.
+Researchers applying IPTW methods must actively check that there are
+both treated and untreated individuals at every level of their
+covariates within cells defined by their covariates because parametric
+methods will smooth over positivity violations and not provide any
+indication of nonpositivity. Increasingly refined covariates are
+attractive because they provide better control of confounding, but the
+point that \citet{Cole2008} make is that this control needs to be traded
+off against increased occurence of random zeroes and subsequent
+instability of IPT weights.
+
+More relevant to this thesis are violations of the positivity assumption
+due to structural zeroes. These occur when an individual cannot possibly
+be treated or if an individual is always treated within some levels of
+the confounding covariate, as is the case in the clinical protocol
+example motivating this thesis. Several studies give examples of
+structural violations of the positivity assumption in epidemiological
+contexts. In \citet{Cole2008} structural zeroes arise when the health
+effects due to exposure to a chemical are confounded by health status
+proxied by being at work. If individuals can only be exposed to the
+chemical at work then all individuals not at work will be unexposed. A
+second example is liver disease as a contraindication of treatment. If
+individuals with liver disease cannot be treated then all individuals in
+the "liver disease = 1" strata will be untreated. In \citet{Messer2010}
+structural zeroes arise in the context of rates of preterm birth and
+racial segregation, whereas \citet{Cheng2010} find structural zeroes in
+the context of fetal position and perinatal outcomes. Our motivating
+example is most closely related to liver disease as a contraindication,
+except that the clinical protocols require that patients with low CD4
+count always be treated instead of never being treated, as in the case
+in the liver disease example.
+
+Although in many epidemiological settings the positivity assumption is
+guaranteed by experimental design, studying positivity violations is
+relevant because, as our own motivating example and the examples above
+suggest, structural violations do occur, and random zeroes are always
+possible especially at finer levels of confounding covariates. Studying
+the finite sample propoerties of MSMs under violations to positivity is
+therefore an important issue which is yet to be dealt with
+systematically in the literature. As \citet{Westreich2010} points out,
+positivity violations, positivity violations by a time varying
+confounder pose an analytic challenge and they suggest g-estimation or
+g-computation may be a way forward. A good start to dealing with the
+time varying confounder case is to see how well MSMs work when
+positivity is violated. This is also a novelty of this thesis.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  estimated weights with a mean far from one, or very extreme values
+  indicate either non-positivity or model mispecification of the weight
+  model.
+\item
+  It is not always true that we want more finely tuned covariates for
+  confounder control because the bias and variance of the effect
+  estimate may increase with the number of categories. This is similar
+  to the positivity masking example.
+\item
+  Our results are equally valid for other circumstances in which
+  positivity may arise.
+\item
+  Also think about how the number of categories of exposure increases
+  the chance that one level of exposure will have a positivity.
+\item
+  Westreich and Cole 2010 have suggested that methodological approaches
+  are needed to weigh the resultant biases incurred when trading of
+  confounding and positivity. The framework we use is flexible enough to
+  allow this in a simulation setting.
+\end{enumerate}
+
+If the structural bias occurs within levels of a time-dependent
+confounder then restriction or censoring may lead to bias whether one
+uses weighting or other methods (Cole and Hernan 2008). In fact,
+weighted estimates are more sensitive to random zeroes (Cole, Hernan,
+2008) Introducing violations of positivity can be achieved by censoring
+observations.
+
+But to give an intuitive example, think about how it links back to a
+situation where sicker patients receive treatment compared to others. So
+in the "sick" strata of the CD4 count \textbf{ALL} patients receive
+treatment which inflates the IPTW. This also affects how we think about
+the associational versus causal models. The causal effect might be 50/50
+but because sicker patients get treatment the mortality ratio in the
+treated group is likely to be higher.
+
+    importantly, changing the relationship between L and A, won;t change the
 relationship between L and Y. This means that an intervention in \(A\)
 does not affect the relationship between \(L\) and \(Y\). So we remove
 the link between \(L\) and \(A\) and assign to \(A\) the value of
@@ -917,103 +1134,7 @@ the relationship between Y and L, although we are not so interested in
 this relationship because it is the least interesting of the
 relationships in the diagram.
 
-    \subsection{Inverse Probability
-Weighting}\label{inverse-probability-weighting}
-
-Inverse probability weighting is a technique that can consistently
-estimate the parameters of marginal structural models \citet{Robins2000}
-
-Inverse probability of treatment weighting is a technique that
-re-weights subject observations to a population where assignment of
-treatment is at random. An early example of this technique is the
-\citet{Horovitz1952} weighted estimator of the mean. In the context of
-marginal structural models, a weight is calculated for each subject
-which can be thought of informally as the inverse of the probability
-that a subject receives their own treatment \citet{Robins2000}. The
-result of applying these weights is to re-weight the data to create a
-pseudo-population in which treatment is independent of measured
-confounders \citet{Cole2008}. The resulting pseudo population no longer
-has a time dependent confounding problem and the causal relationship
-between A and Y can be estimated using naive methods like regression
-without adjusting for confounding because it is no longer present.
-Crucially, in the pseudo population the counterfactual probabilities are
-the same as in the true study population so that the causal RD, RR or OR
-are the same in both populations \citet{Robins2000}.
-
-\[w_{t,i} = \frac{1}{\prod_{\tau=0} ^ t p_{\tau} (A_{\tau, i}\ |\ \bar A_{\tau-1, i}, \bar L_{\tau, i})}\]
-
-stabilized weights
-\[sw_{it} = \frac{\prod_{\tau=0} ^ t p_{\tau} (A_{\tau, i}\ |\ \bar A_{\tau-1, i})} {\prod_{\tau=0} ^ t p_{\tau} (A_{\tau, i}\ |\ \bar A_{\tau-1, i}, \bar L_{\tau, i})}\]
-
-The use of IPTW is valid under the four assumptions of consistency,
-exchangeability, positivity and no misspecification of the model
-\citet{Cole2008}.
-
-Informally a patients weight through visit k is proportional to the
-inverse of the probability of having her own exposure history through
-visit k (Cole and Hernan 2008)
-
-In previous simulation studies unstabilized weights show substantial
-increase in SEs
-
-Explain why this method does appropriately adjust for \textbf{measured
-time varying} confounders affected by prioir exposure.
-
-The weight is informally proportional to the participants probability of
-receiving her own exposure history
-
-As these weights have high instability we need to stabilize them. The
-unstabilized weights can be driven by only a small number of
-observations. Under time dependent confounding it may still be possible
-to recover the causal effect of \(A\) on \(Y\) by the method of Inverse
-Probability of Treatment (IPT) weihting. How does this work?
-
-\begin{itemize}
-\tightlist
-\item
-  true weights are unknown but can be estimated from the data.
-\item
-  Robins(2000) - when there are no unmeasured confounders, we can
-  control for confounding using weights
-\item
-  weighting adjusts for confounding and selection bias due to mesured
-  time varying covariates affected by prior exposure.
-\item
-  \(A_t\) is no longer affected by \(L_t\), and crucially the causal
-  effect of \(\bar A\) on \(Y\) remains unchanged
-\item
-  quantify the degree to which treatment is statistically non-exogenous
-  through month \(t\)
-\end{itemize}
-
-lack of adjustment for L precludes unbiased estimation. This is because
-it introduces selection bias.
-
-Problem is that the weights will have very high variability, so we need
-to stabilize them otherwise they will affect the estimates. Explain all
-the little details about why it becomes more variable etc.
-
-No matter whether we use stabilized or unstabilized weights, under
-positivity violations the weights will be undefined.
-
-Conditions under which IPTW work are largely untestable (westreich 2012)
-
-Be more specific about what is contained in the weights. The denominator
-depends on the measured confounders \(L\) the numerator does not, but
-could contain baseline coefficients in the numerator to help stabilize
-the weights.
-
-weighted regression and MSM are equivalent.
-
-L0 and baseline values - make sure that B = baseline and L0 are either
-together, or have them clearly split. V is a variable predictive of A
-but not of Y - hence not a confounder No rebalancing the baseline
-covariates like gender or age (B), so if we want to see the effect of
-groups of basline If we do not condition on baselines like age then we
-break the link between age and treatment. So baselines must be in the
-condition.
-
-    \subsection{Simulating from marginal structural
+    \section{Simulating from marginal structural
 models}\label{simulating-from-marginal-structural-models}
 
 In order to assess the effect of violations of the positivity
@@ -1030,7 +1151,7 @@ flexible enough to allow us to introduce positivity violations. In this
 section we describe this algorithm and the properties that make it
 suitable for analysing the effect of positivity violations on MSMs.
 
-\paragraph{Specific MSM}\label{specific-msm}
+\subsection{Specific MSM}\label{specific-msm}
 
 Testing positivity violations requires generating data from a known MSM.
 For example, suppose that the chosen MSM was
@@ -1044,7 +1165,7 @@ instance, one specific MSM could be written as
 need to generate data in such a way that we get this model from
 observational data and that we can then return to it.
 
-\paragraph{observational structure}\label{observational-structure}
+\subsection{observational structure}\label{observational-structure}
 
 The observational structure needs to include the central parts of time
 dependent confounding - in particular Y and A are common effects of U
@@ -1052,9 +1173,14 @@ which creates a confounding relationship. We also need selection bias,
 some models like hazard ratios have a built in selection bias so this is
 particularly important.
 
-\paragraph{noncollapsibility}\label{noncollapsibility}
+\subsection{noncollapsibility}\label{noncollapsibility}
 
-\paragraph{related simulation models}\label{related-simulation-models}
+Collapsibility means there is no incompatibility between the marginal
+model and the conditional distributions used to simulate the data.
+Provide example of this. Explain how this affects the simulation
+algorithm
+
+\subsection{related simulation models}\label{related-simulation-models}
 
 \begin{itemize}
 \tightlist
@@ -1117,7 +1243,7 @@ U allows us to get any distribution we like for Y marginal over
 covariates, WOuld L itself allows this? probably not. We can somehow get
 from this the subjects counterfactual survival time.
 
-\subsubsection{role of u - what problem does u
+\subsection{role of u - what problem does u
 solve.}\label{role-of-u---what-problem-does-u-solve.}
 
 As they point out, it is not always obvious how to simulate data from a
@@ -1259,144 +1385,9 @@ and has a nice medical interpretation. In contrast L would be more
 difficult to include. It is better as a function of U than a value in of
 itself.
 
-\subsubsection{collapsibility}\label{collapsibility}
-
-Collapsibility means there is no incompatibility between the marginal
-model and the conditional distributions used to simulate the data.
-Provide example of this. Explain how this affects the simulation
-algorithm
-
-    \subsection{Positivity}\label{positivity}
-
-The final assumption underlying MSMs, and the central topic of this
-thesis, is the positivity assumption. MSMs are used to estimate average
-causal effects in the study population, and one must therefore be able
-to estimate the average causal effect in every subset of the population
-defined by the confounders \citet{Cole2008}. The positivity assumption
-requires that there be exposed and unexposed individuals in every strata
-of the confounding covariates. For example, when treatment is Zidovudine
-and CD4 count is the confounder, there must be a positive probability of
-some patients being exposed and unexposed at every level of CD4 count.
-Positivity can be expressed formally as \(Pr(A=a\ |\ L) > 0\) for all
-\(a \in A\), which extends straightforwardly to the time dependent case
-where the positivity assumption must hold at every time step conditonal
-on previous treatment, time dependent confounders and any baseline
-covaraiates:
-
-\[Pr(A_{it}=a_{it}\ |\ L_{it}, A_{i, t-1}, V_{i0}) > 0\]
-
-Models for the risk \(P(Y=1\ |\ A=a, L=l)\) are commonly studied in
-epidemiological applications. Applying basic probability rules reveals
-that the risk can be re-written with the term \(Pr(A=a\ |\ L=l)\) in the
-denominator:
-
-\[P(Y=1\ |\ A=a, L=l) = \frac{P(Y=1, A=a, L=l)}{Pr(A=a, L=l)} = \frac{P(Y=1, A=a, L=l)}{Pr(A=a\ |\ L=l)Pr(L=l)}\]
-
-This model is only estimable when \(Pr(A=a\ |\ L=l) \neq 0\). Therefore,
-when positivity does not hold it is not possible to estimate the model.
-In the context of MSMs a similar problem emerges. Although weighting via
-IPTW allows naive estimation of (?) without including the confounders,
-the weights in (?) involved the term \(Pr(A=a\ |\ L=l)\) in the
-denominator. This means that the weights are inestimable whenever
-positivity is violated. In order to estimate the causal effect of \(A\)
-on \(Y\), weights must be estimable in every subset of the population
-otherwise the average causal effect in the study population cannot be
-estimated.
-
-In practice, positivity can arise when random zeroes or structural
-zeroes are present in some levels of the confounding covariates. Random
-zeroes arise when, by chance, no individuals or all individuals, receive
-treatment within a certain strata as defined by the covariates. For
-example, \citet{Cole2008} studies positivity violations in individuals
-in strata defined by CD4 count and viral load. By increasing the levels
-of CD4 count the chances of random zeroes also increases and
-\citet{Cole2008} show that the IPT weights rapidly lose their stability
-with the consequence that causal effects are no longer estimable.
-Researchers applying IPTW methods must actively check that there are
-both treated and untreated individuals at every level of their
-covariates within cells defined by their covariates because parametric
-methods will smooth over positivity violations and not provide any
-indication of nonpositivity. Increasingly refined covariates are
-attractive because they provide better control of confounding, but the
-point that \citet{Cole2008} make is that this control needs to be traded
-off against increased occurence of random zeroes and subsequent
-instability of IPT weights.
-
-More relevant to this thesis are violations of the positivity assumption
-due to structural zeroes. These occur when an individual cannot possibly
-be treated or if an individual is always treated within some levels of
-the confounding covariate, as is the case in the clinical protocol
-example motivating this thesis. Several studies give examples of
-structural violations of the positivity assumption in epidemiological
-contexts. In \citet{Cole2008} structural zeroes arise when the health
-effects due to exposure to a chemical are confounded by health status
-proxied by being at work. If individuals can only be exposed to the
-chemical at work then all individuals not at work will be unexposed. A
-second example is liver disease as a contraindication of treatment. If
-individuals with liver disease cannot be treated then all individuals in
-the "liver disease = 1" strata will be untreated. In \citet{Messer2010}
-structural zeroes arise in the context of rates of preterm birth and
-racial segregation, whereas \citet{Cheng2010} find structural zeroes in
-the context of fetal position and perinatal outcomes. Our motivating
-example is most closely related to liver disease as a contraindication,
-except that the clinical protocols require that patients with low CD4
-count always be treated instead of never being treated, as in the case
-in the liver disease example.
-
-Although in many epidemiological settings the positivity assumption is
-guaranteed by experimental design, studying positivity violations is
-relevant because, as our own motivating example and the examples above
-suggest, structural violations do occur, and random zeroes are always
-possible especially at finer levels of confounding covariates. Studying
-the finite sample propoerties of MSMs under violations to positivity is
-therefore an important issue which is yet to be dealt with
-systematically in the literature. As \citet{Westreich2010} points out,
-positivity violations, positivity violations by a time varying
-confounder pose an analytic challenge and they suggest g-estimation or
-g-computation may be a way forward. A good start to dealing with the
-time varying confounder case is to see how well MSMs work when
-positivity is violated. This is also a novelty of this thesis.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{5}
-\tightlist
-\item
-  estimated weights with a mean far from one, or very extreme values
-  indicate either non-positivity or model mispecification of the weight
-  model.
-\item
-  It is not always true that we want more finely tuned covariates for
-  confounder control because the bias and variance of the effect
-  estimate may increase with the number of categories. This is similar
-  to the positivity masking example.
-\item
-  Our results are equally valid for other circumstances in which
-  positivity may arise.
-\item
-  Also think about how the number of categories of exposure increases
-  the chance that one level of exposure will have a positivity.
-\item
-  Westreich and Cole 2010 have suggested that methodological approaches
-  are needed to weigh the resultant biases incurred when trading of
-  confounding and positivity. The framework we use is flexible enough to
-  allow this in a simulation setting.
-\end{enumerate}
-
-If the structural bias occurs within levels of a time-dependent
-confounder then restriction or censoring may lead to bias whether one
-uses weighting or other methods (Cole and Hernan 2008). In fact,
-weighted estimates are more sensitive to random zeroes (Cole, Hernan,
-2008) Introducing violations of positivity can be achieved by censoring
-observations.
-
-But to give an intuitive example, think about how it links back to a
-situation where sicker patients receive treatment compared to others. So
-in the "sick" strata of the CD4 count \textbf{ALL} patients receive
-treatment which inflates the IPTW. This also affects how we think about
-the associational versus causal models. The causal effect might be 50/50
-but because sicker patients get treatment the mortality ratio in the
-treated group is likely to be higher.
+    Don't forget basics like knowing what the true model is and therefore
+being able to compare the true model with the results. Explain why
+simulations work in a general sense don't take it for granted.
 
     \subsection{Related work}\label{related-work}
 
@@ -1870,11 +1861,6 @@ based on parameters that closely match the Swiss HIV Cohort Study
   instead refer readers to these papers to see how IPTW outperforms the
   naive estimators.
 \end{itemize}
-
-    \section{Dynamic Case}\label{dynamic-case}
-
-\subsection{The problem of simulating from a MSM under a dynamic
-strategy}\label{the-problem-of-simulating-from-a-msm-under-a-dynamic-strategy}
 
     \section{Violations of Positivity}\label{violations-of-positivity}
 
