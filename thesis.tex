@@ -448,6 +448,10 @@ of sixty subjects been exposed. We do not observe the quantity
 \(Y_{x=0}\) for any subject, and consequently we do not observe the
 quantity \(\mathbb{P}(Y_{x = 0})\). \linebreak
 
+Dawid 1979 - we can vary the individual I and treatment X but this is
+largely a conceptual entity because only one treatment can in fact be
+applied to any unit.
+
 \subsection{Confounding}\label{confounding}
 
 For example, if group A consists of thirty of the headache sufferers who
@@ -501,10 +505,15 @@ unmeasured confounding". \linebreak
 \tightlist
 \item
   set-up why comparisons are possible within strata and then averages
-  across strata
+  across strata and why this means that naive methods for addresing time
+  fixed confounding work
 \item
   Hint that the finer the confounding control the more accurate the
   analysis but this has consequences for positivty.
+\item
+  from pearl 2001: namely, that if we compare treated vs. untreated
+  subjects having the same values of the selected factors, we get the
+  correct treatment effect in that subpopulation of subjects.
 \end{itemize}
 
     \subsection{Directed Acyclic Graphs: graphical representations of
@@ -554,8 +563,39 @@ causal effect between \(X\) and \(Y\)
     \subsection{Time dependent
 confounding}\label{time-dependent-confounding}
 
+So far we have considered the time fixed context in which exposure and
+confounders take on a single value. It was sufficient to block the path
+between the confounder and the outcome of interest to avoid confounding.
+In many studies subjects are followed over time and both the value of
+the treatment and any confounding variables can change over time. The
+outcome is defined at the end of the follow up period. \linebreak
+
+In the headache example, the confounder was sex which was a determinant
+of treatment and also of the final outcome. For most people sex does not
+change over time. Instead, variables like sex which do not change over
+time, or age which change linearly over time are typically treated as
+baseline covariates which we denote as \(V_{0}\), the value of these
+covariate at \(t=0\). To broaden the setting to include time dependent
+confounding we adopt the canonical example of the causal effect of
+zidovudine (AZT) on mortality amongst human immunodeficiency virus
+(HIV)-infected subjects. This causal effect is confounded by the time
+dependent confounder CD4 lymphocyte count which influences both
+initiation of treatment as well as being an independent predictor of
+survival \citet{Robins2000a}. \linebreak
+
 Graphical methods are particularly useful for describing longitudinal
 data where multiple measurements are made on the same subject over time.
+The left hand pane of figure ? shows this for two periods
+(\(t = 0, 1\)). In the first period a treatment decision \(A_0\) is made
+based on the confounding variable \(L_0\). \linebreak 
+
+\begin{itemize}
+\tightlist
+\item
+  Simpson's paradox linked to making comparisons within strata
+\item
+  notation for vector \(\bar A_{t} = \{A_{1}, \hdots, A_{t-1}\}\).
+\end{itemize}
 
 In longitudinal studies measurements are taken on the same subject at
 different points in time. Interest is still in the causal effect of a
@@ -570,14 +610,6 @@ addition, \(L_0\) is a cause of \(A_1\) and \(Y\) and so the
 relationship is confounded for both L\_0 and L\_1. Despite the more
 complicated structure, adjustment on L\_0 ad L1 will provide consistent
 estimated of the causal effect of \(A\) on \(Y\).
-
-Explain why it is clear that adjustment is needed on L because spurious
-associations will still exist and then explain that this is fine in one
-situation but not in another.
-
-Link back to the headache example and explain why the baselines will be
-variables like age and sex and then switch to the canonical example of
-AZT, CDF and mortality among HIV patients.
 
 Just as in the time fixed case, adjustment on L\_0 and L\_1 will provide
 consisent estimates of the causal relationship because. We can adjust
@@ -597,9 +629,6 @@ Analogous to the time fixed situation, \(L\) is a confounder for \(A\)
 because it is a determinant of \(A\) and \(Y\). Adjusting for the
 covariate distorts the estimate by blocking the path between \linebreak
 
-Fundementally the problem is still that confounders prevent causal
-analysis. If we adjust for them then we get
-
 The right hand pane shows a different situation. At \(t = 1\), \(L_1\)
 is a function of \(A_0\). In other words, in the time dependent case it
 is possible that the confounder is a function of past treatment and a
@@ -613,21 +642,54 @@ from A\_0 to L\_1 and on to Y The second problem is selection bias which
 is the same in Daniels, havercroft and the discussion by greenland on
 common causes.
 
-A second problem is selection bias. Conditioning on L will create an
-association between A0 and Y even in the absence of an actual
-relationship. This is because L is a common cause of A and Y. Daniel
-etal says that ths simple case of the time dependent setting will lead
-to a good estimate so there must be some resolve between harvercroft and
-Daniel. Explain why in the selection bias case, the fact that U is a
-common cause does not mean that it is an unmeasured confounder.
-
-Both the treatment decision \(A\) and the time dependent confounder
-\(L\) change over time. Their histories can be represented by the vector
-of all treatment decisions up to that point and denoted with an overhead
-bar \(\bar A_{t} = \{A_{1}, \hdots, A_{t-1}\}\).
-
 Conclusion, the complicated structure of time dependent data is what we
 will need to simulate from.
+
+Approaching time dependent confounding graphically makes clear why
+adjusting for or conditioning on time dependent confounders in a
+stratification or regression setting does not allow unbiased estimation
+of the causal effect of \(A\) on \(Y\). On the one hand, lack of
+adjustment for a variable \(L\) when the relationship between \(Y\) and
+\(A\) differs within strata of \(L\) will lead to biased estimation of
+the causal effect of \(A\) on \(Y\). On the other hand, conditioning on
+\(L\) may induce selection bias which also precludes the unbiased
+estimation of causal effects \citet{Hernan2004}. The point is that by
+adjusting for \(L\) we induce bias . If there is a relationship between
+A and L then adjusting for L induces. There could also be mediation from
+A through L to Y. Selection bias means an association between A and U
+even if. Cite both Robins and Havercroft on the problems with time
+dependent confounding. Conditioning on a confounder induces a
+relationship between its parents A and U and hence A and Y. Why does
+this happen only in the time dependent case?
+
+The counterfactual framework remains intact but there are now very many
+histories per patient rather than one of a = 0 or a = 1 being
+counterfactual. Also means saturated models are not an option because
+they would be computationally intensive and so we use parametric models
+which also links to positivity.
+
+In many applications measurements are made on subjects at multiple
+points in time. Time dependent confounding differs from the time fixed
+case in that the value of the confounder can change over time. Just as
+in the time fixed case bias arises when adjustment is not made for the
+confounder. However, .
+
+Set up the longitudinal/time dependent case.
+
+Explain why time dependent confounding is more difficult to deal with
+
+Define/explain what time dependent confounding is
+
+Give grahical representation
+
+Explain the problems it introduces
+
+Explain why normal methods cannot solve those problems
+
+Also need to introduce notation especially histories and then the
+ouctome under competing histories.
+
+Conclusion
 
     \begin{figure}
 
@@ -701,55 +763,6 @@ will need to simulate from.
 \end{minipage}
 \caption{Figure 1 DAG} \label{fig:fig2}
 \end{figure}
-
-    In many applications measurements are made on subjects at multiple
-points in time. Time dependent confounding differs from the time fixed
-case in that the value of the confounder can change over time. Just as
-in the time fixed case bias arises when adjustment is not made for the
-confounder. However, .
-
-Set up the longitudinal/time dependent case.
-
-Explain why time dependent confounding is more difficult to deal with
-
-Define/explain what time dependent confounding is
-
-Give grahical representation
-
-Explain the problems it introduces
-
-Explain why normal methods cannot solve those problems
-
-Also need to introduce notation especially histories and then the
-ouctome under competing histories.
-
-Conclusion
-
-    We denote the subject's history using an overhead bar
-\(\bar A = \{1, 0, 1, 1\}\) and their individual time points as \(A_t\).
-
-Approaching time dependent confounding graphically makes clear why
-adjusting for or conditioning on time dependent confounders in a
-stratification or regression setting does not allow unbiased estimation
-of the causal effect of \(A\) on \(Y\). On the one hand, lack of
-adjustment for a variable \(L\) when the relationship between \(Y\) and
-\(A\) differs within strata of \(L\) will lead to biased estimation of
-the causal effect of \(A\) on \(Y\). On the other hand, conditioning on
-\(L\) may induce selection bias which also precludes the unbiased
-estimation of causal effects \citet{Hernan2004}. The point is that by
-adjusting for \(L\) we induce bias . If there is a relationship between
-A and L then adjusting for L induces. There could also be mediation from
-A through L to Y. Selection bias means an association between A and U
-even if. Cite both Robins and Havercroft on the problems with time
-dependent confounding. Conditioning on a confounder induces a
-relationship between its parents A and U and hence A and Y. Why does
-this happen only in the time dependent case?
-
-The counterfactual framework remains intact but there are now very many
-histories per patient rather than one of a = 0 or a = 1 being
-counterfactual. Also means saturated models are not an option because
-they would be computationally intensive and so we use parametric models
-which also links to positivity.
 
     \subsection{Inverse Probability of Treatment
 Weighting}\label{inverse-probability-of-treatment-weighting}
@@ -856,119 +869,20 @@ condition. Areas of application.
   missing data
 \end{enumerate}
 
-    \paragraph{Assumptions}\label{assumptions}
+    \subsection{Assumptions}\label{assumptions}
 
-Link back each assumption to previous discussion for why it is
-important.
+This section presents a more formal discussion of the key assumptions
+underlying MSMs. Most attention will be given to positivity
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Exchangeability
-\end{enumerate}
+\subsubsection{Exchangeability}\label{exchangeability}
 
 \[Y_{x} \perp\!\!\!\perp X\]
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Consistency
-\item
-  model mispecification
-\item
-  positivity.
-\end{enumerate}
+\subsubsection{Consistency}\label{consistency}
 
-define what a causal effect is and how we go from the individual to the
-population and that we cannot in general identify individual causal
-effects due to a missing data problem. Let the assumptions behind this
-extend from the meaning of causal effects, for example the
-exchangeability assumption.
+\subsubsection{Model mispecification}\label{model-mispecification}
 
-Specifically we are interested in the causal effect of a treatment A on
-an outcome Y. A causal model differs from an associative model and
-associative models like regression models will not have a causal
-interpretation when time dependent confounding is present, nor will
-naive methods of adjustment result in a causal interpretation. When time
-dependent confounding is present, associative models such as regression
-models do not have a causal effect.
-
-\begin{itemize}
-\tightlist
-\item
-  independence between treatment and prognostic factors/covariates.
-\item
-  If treatment at each time \(t\) is assigned completely at random then
-  treatment will be independent of both measured and unmeasured
-  confounding
-\item
-  At the individual level we cannot establish causal effects because of
-  a missing data problem. Namely that we do not see the counterfactual
-  outcomes. Link in literature about all problems being missing data
-  problems.
-\item
-  The missing data idea could be shown with an example table of results
-  of people under treatment and not under treatment.
-\end{itemize}
-
-\paragraph{where the name comes from}\label{where-the-name-comes-from}
-
-They model the marginal distribution of counterfactual variables over
-any covariates and are referred to as structural because in econometric
-and social sciences literature the term structural is often used in
-place of causal (hernan, brumback and robins).
-
-marginal because they model the marginal distribution of the
-counterfactual variables. Not marginal over covariates??
-
-\(E(Y\ |\ do(a)) = \beta_0 + \beta_1a\) contains no \(l\) term.
-
-Have been used for missing data problems. see pp.442 of Hernan,
-Brumback, Robins 2001 for a list of papers linked to this
-
-structural is only in the MSM name because structural is used in
-econometrics and social science. Structural here only means that it is a
-causal model.
-
-When treatments are randomised this is not a problem This might arise,
-for example, when the decision to instigate treatment is based on a
-measured covariate \(L\). Contrast this to randomized controlled trial,
-where due to the randomization process treatment will be independent of
-any measured or unmeasured covariates. The randomized controlled trial
-does not often arise in epidemiology, social sciences or econometrics
-due to prohibitive ethical or financial concerns. As a result other
-methods are sought in order to uncover the causal effects. Marginal
-structural models are a class of models which make it possible to
-estimate the causal effect of \(A\) on \(Y\) in the presence of
-confounders.
-
-\begin{itemize}
-\tightlist
-\item
-  still have unmeasured confounders of course. Or model mispecification.
-  Either of these mean that results no longer hold.
-\end{itemize}
-
-A model that parameterises \(P(Y\ |\ do(A=a))\) is called a marginal
-structural model (MSM) as it is marginal over any covariates and
-structural in the sense that it represents an interventional rather than
-observational model. The distinction between an interventional and
-observational model is expressed in definition 1.1 through the notation
-\(do(a)\) in \(P(y\ |\ do(x))\), as opposed to the observational case
-\(P(y\ |\ A=a)\).
-
-marginal structural models are usually for counterfactuals
--\textgreater{} example -\textgreater{} straight through to the IPW not
-too much on counterfactuals.
-
-Randomization ensures that missing values occur by chance. So the
-counterfactual values that we don't see for some observations are
-missing randomly and not due to confounding through a covariate.
-
-    \subsection{Positivity}\label{positivity}
+\subsubsection{Positivity.}\label{positivity.}
 
 The final assumption underlying MSMs, and the central topic of this
 thesis, is the positivity assumption. MSMs are used to estimate average
@@ -1100,6 +1014,83 @@ the associational versus causal models. The causal effect might be 50/50
 but because sicker patients get treatment the mortality ratio in the
 treated group is likely to be higher.
 
+The trade-off between positivity and confounding bias is emphasized in
+Cole2008
+
+Why is practicality important? Cole paper highlights practical advice to
+practictioners. positivity can be violated in a practical setting
+because of two few strata, it can be the result of protocols in a
+clinical setting and it can be seen as a trade-off between
+exchangeability (and we need more measured predictors to maintain
+exchangeability) and positivity where more predictors leads to more
+likely a zero problem.
+
+    \begin{itemize}
+\tightlist
+\item
+  independence between treatment and prognostic factors/covariates.
+\item
+  If treatment at each time \(t\) is assigned completely at random then
+  treatment will be independent of both measured and unmeasured
+  confounding
+\item
+  At the individual level we cannot establish causal effects because of
+  a missing data problem. Namely that we do not see the counterfactual
+  outcomes. Link in literature about all problems being missing data
+  problems.
+\item
+  The missing data idea could be shown with an example table of results
+  of people under treatment and not under treatment.
+\end{itemize}
+
+They model the marginal distribution of counterfactual variables over
+any covariates and are referred to as structural because in econometric
+and social sciences literature the term structural is often used in
+place of causal (hernan, brumback and robins).
+
+marginal because they model the marginal distribution of the
+counterfactual variables. Not marginal over covariates??
+
+\(E(Y\ |\ do(a)) = \beta_0 + \beta_1a\) contains no \(l\) term.
+
+Have been used for missing data problems. see pp.442 of Hernan,
+Brumback, Robins 2001 for a list of papers linked to this
+
+structural is only in the MSM name because structural is used in
+econometrics and social science. Structural here only means that it is a
+causal model.
+
+When treatments are randomised this is not a problem This might arise,
+for example, when the decision to instigate treatment is based on a
+measured covariate \(L\). Contrast this to randomized controlled trial,
+where due to the randomization process treatment will be independent of
+any measured or unmeasured covariates. The randomized controlled trial
+does not often arise in epidemiology, social sciences or econometrics
+due to prohibitive ethical or financial concerns. As a result other
+methods are sought in order to uncover the causal effects. Marginal
+structural models are a class of models which make it possible to
+estimate the causal effect of \(A\) on \(Y\) in the presence of
+confounders.
+
+\begin{itemize}
+\tightlist
+\item
+  still have unmeasured confounders of course. Or model mispecification.
+  Either of these mean that results no longer hold.
+\end{itemize}
+
+A model that parameterises \(P(Y\ |\ do(A=a))\) is called a marginal
+structural model (MSM) as it is marginal over any covariates and
+structural in the sense that it represents an interventional rather than
+observational model. The distinction between an interventional and
+observational model is expressed in definition 1.1 through the notation
+\(do(a)\) in \(P(y\ |\ do(x))\), as opposed to the observational case
+\(P(y\ |\ A=a)\).
+
+Randomization ensures that missing values occur by chance. So the
+counterfactual values that we don't see for some observations are
+missing randomly and not due to confounding through a covariate.
+
     importantly, changing the relationship between L and A, won;t change the
 relationship between L and Y. This means that an intervention in \(A\)
 does not affect the relationship between \(L\) and \(Y\). So we remove
@@ -1180,12 +1171,12 @@ model and the conditional distributions used to simulate the data.
 Provide example of this. Explain how this affects the simulation
 algorithm
 
-\subsection{related simulation models}\label{related-simulation-models}
+\subsection{simulation models}\label{simulation-models}
 
 \begin{itemize}
-\tightlist
 \item
-  Bryan 2004
+  Bryan 2004: fixes the vector L at the beginning which means A never
+  affects L which don't make no sense.
 \item
   Westreich 2 papers
 \item
@@ -1385,52 +1376,11 @@ and has a nice medical interpretation. In contrast L would be more
 difficult to include. It is better as a function of U than a value in of
 itself.
 
-    Don't forget basics like knowing what the true model is and therefore
+Don't forget basics like knowing what the true model is and therefore
 being able to compare the true model with the results. Explain why
 simulations work in a general sense don't take it for granted.
 
-    \subsection{Related work}\label{related-work}
-
-Bryan et al paper fixes the vector L at the beginning which means A
-never affects L which don't make no sense.
-
-paragraph or two talking about positivity, where it has been studied
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  explain that it has not been thoroughly studied. Cite the examples
-  where it has been. The cole papers but also two empirical
-  applications.
-\end{enumerate}
-
-Marginal structural models 1. On MSMs - mainly hernan and Robins work 2.
-On other work into positivity 3. On Simulating from MSMs
-
-The positivity assumption has received less attention than
-exchangeability in the literature on MSMs. Two notable exceptions are
-\citet{Cole009} and \citet{Westereich2009} who have studied positivity
-in detail. Both papers aim to give some
-
-Both papers lack a formal simulation study, and neither have looked into
-detail on the time dependent situation.
-
-The trade-off between positivity and confounding bias is emphasized in
-Cole2008
-
-Why is practicality important? Cole paper highlights practical advice to
-practictioners. positivity can be violated in a practical setting
-because of two few strata, it can be the result of protocols in a
-clinical setting and it can be seen as a trade-off between
-exchangeability (and we need more measured predictors to maintain
-exchangeability) and positivity where more predictors leads to more
-likely a zero problem.
-
-Marginal Structural Models
-
-The aim is to be able to simulate the survival function of a desired MSM
+    The aim is to be able to simulate the survival function of a desired MSM
 under the intervention \(do(\bar a)\)
 
 Several studies have developed algorithms for simulating data from
@@ -1467,7 +1417,7 @@ similarities with \citet{Havercroft2012}
 These previous studies have lacked a systematic investigation of
 positivity violations in a simulation setting. It is unknown, for
 example, how large an effect a violation of positivity has and how it is
-affected by the sample siz, threshold etc etc.
+affected by the sample size, threshold etc etc.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1484,10 +1434,6 @@ affected by the sample siz, threshold etc etc.
   specifically why it helps us to incorporate violations of positivity
   in our analysis.
 \end{enumerate}
-
-Bryan etal 2010 have a similar focus as Havercroft 2012 in that they
-develop an algorithm for simulation from a given MSM and they use this
-algorithm to compare IPTW methods to naive regression methods.
 
 Several studies have considered simulation from margial structural
 models. The finite-sample properties of marginal structural proportional
@@ -1508,57 +1454,20 @@ hazards models has been considered by \citet{Westreich2009}.
 Young etal (2014) also provide a simulation algorithm for simulating
 longitudinal data from a known Cox MSM.
 
-\begin{itemize}
-\tightlist
-\item
-  What is their focus?
-\end{itemize}
-
-to compare IPW and standard regression based techniques. This is not the
-subject of this thesis.
-
 Comparing IPW and standard regression based estimates in the absence of
 model misspecification. This allows for complete isolation of any type
 of bias. This approach involves simulating data from a standard
 parametrization of the likelihood and solving for the underlying Cox MSM
-
-\begin{itemize}
-\item
-  how do they simulate
-\item
-  what do they find (in terms of MSE, SE, etc.
-\item
-  how does it differ from HD (2012)
-\end{itemize}
 
 we describe an approach to Cox MSM data generation that allows for a
 comparison of the bias of IPW estimates versus that of standard
 regression-based estimates in the complete absence of model
 misspecification
 
-\begin{itemize}
-\tightlist
-\item
-  could do this section in comparison to Havercroft and didelez, explain
-  how their algorithm works first and then describe the related work by
-  linking differences in their algorithm to earlier or other algorithms.
-\end{itemize}
-
-ALgorithm:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  generate survival under no treatment from a weibull
-\item
-  generate survival times under the ten non-zero treatment levels.
-\item
-\end{enumerate}
-
-Bryan et al (2010) Cole (2008) for more of a discussion about
-positivity, with an actual observed data example. While Cole (2008) have
-looked at positivity in an observational setting, to our knowledge no
-study has looked at positivity violations within a simulation setting.
+Cole (2008) for more of a discussion about positivity, with an actual
+observed data example. While Cole (2008) have looked at positivity in an
+observational setting, to our knowledge no study has looked at
+positivity violations within a simulation setting.
 
 Cole and Hernan 2008 have examined the four assumptions underlying IPW
 using a study on real data from the HAART SWISS study.
@@ -1632,10 +1541,38 @@ using a study on real data from the HAART SWISS study.
 \item
 \end{itemize}
 
-    \section{Chapter 2}\label{chapter-2}
+    \section{Violations of Positivity}\label{violations-of-positivity}
 
-\subsection{Simulating from a static
-MSM}\label{simulating-from-a-static-msm}
+The motivation for using the algorith of \citet{Havercroft2012} is that
+we have control over how \(L\) affects \(Y\), so we can itroduce
+positivity using a threshold. In other algorithms there would be a
+direct link between \(L\) and \(Y\), this would be a problem because
+altering treatment decisions based on \(L\) would affect \(Y\)
+directly.\\
+- creating an artificial population in which positivity is violated in
+specific ways.
+
+\subsection{Extended discussion of algorithm linking to
+positivity}\label{extended-discussion-of-algorithm-linking-to-positivity}
+
+As described in the introduction, one assumption of the model is that
+there is a non-zero probability of the event occuring at every startum
+of the covariate.
+
+\begin{itemize}
+\tightlist
+\item
+  When previous covariates like CD4 count are strongly associated with
+  treatment the probabilities in the denominator of the ustabilized
+  weights may vary greatly. Because we are foricing positivity by using
+  a treatment rule when L falls below a threshold and A is then eaual to
+  one, we create a strong association between A and L -\textgreater{}
+  hence the unstabilized weights would vary. (Robins et al 2000 pp. 553)
+\item
+  present the algorithm again with positivity violations.
+\end{itemize}
+
+    \section{Application}\label{application}
 
 \subsection{Data Structure}\label{data-structure}
 
@@ -1861,39 +1798,6 @@ based on parameters that closely match the Swiss HIV Cohort Study
   instead refer readers to these papers to see how IPTW outperforms the
   naive estimators.
 \end{itemize}
-
-    \section{Violations of Positivity}\label{violations-of-positivity}
-
-The motivation for using the algorith of \citet{Havercroft2012} is that
-we have control over how \(L\) affects \(Y\), so we can itroduce
-positivity using a threshold. In other algorithms there would be a
-direct link between \(L\) and \(Y\), this would be a problem because
-altering treatment decisions based on \(L\) would affect \(Y\)
-directly.\\
-- creating an artificial population in which positivity is violated in
-specific ways.
-
-\subsection{Extended discussion of algorithm linking to
-positivity}\label{extended-discussion-of-algorithm-linking-to-positivity}
-
-As described in the introduction, one assumption of the model is that
-there is a non-zero probability of the event occuring at every startum
-of the covariate.
-
-\begin{itemize}
-\tightlist
-\item
-  When previous covariates like CD4 count are strongly associated with
-  treatment the probabilities in the denominator of the ustabilized
-  weights may vary greatly. Because we are foricing positivity by using
-  a treatment rule when L falls below a threshold and A is then eaual to
-  one, we create a strong association between A and L -\textgreater{}
-  hence the unstabilized weights would vary. (Robins et al 2000 pp. 553)
-\item
-  present the algorithm again with positivity violations.
-\end{itemize}
-
-    \section{Application}\label{application}
 
     \section{Discussion and Conclusion}\label{discussion-and-conclusion}
 
