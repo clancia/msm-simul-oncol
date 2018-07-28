@@ -14,7 +14,7 @@ def sim(T, k, gam, theta, patid=0, lower=0, upper=float("inf"), prop=1):
     
     # Arguments: 
     # T: number of time points
-    # k: check ups every k time points
+    # k: check-ups every k time points
     # gam: parameters of MSM hazard function
     # theta: parameters of conditional distributions of treatment
     # lower/upper: limits below/above which positivity is violated

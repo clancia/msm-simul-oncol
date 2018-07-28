@@ -68,10 +68,11 @@
                                 % normalem makes italics be italics, not underlines
     
 \usepackage[round]{natbib}
-\usepackage[ruled,vlined]{algorithm2e}
 \usepackage{pgf}
 \usepackage{tikz}
 \usetikzlibrary{positioning}
+\usepackage{algorithmic}
+\usepackage[ruled, vlined, linesnumbered]{algorithm2e}
 
 
     
@@ -289,6 +290,14 @@
     
     \newpage
 
+    \textbf{Abstract}
+
+    \newpage
+
+    \textbf{Aknowledgements}
+
+    \newpage
+
 \tableofcontents{}
 
     \newpage
@@ -330,31 +339,32 @@ confounding assumption, is closely linked to causality?? Several studies
 have considered violations of exchangeability and corrected model
 specification. Positivity has received less attention because in typical
 observational study positivity violations are not suspected explain why.
-In the clinical context that we consider, protocols threaten to violate
-the positivity assumption and we investigate whether MSMs are robust
-against positivity. The focus of this thesis will be on violations of
-the positivity assumption. Positivity means that within every strata
-spanned by the confounders, there must be a positive probability of
-patients being exposed or unexposed to treatment. For example, in a
-medical context, if treatment protocols demand that treatment is
-initiated whenever a prognostic variable falls below a pre-defined
-threshold, there will only be exposed and no unexposed patients in this
-strata of the confounding prognostic variable. make decisions based on
-protocols positivity can be. In the absence of structural positivity
-violations, there is always the threat that random zeroes arise in some
-strata of the confounder especially when the sample size is small or the
-number of confounding variables is large. In each case the sparsity of
-data within the strata of the confounder results in a high chance that
-positivity is violated. Positivity violations increase the bias and
-variance of estimates of the causal effect but the extent of the damage
-is not well known. The central aim of this thesis will be to investigate
-positivity violations when fitting MSMs to longitudinal data. To our
-knowledge positivity violations have not been systematically studied in
-the literature from a simulation point of view. We quantify the bias and
-variance introduced due to positivity violations and hope to provide
-practical advice to researchers tempted to fit MSMs to overcome
-confounding without realising the potential consequences of positivity
-violations in their data. \linebreak
+In the clinical context that we consider, protocols (give some examples,
+like Platt 2012) threaten to violate the positivity assumption and we
+investigate whether MSMs are robust against positivity. The focus of
+this thesis will be on violations of the positivity assumption.
+Positivity means that within every strata spanned by the confounders,
+there must be a positive probability of patients being exposed or
+unexposed to treatment. For example, in a medical context, if treatment
+protocols demand that treatment is initiated whenever a prognostic
+variable falls below a pre-defined threshold, there will only be exposed
+and no unexposed patients in this strata of the confounding prognostic
+variable. make decisions based on protocols positivity can be. In the
+absence of structural positivity violations, there is always the threat
+that random zeroes arise in some strata of the confounder especially
+when the sample size is small or the number of confounding variables is
+large. In each case the sparsity of data within the strata of the
+confounder results in a high chance that positivity is violated.
+Positivity violations increase the bias and variance of estimates of the
+causal effect but the extent of the damage is not well known. The
+central aim of this thesis will be to investigate positivity violations
+when fitting MSMs to longitudinal data. To our knowledge positivity
+violations have not been systematically studied in the literature from a
+simulation point of view. We quantify the bias and variance introduced
+due to positivity violations and hope to provide practical advice to
+researchers tempted to fit MSMs to overcome confounding without
+realising the potential consequences of positivity violations in their
+data. \linebreak
 
 Throughout this thesis we focus on clinical applications as examples. In
 the literature on marginal structural models the causal effect of
@@ -381,6 +391,8 @@ A second consequence is that simulating data from a specific marginal
 structural models is more challenging when the data is to exhibit time
 dependent confounding.
 
+Look through literature for applications of MSMs
+
     Allow for the joint determination of outcomes and treatment status or
 omitted variables related to both treatment status and outcomes (Angrist
 2001).
@@ -393,10 +405,40 @@ see Havercroft algorithm code page bottom.
 
     \subsection{Outline}\label{outline}
 
+In this thesis we assess the impact of violations of the positivity
+assumption on the performance of marginal structural models. \linebreak
+
+The first chapter introduces marginal structural models and inverse
+probability of treatment weighting. Particular attention is given to the
+role of the positivity assumption in MSMs and the trade-off between
+finer confounding control and positivity. Chapter 2 explains the issues
+surrounding simulating data from a specific MSM with a longitudinal
+structure that captures the issues which arise in time dependent
+confounding. This chapter includes a literature review of algorithms
+that have been developed to simulate from a given marginal structural
+model. A particular simulation algorithm which is versatile enough that
+it can be used to introduce violations of positivity is then selected
+and explained in more detail. Chapter 3 presents simulation results and
+key findings. Chapter 4 uses real world data in which positivity
+violations arise as a result of treatment protocols in a chemotherapy
+trial. The ast chapter concludes and provides limitations and directions
+for future work.
+
     \subsection{Software}\label{software}
 
-The simulations carried out in this thesis use the Python programming
-language.
+All simulations and analysis carried out in this thesis use the Python
+programming language and are provided with this thesis. Several modules
+were used to extend the base Python language and these are highlighted
+in the code where appropriate. The \emph{survey} and \emph{ipw} packages
+written in the R programming language were used to provide functionality
+not currently available as a Python module. These packages are freely
+avilable through the Comprehensive R Archive Network (CRAN). Combining R
+functionality in Python code is made possible throughthe \emph{rpy2}
+Python module. \linebreak
+
+All code used for this thesis are provided in an appendix.
+
+    \newpage
 
     \section{Marginal structural models}\label{marginal-structural-models}
 
@@ -415,6 +457,15 @@ and positivity. The algorithm adapted in this paper simulates
 longitudinal data and hence we discuss time dependent confounding and
 the extra bits required for this. In particular, we draw attention to
 the core parts of MSMs needed for this study - linking to positivity.
+
+\begin{itemize}
+\tightlist
+\item
+  describe other methods like g formula as alternative to MSMs
+\item
+  MSMs are models for some aspect (like the mean) of the distribution of
+  counterfactuals.
+\end{itemize}
 
     \subsection{Counterfactuals and
 causality}\label{counterfactuals-and-causality}
@@ -452,10 +503,10 @@ Dawid 1979 - we can vary the individual I and treatment X but this is
 largely a conceptual entity because only one treatment can in fact be
 applied to any unit.
 
-\subsection{Confounding}\label{confounding}
+    \subsection{Confounding}\label{confounding}
 
-For example, if group A consists of thirty of the headache sufferers who
-all took ibuprofen, we would ideally compare the quantity
+Continuing the example, if group A consists of thirty of the headache
+sufferers who all took ibuprofen, we would ideally compare the quantity
 \(\mathbb{P}(Y_{x = 1}|X = 1) = \mu_{A_{x = 1}}\) with the quantity
 \(\mathbb{P}(Y_{x = 0}|X = 1) = \mu_{A_{x = 0}}\). As
 \(\mu_{A_{x = 0}}\) is not actually observed, we could instead compute
@@ -512,8 +563,21 @@ unmeasured confounding". \linebreak
   analysis but this has consequences for positivty.
 \item
   from pearl 2001: namely, that if we compare treated vs. untreated
-  subjects having the same values of the selected factors, we get the
-  correct treatment effect in that subpopulation of subjects.
+  subjects having the same
+\item
+  values of the selected factors, we get the correct treatment effect in
+  that subpopulation of subjects.
+\item
+  Explain clearly why it is a bias.
+\item
+  Also explain why we want to be judicious in our choice of number
+  confounders to control for. Can't include everything (Dawid 1979 on
+  this)
+\item
+  Explain that structural parameters only coincide with associational
+  parameters under exchangeability.
+\item
+  Define what the naive analysis is - analysis without adjustment.
 \end{itemize}
 
     \subsection{Directed Acyclic Graphs: graphical representations of
@@ -535,7 +599,7 @@ itself directly or indirectly \citet{Hernan2004}.\linebreak
 
 For example, figure ? represents the case where interest lies in the
 causal relationship between treatment \(X\) and outcome \(Y\). There is
-a causal relstionship between \(X\) and \(Y\) as well as a causal
+a causal relationship between \(X\) and \(Y\) as well as a causal
 relatiosnhip between both \(L\) and \(X\) and \(L\) and \(Y\). The
 spurious association between \(X\) and \(Y\) is shown graphically a
 "back door" between \(X\) and \(Y\) through \(L\). causal effects cannot
@@ -564,86 +628,96 @@ causal effect between \(X\) and \(Y\)
 confounding}\label{time-dependent-confounding}
 
 So far we have considered the time fixed context in which exposure and
-confounders take on a single value. It was sufficient to block the path
-between the confounder and the outcome of interest to avoid confounding.
-In many studies subjects are followed over time and both the value of
-the treatment and any confounding variables can change over time. The
-outcome is defined at the end of the follow up period. \linebreak
+confounders take on a single value. It was sufficient to block the "back
+door" path between the treatment and outcome by conditioning on the
+confounding variable(s). In many studies subjects are followed over time
+periods and their outcome is measured at the end of follow-up. This type
+of analysis falls under survival analysis. Between the start of follow
+up (\(t = 0\)) and the end of follow-up (\(t = T\)) the treatment .
+Under this data structure further considerations must be taken to
+isolate the causal effect of \(X\) on \(Y\) in addition to confounding
+in the time-fixed context. and both the value of the treatment and any
+confounding variables can change over time. The outcome is defined at
+the end of the follow up period. \linebreak
 
 In the headache example, the confounder was sex which was a determinant
-of treatment and also of the final outcome. For most people sex does not
-change over time. Instead, variables like sex which do not change over
-time, or age which change linearly over time are typically treated as
-baseline covariates which we denote as \(V_{0}\), the value of these
-covariate at \(t=0\). To broaden the setting to include time dependent
-confounding we adopt the canonical example of the causal effect of
-zidovudine (AZT) on mortality amongst human immunodeficiency virus
-(HIV)-infected subjects. This causal effect is confounded by the time
-dependent confounder CD4 lymphocyte count which influences both
-initiation of treatment as well as being an independent predictor of
-survival \citet{Robins2000a}. \linebreak
+of treatment and also of the final outcome. Variables like sex which do
+not change over time, or age which change linearly over time are
+typically treated as baseline covariates which we denote as \(V_{0}\),
+the value of these covariate at \(t=0\). To broaden the setting to
+include time dependent confounders which vary over time, we adopt the
+canonical example of the causal effect of zidovudine (AZT) on mortality
+amongst human immunodeficiency virus (HIV)-infected subjects. This
+causal effect is confounded by the time dependent confounder CD4
+lymphocyte count which influences both initiation of treatment as well
+as being an independent predictor of survival (\citet{Hernan2000}).
+\linebreak
 
 Graphical methods are particularly useful for describing longitudinal
 data where multiple measurements are made on the same subject over time.
 The left hand pane of figure ? shows this for two periods
 (\(t = 0, 1\)). In the first period a treatment decision \(A_0\) is made
-based on the confounding variable \(L_0\). \linebreak 
+based on the confounding variable \(L_0\). In the second period
+(\(t = 1\)) a new treatment decision is made \(A_1\) based on \(L\) in
+both time periods as well as in previous time periods. Finally, the
+treatment decision in the second period is also determined by treatment
+in the first period. For example, subjects on treatment may remain on
+treatment. \linebreak 
+
+Interest now lies in the causal effect of the vector of treatments on
+the outcome of interest. This vector represents the subjects treatment
+history. We denote this vector using an overhead bar as
+\(\bar A_{t} = \{A_{0}, \hdots, A_{t-1}\}\). For example, when there are
+two time periods and the subject receives no treatment in the first
+period followed by treatment in the second period this would be written
+\(\bar A_{t} = \{0, 1\}\). Similarly the subjects covariate history can
+be written as \(\bar L_{t} = \{L_{0}, \hdots, L_{t-1}\}\). Baseline
+confounders which do not change over time like sex, or which increase
+linearly over time like age are written as \(V_0\) and take on only one
+value because they are only measured at baseline. \linebreak
+
+Clearly confounding remains as much of a problem in the time dependent
+case as in the time fixed case. There is a "back door" path between
+\(A_0\) and \(Y\) via \(L_0\) as well as a back door path between
+\(A_1\) and \(Y\) via \(L_0\) and \(L_1\). Conditioning on \(L\) allows
+consistent estimation of the causal effect in the set-up of the left
+hand pane of figure ? because within each strata defined by the
+confounder histories we can compare treated and untreated subjects.
+
+The right hand pane in figure ? has an additional causal relationship
+between \(X_0\) and \(L_1\) represented by the directed line between
+these two nodes.
+
+Time dependent confounding differs from time fixed confounding in two
+key respects. Firstly, it is possible for current treatments to be a
+determinant of future confounders which are in turn determinants of
+future treatment \citet{Robins2000a}. In the HIV example, clinicians may
+use measured CD4 count to decide whether a subject should receive
+treatment or not. The effect of \(A_0\) on \(Y\) in the right hand pane
+of figure ? is mediated through \(L_1\). To avoid confounding between L
+and A we need to block that path by conditioning on L. By doing so we
+also block the path between \(A_0\) and \(L_1\) so that some of the
+effect of treatment on Y is blocked. Point out that we can see this
+effect in the diagram. \linebreak
+
+A second issue is unmeasured confounding of the relationship between L
+and Y due to U. This is analogous to the role which L plays between X
+and Y. However, conditioning on L introduces a relationship between A
+and Y through U. Is this another backdoor? Even though U and A are
+potentially unrelated a relationship is induced when conditioning on L.
+Several inuitive explanations have been offered in the literature.
+\linebreak
+
+Conclusion, 1) clearly a different technique is required for analysis 2)
+the nature of time dependent case needs to be described fully enough to
+explain why we choose the simulation algorithm that we choose and any
+holes in it.
 
 \begin{itemize}
 \tightlist
 \item
   Simpson's paradox linked to making comparisons within strata
-\item
-  notation for vector \(\bar A_{t} = \{A_{1}, \hdots, A_{t-1}\}\).
 \end{itemize}
-
-In longitudinal studies measurements are taken on the same subject at
-different points in time. Interest is still in the causal effect of a
-treatment of outcome and confounding prevents causal analysis. In the
-time dependent case confounders change value over time, as illustrated
-in the right hand pane of figure ? for two time periods (\(t = 0, 1\)).
-In the first period the relationship between \(A_0\) and \(Y\) is
-confounded by \(L_0\) which is a cause of both \(A_0\) and \(Y\). In the
-second period, the causal relationship between \(A_1\) and \(Y\) is
-confounded for \(L_1\) which is a cause of both \(A_1\) and \(Y\). In
-addition, \(L_0\) is a cause of \(A_1\) and \(Y\) and so the
-relationship is confounded for both L\_0 and L\_1. Despite the more
-complicated structure, adjustment on L\_0 ad L1 will provide consistent
-estimated of the causal effect of \(A\) on \(Y\).
-
-Just as in the time fixed case, adjustment on L\_0 and L\_1 will provide
-consisent estimates of the causal relationship because. We can adjust
-for the confounder by stratifying on it or adjusting for it.
-Intuitively, the cause of the difference cannot be due to the strata if
-we make the comparison within the strata. Graphically, the action of
-conditoning is the same as blocking the path but this is just a
-graphical representation, the blocking actually just means asjusting or
-stratifying for.
-
-The right hand pane of figure ? gives an example of this for two time
-periods ). At its simplest, time dependent confounding means that the
-value of the confounder \(L\) changes over time. In figure ?, \(L\)
-takes the value \(L_0\) at time \(t = 0\) and \(L_1\) at time \(t = 1\).
-Primary interest is in the relationship between \(A\) and \(Y\).
-Analogous to the time fixed situation, \(L\) is a confounder for \(A\)
-because it is a determinant of \(A\) and \(Y\). Adjusting for the
-covariate distorts the estimate by blocking the path between \linebreak
-
-The right hand pane shows a different situation. At \(t = 1\), \(L_1\)
-is a function of \(A_0\). In other words, in the time dependent case it
-is possible that the confounder is a function of past treatment and a
-determinant of future treatments (\citet{Robins2000a}). In comparison,
-the right hand side of figure ? has no edge from \(A_0\) to \(L_1\). In
-other words the path between A\_0 and Y is mediated by \(L_1\)
-distorting the relationship between A\_0 and \(Y\). \linebreak
-
-What Havercroft calls mediation is just the case where there is a path
-from A\_0 to L\_1 and on to Y The second problem is selection bias which
-is the same in Daniels, havercroft and the discussion by greenland on
-common causes.
-
-Conclusion, the complicated structure of time dependent data is what we
-will need to simulate from.
 
 Approaching time dependent confounding graphically makes clear why
 adjusting for or conditioning on time dependent confounders in a
@@ -662,34 +736,9 @@ dependent confounding. Conditioning on a confounder induces a
 relationship between its parents A and U and hence A and Y. Why does
 this happen only in the time dependent case?
 
-The counterfactual framework remains intact but there are now very many
-histories per patient rather than one of a = 0 or a = 1 being
-counterfactual. Also means saturated models are not an option because
-they would be computationally intensive and so we use parametric models
-which also links to positivity.
-
-In many applications measurements are made on subjects at multiple
-points in time. Time dependent confounding differs from the time fixed
-case in that the value of the confounder can change over time. Just as
-in the time fixed case bias arises when adjustment is not made for the
-confounder. However, .
-
-Set up the longitudinal/time dependent case.
-
-Explain why time dependent confounding is more difficult to deal with
-
-Define/explain what time dependent confounding is
-
-Give grahical representation
-
-Explain the problems it introduces
-
-Explain why normal methods cannot solve those problems
-
-Also need to introduce notation especially histories and then the
-ouctome under competing histories.
-
-Conclusion
+Saturated models are not an option because they would be computationally
+intensive and so we use parametric models which also links to positivity
+because we smooth over zeroes in certain strata.
 
     \begin{figure}
 
@@ -767,8 +816,19 @@ Conclusion
     \subsection{Inverse Probability of Treatment
 Weighting}\label{inverse-probability-of-treatment-weighting}
 
-Inverse probability weighting is a technique that can consistently
-estimate the parameters of marginal structural models \citet{Robins2000}
+\begin{itemize}
+\tightlist
+\item
+  creates a pseudo-population in which we have something similar to an
+  experimental setting
+\item
+  Because we need weights this means we need a model for the weights -
+  model can be non parametric or parametric depending on data used.
+\end{itemize}
+
+Recap of issues with time dependent confounding. Introduce IPTW as a
+means of dealing with these issues. Areas where IPTW has been used (time
+dependent confounding, comparing dynamic regimes, missing data)
 
 Inverse probability of treatment weighting is a technique that
 re-weights subject observations to a population where assignment of
@@ -860,14 +920,10 @@ groups of basline If we do not condition on baselines like age then we
 break the link between age and treatment. So baselines must be in the
 condition. Areas of application.
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  useful for comparing dynamic regimes. see hernan paper.
-\item
-  missing data
-\end{enumerate}
+\subsubsection{Applications of IPTW}\label{applications-of-iptw}
+
+Different from application of MSMs - IPW is a technique which has been
+applied to MSMs - i.e. MSMs are on example of how IPTW can be used.
 
     \subsection{Assumptions}\label{assumptions}
 
@@ -880,7 +936,11 @@ underlying MSMs. Most attention will be given to positivity
 
 \subsubsection{Consistency}\label{consistency}
 
-\subsubsection{Model mispecification}\label{model-mispecification}
+\citet{Cole2009} \citet{Pearl2010}
+
+\subsubsection{No model mispecification}\label{no-model-mispecification}
+
+\subsubsection{No measurement error}\label{no-measurement-error}
 
 \subsubsection{Positivity.}\label{positivity.}
 
@@ -1124,6 +1184,11 @@ between L and A. We need to do this in such a way that we do not change
 the relationship between Y and L, although we are not so interested in
 this relationship because it is the least interesting of the
 relationships in the diagram.
+
+Explain that there is positivity in estimation of the structural model
+and also in the weight model. The reason why positivity is more
+important in the weight model is because when the weights are unstable
+the estimates can be very wrong as a result.
 
     \section{Simulating from marginal structural
 models}\label{simulating-from-marginal-structural-models}
@@ -1651,7 +1716,7 @@ one, and at most \(T\) records for each patient.
    }{
    $Y_{1, i} \gets 1$\\
   }
-  \For{$k in 1, \dots , T$}{
+  \For{k in 1, \dots , T}{
    \If{$Y_{t, i} = 0$}{
     $\Delta_{t, i} \sim N(\mu_2, \sigma^2_2)$\\
     $U_{t, i} \gets min(1, max(0, U_{t-1, i} + \Delta_{t, i}))$\\

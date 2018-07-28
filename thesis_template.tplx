@@ -11,10 +11,11 @@
 ((* block packages *))
 ((( super() )))
 \usepackage[round]{natbib}
-\usepackage[ruled,vlined]{algorithm2e}
 \usepackage{pgf}
 \usepackage{tikz}
 \usetikzlibrary{positioning}
+\usepackage{algorithmic}
+\usepackage[ruled, vlined, linesnumbered]{algorithm2e}
 ((* endblock packages *))
 
 ((* block bibliography *))
