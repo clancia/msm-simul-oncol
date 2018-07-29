@@ -504,7 +504,8 @@ quantity \(\mathbb{P}(Y_{x = 0})\). \linebreak
 
 Dawid 1979 - we can vary the individual I and treatment X but this is
 largely a conceptual entity because only one treatment can in fact be
-applied to any unit.
+applied to any unit. - Can also use the odds ratio as the comparison
+instead of the risk difference.
 
     \subsection{Confounding}\label{confounding}
 
@@ -581,6 +582,16 @@ unmeasured confounding". \linebreak
   parameters under exchangeability.
 \item
   Define what the naive analysis is - analysis without adjustment.
+\item
+  knowing the value of Z gives us no more information about the
+  distribution of the counterfactuals \(Y_x\)
+\item
+  Explain that in a randomized experiment exchangeability is guaranteed
+  because \(X\) is automatically noy related to any other variables.
+\item
+  Randomization ensures that missing values occur by chance. So the
+  counterfactual values that we don't see for some observations are
+  missing randomly and not due to confounding through a covariate.
 \end{itemize}
 
     \subsection{Directed Acyclic Graphs: graphical representations of
@@ -600,15 +611,45 @@ only proceed in one direction. There are no feedback loops or mutual
 causation because in a causal framework a variable cannot be a cause of
 itself directly or indirectly \citet{Hernan2004}.\linebreak
 
-For example, figure ? represents the case where interest lies in the
-causal relationship between treatment \(X\) and outcome \(Y\). There is
-a causal relationship between \(X\) and \(Y\) as well as a causal
-relatiosnhip between both \(L\) and \(X\) and \(L\) and \(Y\). The
-spurious association between \(X\) and \(Y\) is shown graphically a
-"back door" between \(X\) and \(Y\) through \(L\). causal effects cannot
-be which carries the spurious correlation between \(X\) and \(Y\).
-Conditioning on \(L\) blocks this path allowing estimation of the purely
-causal effect between \(X\) and \(Y\)
+For example, figure ? represents the case where interest is in the
+causal relationship between treatment \(X\) and outcome \(Y\). Treatment
+is assigned according to conditional distributions \(P(treatment|male)\)
+and \(P(treatment|female)\). Once treatment has been assigned, the
+outcome \(Y\) is determined by both \(X\) and \(Z\) by the conditional
+distribution P(Y\textbar{}X, Z). \citet(Pearl2001\}, \citet(Pearl2014\}.
+Blocking or screening off \(Z\) has the same inuition as explained in
+the section on confounding. The causal effect of X and Y cannot be
+different between two subjects because of \(Z\) when everyone is that
+strata has the same value of \(Z\). Blocking is the same as holding
+\(Z\) constant. Intuition to drive forward is that difference in outcome
+cannot be due to strata when everyone shares that strata.
+
+Show the same graph without causal relationship between X and Y. There
+is a marginal dependence between X and Y through Z, but once we
+condition on Z this dependence dissapears as shown by the lack of an
+edge between X and Y. Once we condition on Z (i.e. we know that the
+subject was male of female.) then the margial dependence dissapears.
+Introduce idea of common cause here as well.
+
+Both treatment and outcome are determined by sex leading to a spurious
+association between \(X\) and \(Y\) through \(Z\). This is called a
+"back door" path between \(X\) and \(Y\). Conditioning on \(Z\) is
+reprsented graphically by blocking the back door and any spurious
+assocations to allow causal estimation
+
+\begin{itemize}
+\tightlist
+\item
+  use example of cause by just removing an arrow from the DAG to
+  illustrate the point that there must be a cause so adding back the
+  causal arrow of interest does not change the fact that part of the
+  cause comes through the confounder.
+\item
+  common cause and structural approach to selection bias paper.
+\item
+  the absense of an arrow means no direct effect between two variables
+  cole 2009 illustrating bias paper.
+\end{itemize}
 
     \begin{figure}
 \begin{tikzpicture}
@@ -634,123 +675,104 @@ So far we have considered the time fixed context in which treatment and
 confounders take on a single value. It was sufficient to block the "back
 door" path between the treatment and outcome by conditioning on the
 confounding variable(s). In the headache example, the causal effect of
-ibuprofen on headache alleviation was confounded by sex. To broaden the
-setting to a time dependent context, we adopt the canonical example of
-the causal effect of Zidovudine (AZT) on mortality amongst human
-immunodeficiency virus (HIV)-infected subjects \citet{Hernan2000}.
-Subjects are followed over multiple visits and in each each visit a
-treatment decision is made and CD4 count is measured. Survival at the
-end of follow-up is a binary outcome equal to 1 if the patient has died
-and 0 otherwise. \linebreak
+ibuprofen on headache alleviation was confounded by sex. For most
+people, sex is a time-fixed covariate because it does not change value
+over time. To broaden the setting to a time dependent context, we adopt
+the canonical example of the causal effect of Zidovudine (AZT) on
+mortality amongst human immunodeficiency virus (HIV)-infected subjects
+\citet{Hernan2000}. In this example, subjects are measured at baseline
+\(t = 0\) and at subsequent visits. In each visit the patient's CD4
+lymphocyte count is measured and a treatment decision made. Survival at
+the end of follow-up is a binary outcome equal to 1 if the patient has
+died and 0 otherwise. \linebreak
 
-The time-fixed notation is extended to include subject histories of
-treatment decision and covariates at each visit. The vector of treatment
-histories is denoted with an overhead bar. For example, treatment
-decisions up to visit \(k\) are denoted
-\(\bar X_{k} = \{X_1, \hdots, X_k\}\). Similarly, covariate histories
-are denoted \(\bar L_{k} = \{L_1, \hdots, \L_k\}\). Covariates like sex
-may be confounders but do not change over time. Such covariates are
-tyically recorded at baseline (\(t = 0\)) and we denote the collection
-of baseline covariates as \(V_{0}\). The outcome of interest at the end
-of follow-up is mortality \(Y\) which is a binary variable taking the
-value \(1\) if the patient is dead and \(0\) otherwise. \linebreak 
+The time-fixed notation can be extended to include subject histories for
+time varying variables. Treatment and covariate histories up to visit
+\(k\) are can be represented by an overhead bar. For example,
+\(\bar X_{k} = \{X_{0}, \hdots, X_{k}\}\) represented the vector of
+treatment decisions while \(\bar Z_{k} = \{Z_{0}, \hdots, Z_{k}\}\)
+represents the vector of measurements on the time dependent-confounder
+\(Z\). Time-fixed covariates like sex, or covariates which change
+linearly over time like age are tyically recorded at baseline
+(\(t = 0\)) and we denote the collection of baseline covariates as
+\(V_{0}\). The outcome of interest at the end of follow-up is mortality
+\(Y\) which is a binary variable taking the value \(1\) if the patient
+is dead and \(0\) otherwise. \linebreak 
 
-In many studies subjects are followed over time periods and their
-outcome is measured at the end of follow-up. This type of analysis falls
-under survival analysis. Between the start of follow up (\(t = 0\)) and
-the end of follow-up (\(t = T\)) the treatment . Under this data
-structure further considerations must be taken to isolate the causal
-effect of \(X\) on \(Y\) in addition to confounding in the time-fixed
-context. and both the value of the treatment and any confounding
-variables can change over time. The outcome is defined at the end of the
-follow up period. \linebreak
+Just as in the time-fixed case, time-dependent confounders lead to
+spurious associations between \(X\) and \(Y\) through a "back door" path
+between \(X\) and \(Y\) through \(L\). To estimate a causal effect it is
+necessary to block or screen off this path by conditioning or
+stratifying on the confounding variables. Figure ? gives an example of
+this in the time dependent case for two periods (\(t = 0, 1\)). In the
+first period a treatment decision is made based on the measured
+confounder \(Z_0\). In the second period (\(t = 1\)) a new treatment
+decision is made based on both \(Z_0\) and \(Z_1\). Conditioning on
+\(\bar Z\) under this DAG leads to a consistent estimate of the causal
+effect because doing so blocks all paths between \(X_0\) and \(X_1\) and
+\(Y\) except the causal path of interest. \linebreak
 
-Graphical methods are particularly useful for describing longitudinal
-data where multiple measurements are made on the same subject over time.
-The left hand pane of figure ? shows this for two periods
-(\(t = 0, 1\)). In the first period a treatment decision \(A_0\) is made
-based on the confounding variable \(L_0\). In the second period
-(\(t = 1\)) a new treatment decision is made \(A_1\) based on \(L\) in
-both time periods as well as in previous time periods. Finally, the
-treatment decision in the second period is also determined by treatment
-in the first period. For example, subjects on treatment may remain on
-treatment. \linebreak 
+However, the time-dependent context also admits structures like the
+middle pane of figure ? with the addition of a causal relationship
+between \(X_0\) and \(Z_1\). It is now possible for current treatments
+to be a determinant of future confounders which are in turn determinants
+of future treatment \citet{Robins2000a}. As a result the effect of
+\(A_0\) on \(Y\) is mediated through \(L_1\) in the path
+\(A_0 \rightarrow L_1 \rightarrow Y\). Blocking this path by
+conditioning on \(Z\) also blocks some portion of the effect of \(A_0\)
+on \(Y\) and will lead to a biased estimate. \linebreak
 
-Interest now lies in the causal effect of the vector of treatments on
-the outcome of interest. This vector represents the subjects treatment
-history. We denote this vector using an overhead bar as
-\(\bar A_{t} = \{A_{0}, \hdots, A_{t-1}\}\). For example, when there are
-two time periods and the subject receives no treatment in the first
-period followed by treatment in the second period this would be written
-\(\bar A_{t} = \{0, 1\}\). Similarly the subjects covariate history can
-be written as \(\bar L_{t} = \{L_{0}, \hdots, L_{t-1}\}\). Baseline
-confounders which do not change over time like sex, or which increase
-linearly over time like age are written as \(V_0\) and take on only one
-value because they are only measured at baseline. \linebreak
-
-Clearly confounding remains as much of a problem in the time dependent
-case as in the time fixed case. There is a "back door" path between
-\(A_0\) and \(Y\) via \(L_0\) as well as a back door path between
-\(A_1\) and \(Y\) via \(L_0\) and \(L_1\). Conditioning on \(L\) allows
-consistent estimation of the causal effect in the set-up of the left
-hand pane of figure ? because within each strata defined by the
-confounder histories we can compare treated and untreated subjects.
-
-The right hand pane in figure ? has an additional causal relationship
-between \(X_0\) and \(L_1\) represented by the directed line between
-these two nodes.
-
-Time dependent confounding differs from time fixed confounding in two
-key respects. Firstly, it is possible for current treatments to be a
-determinant of future confounders which are in turn determinants of
-future treatment \citet{Robins2000a}. In the HIV example, clinicians may
-use measured CD4 count to decide whether a subject should receive
-treatment or not. The effect of \(A_0\) on \(Y\) in the right hand pane
-of figure ? is mediated through \(L_1\). To avoid confounding between L
-and A we need to block that path by conditioning on L. By doing so we
-also block the path between \(A_0\) and \(L_1\) so that some of the
-effect of treatment on Y is blocked. Point out that we can see this
-effect in the diagram. \linebreak
-
-A second issue is unmeasured confounding of the relationship between L
-and Y due to U. This is analogous to the role which L plays between X
-and Y. However, conditioning on L introduces a relationship between A
-and Y through U. Is this another backdoor? Even though U and A are
-potentially unrelated a relationship is induced when conditioning on L.
-Several inuitive explanations have been offered in the literature.
-\linebreak
+A second danger in the time-dependent context arises when \(Z\) is a
+common effect of treatment and an unmeasured variable \(U\) which also
+influences the outcome \(Y\). There is no direct association Figure ?
+shows the same two structures with the addition of a an unmeasured
+variable \(U\) which influences \(Z\) and \(Y\). Conditioning on \(Z\).
+Selection bias precludes unbiased estimation \citet{Hernan2004}. There
+is a mediating relationship between \(A\) and \(Z\) in which case there
+is a spurious relationship between \(A\) and \(Y\) again? This is less
+inuitive and so examples are best according to \citet{Cole2010}. We can
+say that Z is a common effect of A and U, once we condition on Z we
+create a dependence of A on U. U is a cause of Y and hence there is an
+association between A and Y. This association is present even when there
+is no direct causal path between A and Y. \linebreak
 
 Conclusion, 1) clearly a different technique is required for analysis 2)
 the nature of time dependent case needs to be described fully enough to
 explain why we choose the simulation algorithm that we choose and any
-holes in it.
+holes in it. In subsequent sections our choice of simulation algorithm
+will be motivated by the structure of time dependent confounding as well
+as the viability of introducing positivity violations which are
+propogated through the time dependent structure. Explain meaning of a
+collider and that a collider that is conditioned on will not block
+confounding. Essentially with this kind of data we cannot use
+confoudning or stratification methods.
 
 \begin{itemize}
 \tightlist
 \item
+  introduce survival analysis?
+\item
+  Intuition from Pearl 2009 book pp. 17 on sprinklers.
+\item
   Simpson's paradox linked to making comparisons within strata
+\item
+  explain that we are often interested in parsimnonious models so cannot
+  have all covariates \(U\) that will create associations between \(X\)
+  and \(Y\)
+\item
+  explain why we do not need to worry about the path between A\_0 and
+  A\_1
+\item
+  explain why mediation is likely to occur in example.
+\item
+  explain why saturated models cannot be used because they will have
+\item
+  inituitive examples of selection bias.
+\item
+  Saturated models are not an option because they would be
+  computationally intensive and so we use parametric models which also
+  links to positivity because we smooth over zeroes in certain strata.
 \end{itemize}
-
-Approaching time dependent confounding graphically makes clear why
-adjusting for or conditioning on time dependent confounders in a
-stratification or regression setting does not allow unbiased estimation
-of the causal effect of \(A\) on \(Y\). On the one hand, lack of
-adjustment for a variable \(L\) when the relationship between \(Y\) and
-\(A\) differs within strata of \(L\) will lead to biased estimation of
-the causal effect of \(A\) on \(Y\). On the other hand, conditioning on
-\(L\) may induce selection bias which also precludes the unbiased
-estimation of causal effects \citet{Hernan2004}. The point is that by
-adjusting for \(L\) we induce bias . If there is a relationship between
-A and L then adjusting for L induces. There could also be mediation from
-A through L to Y. Selection bias means an association between A and U
-even if. Cite both Robins and Havercroft on the problems with time
-dependent confounding. Conditioning on a confounder induces a
-relationship between its parents A and U and hence A and Y. Why does
-this happen only in the time dependent case?
-
-Saturated models are not an option because they would be computationally
-intensive and so we use parametric models which also links to positivity
-because we smooth over zeroes in certain strata.
 
     \begin{figure}
 
@@ -787,7 +809,81 @@ because we smooth over zeroes in certain strata.
 \end{tikzpicture}
 
 \end{minipage}
-\hspace{3cm}% NO SPACE BETWEEN \end \hspace and \begin!
+\hspace{5cm}% NO SPACE BETWEEN \end \hspace and \begin!
+\begin{minipage}{.2\textwidth}
+
+\begin{tikzpicture}
+
+% nodes %
+\node[text centered] (l0) {$L_0$};
+\node[below = 3 of l0, text centered] (a0) {$A_0$};
+\node[right = 3 of l0, text centered] (l1) {$L_1$};
+\node[right = 3 of a0, text centered] (a1) {$A_1$};
+\node[below right = 1.5 and 5 of l0, text centered] (y) {$Y$};
+
+% edges %
+
+%L0%
+\draw[->, line width= 1] (l0) --  (l1);
+\draw[->, line width= 1] (l0) --  (a0);
+\draw[->, line width= 1] (l0) --  (a1);
+\draw[->, line width= 1] (l0) --  (y);
+
+%A0%
+\draw[->, line width=1] (a0) --  (a1);
+\draw[->, line width=1] (a0) --  (l1);
+\draw[->, line width=1] (a0) --  (y);
+
+%L1%
+\draw[->, line width= 1] (l1) --  (a1);
+\draw[->, line width= 1] (l1) --  (y);
+
+%A1%
+\draw[->, line width= 1] (a1) --  (y);
+
+\end{tikzpicture}
+
+\end{minipage}
+\caption{Figure 1 DAG} \label{fig:fig2}
+\end{figure}
+
+    \begin{figure}
+
+\begin{minipage}{.2\textwidth}
+
+\begin{tikzpicture}
+
+% nodes %
+\node[text centered] (l0) {$L_0$};
+\node[below = 3 of l0, text centered] (a0) {$A_0$};
+\node[right = 3 of l0, text centered] (l1) {$L_1$};
+\node[right = 3 of a0, text centered] (a1) {$A_1$};
+\node[below right = 1.5 and 5 of l0, text centered] (y) {$Y$};
+
+% edges %
+
+%L0%
+\draw[->, line width= 1] (l0) --  (l1);
+\draw[->, line width= 1] (l0) --  (a0);
+\draw[->, line width= 1] (l0) --  (a1);
+\draw[->, line width= 1] (l0) --  (y);
+
+%A0%
+\draw[->, line width=1] (a0) --  (a1);
+\draw[->, line width=1] (a0) --  (l1);
+\draw[->, line width=1] (a0) --  (y);
+
+%L1%
+\draw[->, line width= 1] (l1) --  (a1);
+\draw[->, line width= 1] (l1) --  (y);
+
+%A1%
+\draw[->, line width= 1] (a1) --  (y);
+
+\end{tikzpicture}
+
+\end{minipage}
+\hspace{5cm}% NO SPACE BETWEEN \end \hspace and \begin!
 \begin{minipage}{.2\textwidth}
 
 \begin{tikzpicture}
@@ -831,12 +927,20 @@ Weighting}\label{inverse-probability-of-treatment-weighting}
 \begin{itemize}
 \tightlist
 \item
+  Dangers associated with startification and controlling for methods
+  highlighted already explain why we need other methods - explain a few
+  of these like G-estimation, SNTM etc.
+\item
   creates a pseudo-population in which we have something similar to an
   experimental setting
 \item
   Because we need weights this means we need a model for the weights -
   model can be non parametric or parametric depending on data used.
+\item
+  Contrast IPTW methods with stratification methods.
 \end{itemize}
+
+\citet{Horvitz1952}
 
 Recap of issues with time dependent confounding. Introduce IPTW as a
 means of dealing with these issues. Areas where IPTW has been used (time
@@ -872,9 +976,6 @@ Informally a patients weight through visit k is proportional to the
 inverse of the probability of having her own exposure history through
 visit k (Cole and Hernan 2008)
 
-In previous simulation studies unstabilized weights show substantial
-increase in SEs
-
 Explain why this method does appropriately adjust for \textbf{measured
 time varying} confounders affected by prioir exposure.
 
@@ -892,45 +993,34 @@ Probability of Treatment (IPT) weihting. How does this work?
 \item
   true weights are unknown but can be estimated from the data.
 \item
-  Robins(2000) - when there are no unmeasured confounders, we can
-  control for confounding using weights
-\item
-  weighting adjusts for confounding and selection bias due to mesured
-  time varying covariates affected by prior exposure.
-\item
   \(A_t\) is no longer affected by \(L_t\), and crucially the causal
   effect of \(\bar A\) on \(Y\) remains unchanged
-\item
-  quantify the degree to which treatment is statistically non-exogenous
-  through month \(t\)
 \end{itemize}
 
-lack of adjustment for L precludes unbiased estimation. This is because
-it introduces selection bias.
-
-Problem is that the weights will have very high variability, so we need
-to stabilize them otherwise they will affect the estimates. Explain all
-the little details about why it becomes more variable etc.
-
-No matter whether we use stabilized or unstabilized weights, under
-positivity violations the weights will be undefined.
-
-Conditions under which IPTW work are largely untestable (westreich 2012)
-
 Be more specific about what is contained in the weights. The denominator
-depends on the measured confounders \(L\) the numerator does not, but
-could contain baseline coefficients in the numerator to help stabilize
-the weights.
+depends on the measured confounders \(L\) the numerator does not.
 
-weighted regression and MSM are equivalent.
+\begin{itemize}
+\tightlist
+\item
+  weighted regression and MSM are equivalent.
+\end{itemize}
 
-L0 and baseline values - make sure that B = baseline and L0 are either
-together, or have them clearly split. V is a variable predictive of A
-but not of Y - hence not a confounder No rebalancing the baseline
-covariates like gender or age (B), so if we want to see the effect of
-groups of basline If we do not condition on baselines like age then we
-break the link between age and treatment. So baselines must be in the
-condition. Areas of application.
+Point out that we need baseline variables in the conditional statments
+in the num and denom of the weights otherwise we break the relationship
+between outcome and baselines in the new pseudo-population. If the
+baseline variables are not confounders, then we do not want to break
+this relationship. Baseline covariates also help to stabalize the
+weights (how?)
+
+importantly, changing the relationship between L and A, won;t change the
+relationship between L and Y. This means that an intervention in \(A\)
+does not affect the relationship between \(L\) and \(Y\). So we remove
+the link between \(L\) and \(A\) and assign to \(A\) the value of
+treatment on or off. Once we place the patient on treatment, regardless
+of the relationship which had existed before hand between the covariate
+and treatment, a new relationship between \(A\) and \(Y\) exists in
+which the covariate has no say.
 
 \subsubsection{Applications of IPTW}\label{applications-of-iptw}
 
@@ -940,7 +1030,8 @@ applied to MSMs - i.e. MSMs are on example of how IPTW can be used.
     \subsection{Assumptions}\label{assumptions}
 
 This section presents a more formal discussion of the key assumptions
-underlying MSMs. Most attention will be given to positivity
+underlying MSMs. Most attention will be given to positivity. Conditions
+under which IPTW work are largely untestable (westreich 2012)
 
 \subsubsection{Exchangeability}\label{exchangeability}
 
@@ -989,7 +1080,7 @@ denominator. This means that the weights are inestimable whenever
 positivity is violated. In order to estimate the causal effect of \(A\)
 on \(Y\), weights must be estimable in every subset of the population
 otherwise the average causal effect in the study population cannot be
-estimated.
+estimated. \linebreak
 
 In practice, positivity can arise when random zeroes or structural
 zeroes are present in some levels of the confounding covariates. Random
@@ -1008,7 +1099,7 @@ indication of nonpositivity. Increasingly refined covariates are
 attractive because they provide better control of confounding, but the
 point that \citet{Cole2008} make is that this control needs to be traded
 off against increased occurence of random zeroes and subsequent
-instability of IPT weights.
+instability of IPT weights. \linebreak
 
 More relevant to this thesis are violations of the positivity assumption
 due to structural zeroes. These occur when an individual cannot possibly
@@ -1029,7 +1120,7 @@ the context of fetal position and perinatal outcomes. Our motivating
 example is most closely related to liver disease as a contraindication,
 except that the clinical protocols require that patients with low CD4
 count always be treated instead of never being treated, as in the case
-in the liver disease example.
+in the liver disease example. \linebreak
 
 Although in many epidemiological settings the positivity assumption is
 guaranteed by experimental design, studying positivity violations is
@@ -1097,110 +1188,28 @@ exchangeability (and we need more measured predictors to maintain
 exchangeability) and positivity where more predictors leads to more
 likely a zero problem.
 
-    \begin{itemize}
-\tightlist
-\item
-  independence between treatment and prognostic factors/covariates.
-\item
-  If treatment at each time \(t\) is assigned completely at random then
-  treatment will be independent of both measured and unmeasured
-  confounding
-\item
-  At the individual level we cannot establish causal effects because of
-  a missing data problem. Namely that we do not see the counterfactual
-  outcomes. Link in literature about all problems being missing data
-  problems.
-\item
-  The missing data idea could be shown with an example table of results
-  of people under treatment and not under treatment.
-\end{itemize}
-
-They model the marginal distribution of counterfactual variables over
-any covariates and are referred to as structural because in econometric
-and social sciences literature the term structural is often used in
-place of causal (hernan, brumback and robins).
-
-marginal because they model the marginal distribution of the
-counterfactual variables. Not marginal over covariates??
-
-\(E(Y\ |\ do(a)) = \beta_0 + \beta_1a\) contains no \(l\) term.
-
-Have been used for missing data problems. see pp.442 of Hernan,
-Brumback, Robins 2001 for a list of papers linked to this
-
-structural is only in the MSM name because structural is used in
-econometrics and social science. Structural here only means that it is a
-causal model.
-
-When treatments are randomised this is not a problem This might arise,
-for example, when the decision to instigate treatment is based on a
-measured covariate \(L\). Contrast this to randomized controlled trial,
-where due to the randomization process treatment will be independent of
-any measured or unmeasured covariates. The randomized controlled trial
-does not often arise in epidemiology, social sciences or econometrics
-due to prohibitive ethical or financial concerns. As a result other
-methods are sought in order to uncover the causal effects. Marginal
-structural models are a class of models which make it possible to
-estimate the causal effect of \(A\) on \(Y\) in the presence of
-confounders.
-
 \begin{itemize}
 \tightlist
 \item
-  still have unmeasured confounders of course. Or model mispecification.
-  Either of these mean that results no longer hold.
+  Dynamic stratgies evaluated using MSMs will have rules like, start
+  treatment if CD4 falls below a certain threshold. See Didelez
+  presentation on this
+\item
+  Explain that there is positivity in estimation of the structural model
+  and also in the weight model. The reason why positivity is more
+  important in the weight model is because when the weights are unstable
+  the estimates can be very wrong as a result.
 \end{itemize}
+
+    Have been used for missing data problems. see pp.442 of Hernan,
+Brumback, Robins 2001 for a list of papers linked to this
 
 A model that parameterises \(P(Y\ |\ do(A=a))\) is called a marginal
 structural model (MSM) as it is marginal over any covariates and
 structural in the sense that it represents an interventional rather than
-observational model. The distinction between an interventional and
-observational model is expressed in definition 1.1 through the notation
-\(do(a)\) in \(P(y\ |\ do(x))\), as opposed to the observational case
-\(P(y\ |\ A=a)\).
+observational model.
 
-Randomization ensures that missing values occur by chance. So the
-counterfactual values that we don't see for some observations are
-missing randomly and not due to confounding through a covariate.
-
-    importantly, changing the relationship between L and A, won;t change the
-relationship between L and Y. This means that an intervention in \(A\)
-does not affect the relationship between \(L\) and \(Y\). So we remove
-the link between \(L\) and \(A\) and assign to \(A\) the value of
-treatment on or off. Once we place the patient on treatment, regardless
-of the relationship which had existed before hand between the covariate
-and treatment, a new relationship between \(A\) and \(Y\) exists in
-which the covariate has no say.
-
-This distinction can be understood more clearly when comparing
-randomized controlled trials in medical resarch and observational
-epidemiological research. In randomised trials the In the presence of
-confounding \(P(y\ |\ A=a)\) will not represent the true causal effect
-of \(A\) on \(Y\) why?. The interventional case \(P(y\ |\ do(A=a))\), on
-the otherhand, \(\ne P(y\ |\ do(x))\) with the result that a model which
-is conditional on A will not represent the true causal effect of A on Y.
-In the former case the system is changed such that variable A takes on a
-particular value or history, the result represents the system under the
-intervention \(do(A=a)\) (pearl 2010). On the other hand the first
-method represents the situation where the model is unchanged and \(A\)
-is observed to be \(a\). This distinction will be particularly important
-when considering static and dynamic stratgeies in subsequent sections.
-
-From the point of view of simulating from a marginal structural model,
-In a nutshell, we need a simulation algorithm that allows us to simulate
-discrete time longitudinal data in which A affects Y, and so does L and
-L affects A. The most direct way of doing this would be the red line in
-the DAG. But this won't do in our case. The Havercroft and Didelez
-algorithm is useful because it allows us to break the relationship
-between L and A. We need to do this in such a way that we do not change
-the relationship between Y and L, although we are not so interested in
-this relationship because it is the least interesting of the
-relationships in the diagram.
-
-Explain that there is positivity in estimation of the structural model
-and also in the weight model. The reason why positivity is more
-important in the weight model is because when the weights are unstable
-the estimates can be very wrong as a result.
+    \newpage
 
     \section{Simulating from marginal structural
 models}\label{simulating-from-marginal-structural-models}
@@ -1218,6 +1227,17 @@ including survival models. And finally the algorithm needs to be
 flexible enough to allow us to introduce positivity violations. In this
 section we describe this algorithm and the properties that make it
 suitable for analysing the effect of positivity violations on MSMs.
+
+From the point of view of simulating from a marginal structural model,
+In a nutshell, we need a simulation algorithm that allows us to simulate
+discrete time longitudinal data in which A affects Y, and so does L and
+L affects A. The most direct way of doing this would be the red line in
+the DAG. But this won't do in our case. The Havercroft and Didelez
+algorithm is useful because it allows us to break the relationship
+between L and A. We need to do this in such a way that we do not change
+the relationship between Y and L, although we are not so interested in
+this relationship because it is the least interesting of the
+relationships in the diagram.
 
 \subsection{Specific MSM}\label{specific-msm}
 
