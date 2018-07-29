@@ -421,8 +421,8 @@ it can be used to introduce violations of positivity is then selected
 and explained in more detail. Chapter 3 presents simulation results and
 key findings. Chapter 4 uses real world data in which positivity
 violations arise as a result of treatment protocols in a chemotherapy
-trial. The ast chapter concludes and provides limitations and directions
-for future work.
+trial. The last chapter concludes and provides limitations and
+directions for future work.
 
     \subsection{Software}\label{software}
 
@@ -433,10 +433,13 @@ in the code where appropriate. The \emph{survey} and \emph{ipw} packages
 written in the R programming language were used to provide functionality
 not currently available as a Python module. These packages are freely
 avilable through the Comprehensive R Archive Network (CRAN). Combining R
-functionality in Python code is made possible throughthe \emph{rpy2}
+functionality in Python code is made possible through the \emph{rpy2}
 Python module. \linebreak
 
-All code used for this thesis are provided in an appendix.
+All functions used for this thesis are provided in appendices. Appendix
+? contains the code for simulating data from the chosen marginal
+structural model. Appendix ? contains the code used to generate the
+results and graphs in this thesis.
 
     \newpage
 
@@ -627,31 +630,40 @@ causal effect between \(X\) and \(Y\)
     \subsection{Time dependent
 confounding}\label{time-dependent-confounding}
 
-So far we have considered the time fixed context in which exposure and
+So far we have considered the time fixed context in which treatment and
 confounders take on a single value. It was sufficient to block the "back
 door" path between the treatment and outcome by conditioning on the
-confounding variable(s). In many studies subjects are followed over time
-periods and their outcome is measured at the end of follow-up. This type
-of analysis falls under survival analysis. Between the start of follow
-up (\(t = 0\)) and the end of follow-up (\(t = T\)) the treatment .
-Under this data structure further considerations must be taken to
-isolate the causal effect of \(X\) on \(Y\) in addition to confounding
-in the time-fixed context. and both the value of the treatment and any
-confounding variables can change over time. The outcome is defined at
-the end of the follow up period. \linebreak
+confounding variable(s). In the headache example, the causal effect of
+ibuprofen on headache alleviation was confounded by sex. To broaden the
+setting to a time dependent context, we adopt the canonical example of
+the causal effect of Zidovudine (AZT) on mortality amongst human
+immunodeficiency virus (HIV)-infected subjects \citet{Hernan2000}.
+Subjects are followed over multiple visits and in each each visit a
+treatment decision is made and CD4 count is measured. Survival at the
+end of follow-up is a binary outcome equal to 1 if the patient has died
+and 0 otherwise. \linebreak
 
-In the headache example, the confounder was sex which was a determinant
-of treatment and also of the final outcome. Variables like sex which do
-not change over time, or age which change linearly over time are
-typically treated as baseline covariates which we denote as \(V_{0}\),
-the value of these covariate at \(t=0\). To broaden the setting to
-include time dependent confounders which vary over time, we adopt the
-canonical example of the causal effect of zidovudine (AZT) on mortality
-amongst human immunodeficiency virus (HIV)-infected subjects. This
-causal effect is confounded by the time dependent confounder CD4
-lymphocyte count which influences both initiation of treatment as well
-as being an independent predictor of survival (\citet{Hernan2000}).
-\linebreak
+The time-fixed notation is extended to include subject histories of
+treatment decision and covariates at each visit. The vector of treatment
+histories is denoted with an overhead bar. For example, treatment
+decisions up to visit \(k\) are denoted
+\(\bar X_{k} = \{X_1, \hdots, X_k\}\). Similarly, covariate histories
+are denoted \(\bar L_{k} = \{L_1, \hdots, \L_k\}\). Covariates like sex
+may be confounders but do not change over time. Such covariates are
+tyically recorded at baseline (\(t = 0\)) and we denote the collection
+of baseline covariates as \(V_{0}\). The outcome of interest at the end
+of follow-up is mortality \(Y\) which is a binary variable taking the
+value \(1\) if the patient is dead and \(0\) otherwise. \linebreak 
+
+In many studies subjects are followed over time periods and their
+outcome is measured at the end of follow-up. This type of analysis falls
+under survival analysis. Between the start of follow up (\(t = 0\)) and
+the end of follow-up (\(t = T\)) the treatment . Under this data
+structure further considerations must be taken to isolate the causal
+effect of \(X\) on \(Y\) in addition to confounding in the time-fixed
+context. and both the value of the treatment and any confounding
+variables can change over time. The outcome is defined at the end of the
+follow up period. \linebreak
 
 Graphical methods are particularly useful for describing longitudinal
 data where multiple measurements are made on the same subject over time.
@@ -1234,7 +1246,7 @@ particularly important.
 Collapsibility means there is no incompatibility between the marginal
 model and the conditional distributions used to simulate the data.
 Provide example of this. Explain how this affects the simulation
-algorithm
+algorithm. Especially hazard ratios which are non-collapsible.
 
 \subsection{simulation models}\label{simulation-models}
 
@@ -1873,7 +1885,7 @@ based on parameters that closely match the Swiss HIV Cohort Study
     
     
 \bibliographystyle{plainnat}
-\bibliography{references/library}
+\bibliography{references/thesis}
 
     
     \end{document}
