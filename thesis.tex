@@ -468,6 +468,9 @@ the core parts of MSMs needed for this study - linking to positivity.
 \item
   MSMs are models for some aspect (like the mean) of the distribution of
   counterfactuals.
+\item
+  many types like a marginal structural cox model (maybe let this follow
+  on after weights part.
 \end{itemize}
 
     \subsection{Counterfactuals and
@@ -505,7 +508,8 @@ quantity \(\mathbb{P}(Y_{x = 0})\). \linebreak
 Dawid 1979 - we can vary the individual I and treatment X but this is
 largely a conceptual entity because only one treatment can in fact be
 applied to any unit. - Can also use the odds ratio as the comparison
-instead of the risk difference.
+instead of the risk difference. - only have the data and observed
+outcomes, not the counterfactuals.
 
     \subsection{Confounding}\label{confounding}
 
@@ -592,6 +596,9 @@ unmeasured confounding". \linebreak
   Randomization ensures that missing values occur by chance. So the
   counterfactual values that we don't see for some observations are
   missing randomly and not due to confounding through a covariate.
+\item
+  Any residual confounding cannot be due to the variables that we have
+  conditioned on.
 \end{itemize}
 
     \subsection{Directed Acyclic Graphs: graphical representations of
@@ -702,15 +709,15 @@ is dead and \(0\) otherwise. \linebreak
 Just as in the time-fixed case, time-dependent confounders lead to
 spurious associations between \(X\) and \(Y\) through a "back door" path
 between \(X\) and \(Y\) through \(L\). To estimate a causal effect it is
-necessary to block or screen off this path by conditioning or
-stratifying on the confounding variables. Figure ? gives an example of
-this in the time dependent case for two periods (\(t = 0, 1\)). In the
-first period a treatment decision is made based on the measured
-confounder \(Z_0\). In the second period (\(t = 1\)) a new treatment
-decision is made based on both \(Z_0\) and \(Z_1\). Conditioning on
-\(\bar Z\) under this DAG leads to a consistent estimate of the causal
-effect because doing so blocks all paths between \(X_0\) and \(X_1\) and
-\(Y\) except the causal path of interest. \linebreak
+necessary to block this path by conditioning on the confounding
+variables. Figure ? gives an example of this in the time dependent case
+for two periods (\(t = 0, 1\)). In the first period a treatment decision
+is made based on the measured confounder \(Z_0\). In the second period
+(\(t = 1\)) a new treatment decision is made based on both \(Z_0\) and
+\(Z_1\). Conditioning on \(\bar Z\) under this DAG leads to a consistent
+estimate of the causal effect because doing so blocks all paths between
+\(X_0\) and \(X_1\) and \(Y\) except the causal path of interest.
+\linebreak
 
 However, the time-dependent context also admits structures like the
 middle pane of figure ? with the addition of a causal relationship
@@ -735,6 +742,13 @@ say that Z is a common effect of A and U, once we condition on Z we
 create a dependence of A on U. U is a cause of Y and hence there is an
 association between A and Y. This association is present even when there
 is no direct causal path between A and Y. \linebreak
+
+Hazard ratios and selection bias \citet{Hernan2010}. Actual application
+will look at toxicity of treatment. Somepeople will be suceptible and
+drop out leaving more people in the untreated arm of the study.
+
+general point about selection bias is that the general population is not
+a valid control group.
 
 Conclusion, 1) clearly a different technique is required for analysis 2)
 the nature of time dependent case needs to be described fully enough to
@@ -772,6 +786,17 @@ confoudning or stratification methods.
   Saturated models are not an option because they would be
   computationally intensive and so we use parametric models which also
   links to positivity because we smooth over zeroes in certain strata.
+\item
+  Explain why hazard ratios have a built in selection bias after giving
+  some examples of why selection bias arises. It is because it is
+  selective on patients reaching the time period in question. Is this
+  also the reason why summary methods create selection bias.
+\item
+  give an inuitive explanation for why CD4 count is a predictor of
+  subsequent treatment and of death.
+\item
+  Because treatment is randomized (at baseline) in expectation the
+  proportion of men and women in each group is the same.
 \end{itemize}
 
     \begin{figure}
@@ -924,8 +949,33 @@ confoudning or stratification methods.
     \subsection{Inverse Probability of Treatment
 Weighting}\label{inverse-probability-of-treatment-weighting}
 
+The previous section has highlighted how standard approaches for
+controlling for confounding in a time dependent context may lead to
+biased estimates. In this section we describe a technique called inverse
+probability of treatment weighting that can be used to obtain unbiased
+estimates of the causal effect of treatment on outcome in the presence
+of time dependent confounding.
+
+Inverse probability of treatment weighting is a technique that can be
+used to obtain unbiased estimates of the causal effect of treatment on
+outcome in the presence of time dependent confounding. The intuition
+behind the technique is that by re-weighting the data a pseudopopulation
+is created in which the treatment is independent of any measured
+confounders. Regression analysis on the pseudopopulation can be carried
+out without the need to control for confounders eliminating the problems
+which arose in the previous section due to conditioning on \(Z\).
+Crucially, in the pseudopopulation, the causal effect of \(X\) on \(Y\)
+remains unchanged. As a result, it is possible to estimate the true
+causal effect of \(X\) on \(Y\).
+
+\paragraph{Construction of weights}\label{construction-of-weights}
+
 \begin{itemize}
 \tightlist
+\item
+  why does it work and naive methods do not?
+\item
+  How does it break the link?
 \item
   Dangers associated with startification and controlling for methods
   highlighted already explain why we need other methods - explain a few
@@ -940,11 +990,8 @@ Weighting}\label{inverse-probability-of-treatment-weighting}
   Contrast IPTW methods with stratification methods.
 \end{itemize}
 
-\citet{Horvitz1952}
-
-Recap of issues with time dependent confounding. Introduce IPTW as a
-means of dealing with these issues. Areas where IPTW has been used (time
-dependent confounding, comparing dynamic regimes, missing data)
+\citet{Horvitz1952} Areas where IPTW has been used (time dependent
+confounding, comparing dynamic regimes, missing data)
 
 Inverse probability of treatment weighting is a technique that
 re-weights subject observations to a population where assignment of
@@ -955,13 +1002,10 @@ which can be thought of informally as the inverse of the probability
 that a subject receives their own treatment \citet{Robins2000}. The
 result of applying these weights is to re-weight the data to create a
 pseudo-population in which treatment is independent of measured
-confounders \citet{Cole2008}. The resulting pseudo population no longer
-has a time dependent confounding problem and the causal relationship
-between A and Y can be estimated using naive methods like regression
-without adjusting for confounding because it is no longer present.
-Crucially, in the pseudo population the counterfactual probabilities are
-the same as in the true study population so that the causal RD, RR or OR
-are the same in both populations \citet{Robins2000}.
+confounders \citet{Cole2008}. Crucially, in the pseudo population the
+counterfactual probabilities are the same as in the true study
+population so that the causal RD, RR or OR are the same in both
+populations \citet{Robins2000}.
 
 \[w_{t,i} = \frac{1}{\prod_{\tau=0} ^ t p_{\tau} (A_{\tau, i}\ |\ \bar A_{\tau-1, i}, \bar L_{\tau, i})}\]
 
@@ -976,17 +1020,12 @@ Informally a patients weight through visit k is proportional to the
 inverse of the probability of having her own exposure history through
 visit k (Cole and Hernan 2008)
 
-Explain why this method does appropriately adjust for \textbf{measured
-time varying} confounders affected by prioir exposure.
-
 The weight is informally proportional to the participants probability of
 receiving her own exposure history
 
 As these weights have high instability we need to stabilize them. The
 unstabilized weights can be driven by only a small number of
-observations. Under time dependent confounding it may still be possible
-to recover the causal effect of \(A\) on \(Y\) by the method of Inverse
-Probability of Treatment (IPT) weihting. How does this work?
+observations. Why are they unstable?
 
 \begin{itemize}
 \tightlist
@@ -1027,13 +1066,21 @@ which the covariate has no say.
 Different from application of MSMs - IPW is a technique which has been
 applied to MSMs - i.e. MSMs are on example of how IPTW can be used.
 
+\begin{itemize}
+\tightlist
+\item
+  Crucial that the relationship between Y and X remains the same in the
+  new population. I.e. the marginal structural model is the same.
+\end{itemize}
+
     \subsection{Assumptions}\label{assumptions}
 
 This section presents a more formal discussion of the key assumptions
 underlying MSMs. Most attention will be given to positivity. Conditions
 under which IPTW work are largely untestable (westreich 2012)
 
-\subsubsection{Exchangeability}\label{exchangeability}
+\subsubsection{No unmeasured
+confounders}\label{no-unmeasured-confounders}
 
 \[Y_{x} \perp\!\!\!\perp X\]
 
@@ -1042,6 +1089,10 @@ under which IPTW work are largely untestable (westreich 2012)
 \citet{Cole2009} \citet{Pearl2010}
 
 \subsubsection{No model mispecification}\label{no-model-mispecification}
+
+Correct specifcation of the inverse probability weighting (IPW) model is
+necessary for consistent inference from a marginal structural Cox model
+(MSCM).
 
 \subsubsection{No measurement error}\label{no-measurement-error}
 
@@ -1214,32 +1265,59 @@ observational model.
     \section{Simulating from marginal structural
 models}\label{simulating-from-marginal-structural-models}
 
-In order to assess the effect of violations of the positivity
-assumption, we adopt the algorithm of \citet{Havercroft2012} for
-generating longitudinal data. This algorithm is suitable for several
-reasons. Firstly, it allows us to simulate observational data from a
-known MSM so that when positivity violations are introduced we can
-compare estimates under positivity violations with those from the known
-MSM. Secondly, we can simulate data with observational structure
-including selection bias which is particulalry important for survival
-models. Thirdly, this algorithm is suitable for noncollapsible models
-including survival models. And finally the algorithm needs to be
-flexible enough to allow us to introduce positivity violations. In this
-section we describe this algorithm and the properties that make it
-suitable for analysing the effect of positivity violations on MSMs.
+In order to assess the impact of violations of the positivity assumption
+on the performance of the IPTW estimator we simulate data from a
+specific marginal structural model in a series of monte carlo
+simulations. In this chapter we start by describing monte carlo
+simulations in general terms. Next, we consider several important
+criteria that a simulation model must exhibit in the context of MSMs.
+Several algorithms are briefly compared. An appropriate simulation
+algorithm for the purposes of this thesis means we can simulate data
+from a specific MSM against which we can test the model. The algorithm
+should also generate data with the time-dependent confounding structure
+described earlier. Specifically, it should be possible for treatment to
+determine confounder and confounder to determine treatment in turn.
+Selection bias should also be possible. In this section we briefly
+review several simulation algorithms which have been applied to the
+study of MSMs. We then focus on the algorithm suggested in
+\citet{Havercroft2010} and explain why it satisfies our requirements and
+how positivity violations are introduced and propogated through the
+model. This chapter also includes a broader view of monte carlo
+simulations.
 
-From the point of view of simulating from a marginal structural model,
-In a nutshell, we need a simulation algorithm that allows us to simulate
-discrete time longitudinal data in which A affects Y, and so does L and
-L affects A. The most direct way of doing this would be the red line in
-the DAG. But this won't do in our case. The Havercroft and Didelez
-algorithm is useful because it allows us to break the relationship
-between L and A. We need to do this in such a way that we do not change
-the relationship between Y and L, although we are not so interested in
-this relationship because it is the least interesting of the
-relationships in the diagram.
+\paragraph{Monte Carlo Simulations}\label{monte-carlo-simulations}
 
-\subsection{Specific MSM}\label{specific-msm}
+In statistical research interest often lies in the estimation of a
+population parameter \(\theta\). When only a sample \(X\) from the
+population is available, statistical methods are applied to estimate the
+population parameter \(\hat \theta\). If a second sample is drawn from
+the population it will result in second estimate \(\hat \theta_2\) and
+so on for more samples.
+
+Analogously, a "true" model can be specified and a sample of data
+generated according to that model. The success of a technique can be
+compared to the true model. Any single sample generated
+
+\begin{itemize}
+\tightlist
+\item
+  simulate from a specific "true" or "known" model.
+\item
+  estimate method
+\item
+  variability hence do this many times
+\item
+  aggregate results and calculate SE
+\item
+  to study finite sample properties we simulate a finite sample (of size
+  n = 1000 for example.)
+\end{itemize}
+
+Naturally this requires knowing the parameters in advance in order to
+simulate from the model. In the case of MSMs this requires simulating
+from a specific MSM
+
+\paragraph{Specific MSM}\label{specific-msm}
 
 Testing positivity violations requires generating data from a known MSM.
 For example, suppose that the chosen MSM was
@@ -1253,7 +1331,7 @@ instance, one specific MSM could be written as
 need to generate data in such a way that we get this model from
 observational data and that we can then return to it.
 
-\subsection{observational structure}\label{observational-structure}
+\paragraph{observational structure}\label{observational-structure}
 
 The observational structure needs to include the central parts of time
 dependent confounding - in particular Y and A are common effects of U
@@ -1261,53 +1339,61 @@ which creates a confounding relationship. We also need selection bias,
 some models like hazard ratios have a built in selection bias so this is
 particularly important.
 
-\subsection{noncollapsibility}\label{noncollapsibility}
+\paragraph{noncollapsibility}\label{noncollapsibility}
 
 Collapsibility means there is no incompatibility between the marginal
 model and the conditional distributions used to simulate the data.
 Provide example of this. Explain how this affects the simulation
 algorithm. Especially hazard ratios which are non-collapsible.
 
-\subsection{simulation models}\label{simulation-models}
-
-\begin{itemize}
-\item
-  Bryan 2004: fixes the vector L at the beginning which means A never
-  affects L which don't make no sense.
-\item
-  Westreich 2 papers
-\item
-  others.
-\item
-  why we choose the havercroft one
-\item
-  What is the advantage of havercroft over Bryan.
-\end{itemize}
-
 Models are noncollapsible when conditioning on a covariate
 \textbf{related to the outcome} changes the size of the estimate even
 when the covariate is unrelated to the exposure. Illustrate why this
 happens with survival models.
 
-Exlain why survival models are noncollapsible and why the CDF method
-based on U is how we overcome this. Survival models are non-collapsible
-because
+Collapsability comes in because we cannot collapse a model conditional
+on L into one conditional on only A.
 
-Hazard rations
-
-Hazard rations have built in selection bias when we consider period
-specific hazard ratios. This is because it is selective on patients
-reaching the time period in question.
-
-The parameter of interest could be expected survival or the five year
-survival probability
+Survival models are non-collapsible. Hence we cannot eaily simulate from
+them. Instead we use U as a sneaky trick. Explain why survival models
+are non-collapsible
 
 This is particularly important because collapsibility and confounding
 are often treated as identical concepts when in fact they are not.
 \citet{Greenland1999}
 
-generate L and A based on U. Transform U to obtain Y. Trick is to get to
-Y and this comes through properties of the CDF.
+\paragraph{Simulation algorithms literature
+review.}\label{simulation-algorithms-literature-review.}
+
+Several algorithms for simulating from a specific MSM have ben suggested
+in the literature.
+
+\citet{Havercroft2012} \citet{Bryan2004} \citet{Westreich2012}
+\citet{Young2014}
+
+\begin{itemize}
+\tightlist
+\item
+  Bryan 2004: fixes the vector L at the beginning which means A never
+  affects L which don't make no sense. In other words it doesn't have
+  the observational structure we are looking for.
+\item
+  Do we introduce a form of selection bias into the data when we force
+  positivity according to protocols? At baseline the proportion of
+  people in any CD4 strata was unknown but randomized and hence in
+  expectation it should be the same in treated and untreated.
+\item
+  Young 2014 - Law of the observed outcome conditional on the measured
+  past. What this paper shows is that the regression results are not
+  correct but the IPTW ones are fine. The issues is comparing IPTW to
+  normal regression results. As we compare IPTW results to IPTW results
+  under positivity it should be fine to use the Havercroft algorithm.
+\end{itemize}
+
+\subsection{Algorithm}\label{algorithm}
+
+\subsection{Algorithm with positivity
+violations.}\label{algorithm-with-positivity-violations.}
 
 The confounding structure occurs because there is a relationship between
 A and Y confounded through L through U? Y and A are common effects of U
@@ -1315,34 +1401,15 @@ which creates an association between A and Y other than the causal
 association we want to study in the MSM - refer to structural bias
 paper.
 
-The true MSM that we want to resolve using IPTW needs to take a known
-form. This is the hazard function - which is of a form that we choose in
-advance. Survival models are non-collapsible. Hence we cannot eaily
-simulate from them - so why are we able to do it in this case?
+The parameter of interest could be expected survival or the five year
+survival probability
 
 Need to specify what the MSM is, give an example of it as a hazard
 function. Survival is completeley determined by the hazard function.
 
-We could adjust for confounding y blocking all back door paths. SO need
-to explain what the back dorr path is. Need to explain intuitevely why
-it is there.
-
 U allows us to get any distribution we like for Y marginal over
 covariates, WOuld L itself allows this? probably not. We can somehow get
 from this the subjects counterfactual survival time.
-
-\subsection{role of u - what problem does u
-solve.}\label{role-of-u---what-problem-does-u-solve.}
-
-As they point out, it is not always obvious how to simulate data from a
-given MSM because of noncolapsibility. The DAG in figure 1 represents
-the causal system in question.
-
-Ultimately we need an algorithm which exhibits the observational
-qualities we want and, at the same time, comes from a given MSM.. We
-need an algorithm which exhibits time dependent confounding. We need the
-model to take a known form so we specify in advance what the parameters
-should be.
 
 Importantly, this expression on the left hand side has unobserved
 counterfactuals, but the right hand side has only observed quantities
@@ -1354,26 +1421,12 @@ investigate positivity we can still only do so for collapsible models?
 Equivalent way of motivating dividing the joint distribution by
 Pr(A\textbar{}L) is through IPTW.
 
-Collapsability comes in because we cannot collapse a model conditional
-on L into one conditional on only A. Why do we need to get rid of L to
-get the correct MSM?
-
-Problem is that conditional distributions one might use to draw the
-simulated data are not compatible with the desired properties of the
-marginal model. Is this collapsibility?
-
-Following the math through, we want to end up with the correct
-coefficient, having L in there does not matter really. The important
-point is to resolve the correct, causal parameter on a
+The important point is to resolve the correct, causal parameter on a
 
 How does selection bias relate to \(U\)?
 
 Explain why the algoritm allows positivity to be propagated throught the
-patients history. Always linking back to positivity
-
-The simulating procedure needs to allow us to specifiy a particular MSM,
-while at the same time capturing the characteristics of observational
-data.
+patients history.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1382,24 +1435,8 @@ data.
   distributions. Follows from truncated factorisation why we can et
   P(Y\textbar{}do(a))
 \item
-  simulating from a chosen MSM
-\item
-  creating a confounding relationship
-\item
-  only have the data and observed outcomes, not the counterfactuals.
-\item
-  Fixing relationships.
-\item
   think of this process as if we had fixed a treatment vector in
   advance. consistency assumption.
-\item
-  Relationship between A and L should be observational and a confounding
-  relationship
-\item
-  U is breaking the relationship between L and Y, important for
-  positvity.
-\item
-  Don't care about the relationship between L and Y
 \item
   HD 2012, with Pearl and truncated factorization formula, show that it
   is possible to link the counterfactual represented by
@@ -1458,8 +1495,6 @@ If we can find suitable forms for either \(P(Y\ |\ L, A=a)\) and
 \(P(Y\ |\ do(A=a)\), then, given suitable values for \(A, L, U\) it will
 be possible to simulate from the chosen MSM.
 
-use the phrase, "in words ...." to make something more understandable.
-
 Choosing a functional form for \[P(Y\ |\ do(A=a)\] depends on
 convenience. We need a functional form that can be easily represented by
 \(P(Y\ |\ L, A=a)P(L)\). non-linear functions will be hard to work into
@@ -1473,169 +1508,27 @@ and has a nice medical interpretation. In contrast L would be more
 difficult to include. It is better as a function of U than a value in of
 itself.
 
-Don't forget basics like knowing what the true model is and therefore
-being able to compare the true model with the results. Explain why
-simulations work in a general sense don't take it for granted.
-
-    The aim is to be able to simulate the survival function of a desired MSM
-under the intervention \(do(\bar a)\)
-
-Several studies have developed algorithms for simulating data from
-marginal structural models in the presence of time dependent
-confounding. An early example is \citet{bryan2004} who study estimators
-of the causal effec of a time dependent treatment on survival outcomes.
-They compare naive estimators with IPTW and a treatment orthogonalized
-estimator which is also developed in the paper. This study shares
-similarities with \citet{Havercroft2012}
+basic idea behind simulation is that we know what the true model is and
+therefore being able to compare the true model with the results. Explain
+why simulations work in a general sense don't take it for granted.
 
 \begin{itemize}
+\tightlist
+\item
+  Explain issue that survival models are not collapsible which is why
+  most algorithms don't work. Big reason we choose HD2012 is because of
+  this
+\item
+  no model mispecification in the HD2012 algorithm
 \item
   stay on treatment after treatment starts
-\item
-  treatment regime is determined by t* (starting point of treatment
-  because it is a vector of \{0, 0, 0, 1, 1, 1\}
 \item
   they motivate a logistic model for the haxard function, they use a
   discrete equivalent to the hazrd function (link to citation about
   farington study.)
 \item
-  the survival time U is directly linked to the survival outcome
-  -\textgreater{} here it is good to provide more inuition.
-\item
-  need to understand why it is linked.
-
-  Work that proposes a different method to solve the same problem. Work
-  that uses the same proposed method to solve a different problem. A
-  method that is similar to your method that solves a relatively similar
-  problem. A discussion of a set of related problems that covers your
-  problem domain.
-\end{itemize}
-
-These previous studies have lacked a systematic investigation of
-positivity violations in a simulation setting. It is unknown, for
-example, how large an effect a violation of positivity has and how it is
-affected by the sample size, threshold etc etc.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  marginal structural models literature
-\item
-  Simulating from marginal structural models
-\item
-  positivity
-\item
-  connect limited work on simulating from models to positivity
-\item
-  Explain why we choose the Havercroft simulation of the others,
-  specifically why it helps us to incorporate violations of positivity
-  in our analysis.
-\end{enumerate}
-
-Several studies have considered simulation from margial structural
-models. The finite-sample properties of marginal structural proportional
-hazards models has been considered by \citet{Westreich2009}.
-
-\begin{itemize}
-\tightlist
-\item
-  What is their focus?
-\item
-  how do they simulate
-\item
-  what do they find (in terms of MSE, SE, etc.
-\item
-  how does it differ from HD (2012)
-\end{itemize}
-
-Young etal (2014) also provide a simulation algorithm for simulating
-longitudinal data from a known Cox MSM.
-
-Comparing IPW and standard regression based estimates in the absence of
-model misspecification. This allows for complete isolation of any type
-of bias. This approach involves simulating data from a standard
-parametrization of the likelihood and solving for the underlying Cox MSM
-
-we describe an approach to Cox MSM data generation that allows for a
-comparison of the bias of IPW estimates versus that of standard
-regression-based estimates in the complete absence of model
-misspecification
-
-Cole (2008) for more of a discussion about positivity, with an actual
-observed data example. While Cole (2008) have looked at positivity in an
-observational setting, to our knowledge no study has looked at
-positivity violations within a simulation setting.
-
-Cole and Hernan 2008 have examined the four assumptions underlying IPW
-using a study on real data from the HAART SWISS study.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  2 paper on simulation + Bryan paper - why this simulation method is
-  different from other sim papers
-\item
-  related work - Judea pearl, Robins, econometrics, related and broader
-  literature on MSM
-\item
-  positivity long discussion in Hernan and cole and the warnings but no
-  simulation study in that paper. They study the positivity but not the
-  effect and there is nothing in the havercroft paper on this either.
-\end{enumerate}
-
-\begin{itemize}
-\item
-\item
-  Major point is that there are a number of ways of simulating from
-  marginal structural models. But, we need one where we can mess with
-  the positivity. Other methods are not suitable for this.
-\item
-  G formula simulation
-\item
-  exposure, confounder feedback loop
-\item
-  treatment
-\item
-  outcome variable
-\item
-  causal effect of the treatment variable on the outcome.
-\item
-  external intervention
-\item
-  Explain the do notation, and what presicely is meant in the case\\
-\item
-  used to estimate the joint effect of time dependent treatments on
-  survival
-\item
-  Need to stronly link the time dependent confounding to the MSM, do we
-  choose this class of models because of their relationship with time
-  dep confounding? Yes, marginal strictural models are used with TDC
-\item
-  The causal graph helps (according to Pearl pp. 40) to bridge
-  statistics into causality
-\item
-  There is a key part to this, which is that we do not observe
-  confounding, this seems to be what motivates the use of the MSM class
-  of models.
-\item
-  Counterfactuals need to be addressed here to make it clear this is not
-  the purpose of the thesis.
-\item
-  Robins (2000) have demonstrated that in the presense of time dependent
-  confounders, standard approaches for asjusting for confounding are
-  biased.
-\item
-  A covariate that is a risk factor for, or predictor of the event of
-  interest (Y) (from Robins 2000). This defines a time dependent
-  covariate
-\item
-  And also past exposure determines the level of the covariate.
-\item
-  Works under a set of assumptions (consistency, exchanchability,
-  positivity and no mispecification of the model used to estimate the
-  weights
-\item
+  treatment regime is determined by t* (starting point of treatment
+  because it is a vector of \{0, 0, 0, 1, 1, 1\}
 \end{itemize}
 
     \section{Violations of Positivity}\label{violations-of-positivity}
@@ -1669,9 +1562,25 @@ of the covariate.
   present the algorithm again with positivity violations.
 \end{itemize}
 
-    \section{Application}\label{application}
+\subsection{Simulation scenarios}\label{simulation-scenarios}
+
+\paragraph{thresholding}\label{thresholding}
+
+\paragraph{percentage of compliant
+doctors.}\label{percentage-of-compliant-doctors.}
+
+    \section{Simulation study}\label{simulation-study}
 
 \subsection{Data Structure}\label{data-structure}
+
+Include an example simulation graph plot showing the data colored to
+show where positivity would arise.
+
+\subsection{Number of positivity compliant
+doctors.}\label{number-of-positivity-compliant-doctors.}
+
+\subsection{Varying levels of
+threshold.}\label{varying-levels-of-threshold.}
 
 We wish to simulate survival data in discrete time \(t = 0, \dots, T\)
 for \(n\) subjects. At baseline \(t=0\) all subjects are assumed to be
@@ -1865,7 +1774,7 @@ remain the same. Other ways of doing this include a spline function over
 the months to create a smooth function between the visits. Another
 difference might be to use a coxph function instead of logistic function
 
-\[logit\ p_{\tau} (A_{\tau, i}\ |\ \bar A_{\tau-1, i}, \bar L_{\tau, i}) = \alpha_0 + \alpha_1 k + alpha_2 a_{k-1} + \dots + alpha_k a_0 + \]
+\[logit\ p_{\tau} (A_{\tau, i}\ |\ \bar A_{\tau-1, i}, \bar L_{\tau, i}) = \alpha_0 + \alpha_1 k + \alpha_2 a_{k-1} + \dots + \alpha_k a_0 + \]
 
 We have several options for estimating these weights. We could use a
 coxph model, or a logistic model.
