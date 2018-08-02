@@ -20,7 +20,7 @@
 
 ((* block bibliography *))
 \bibliographystyle{plainnat}
-\bibliography{references/library}
+\bibliography{references/thesis}
 ((* endblock bibliography *))
 
 
