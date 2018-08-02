@@ -614,7 +614,14 @@ unmeasured confounding". \linebreak
   the exposed cohorts experience for the unexposed cohort.
 \item
   confounders are simply covariates which explain why confounding is
-  present (see greenland 1996)
+  present (see Greenland 1996)
+\item
+  By conditioning on a variable (or a set of variables) C we will mean
+  examining relations within levels of C (i.e. within strata defined by
+  single values of C) (see Greenland 2011)
+\item
+  conditioning and adjustment not the same thing. Control is used as a
+  synonym for asjutment.
 \end{itemize}
 
     \subsection{Directed Acyclic Graphs: graphical representations of
@@ -672,6 +679,9 @@ assocations to allow causal estimation
 \item
   the absense of an arrow means no direct effect between two variables
   cole 2009 illustrating bias paper.
+\item
+  Didelez 2010 and Pearl 2009 for connecting DAGs to probability
+  distributions and factorizations.
 \end{itemize}
 
     \begin{figure}
@@ -1321,6 +1331,14 @@ which come up in the simulation algorithm.
 
 \paragraph{Survival function}\label{survival-function}
 
+\begin{itemize}
+\tightlist
+\item
+  Naturally survival is measured at each follow up point, but as the
+  person is alive until their final follow up then we are always
+  conditioning on Y = 0 until the final follow up.
+\end{itemize}
+
 \paragraph{Hazard function}\label{hazard-function}
 
 \begin{itemize}
@@ -1331,6 +1349,11 @@ which come up in the simulation algorithm.
   show that the hazard ratio has a built-in selection bias?
 \item
   condition on survival up to a certain point?
+\item
+  Hazard ratios differ from relative risks and odds ratios in that RRs
+  and ORs are cumulative over an entire study, using a defined endpoint,
+  while HRs represent instantaneous risk over the study time period, or
+  some subset thereof.
 \end{itemize}
 
     \newpage
@@ -1413,14 +1436,37 @@ particularly important.
 
 \paragraph{noncollapsibility}\label{noncollapsibility}
 
+\begin{itemize}
+\tightlist
+\item
+  Define noncollapsibility and give example
+\end{itemize}
+
+conditional odds ratio constant over levels of \(Z\)
+
+example of ranomized trial, there being no confounding because it is a
+randomized trial, same result in men and women, different result in
+whole population. Not confounding because we eliminate confounding by
+randomization.
+
 Noncollapsibility arises when the marginal effect measure (marginal over
 any covariates, i.e. unstratified or with no confounder control, crude)
-is not equal to the strata specific effect measure. This is a problem
-when simulating from marginal structural models because the correct
-marginal structural model
+is not equal to the strata specific effect measure.
+
+\begin{itemize}
+\tightlist
+\item
+  explain why it is a probelm for marginals versus conditionals with
+  (i.e. won;t be the same MSM)
+\item
+  use cox ph model as example.
+\end{itemize}
+
+This is a problem when simulating from marginal structural models
+because the correct marginal structural model
 
 \[correct marginal structural model\] \[model with covariates\]
-\[collapsed ovr covariates and not equal to marginal model\]
+\[collapsed over covariates and not equal to marginal model\]
 
 In previous sections we descrie the necessity of controlling for
 confounding variables when estimating causal effects.
@@ -1436,7 +1482,7 @@ homogenous.
 The effect of treatment on diesease outcome may be unconfounded but
 noncollapsible
 
-Collapsibility is the same as simoson's paradox if we adopt the
+Collapsibility is the same as simpson's paradox if we adopt the
 definition that without the conditional variable they can be equal.
 
 collapsibility depends on the measure used. Some are collapsible and
@@ -1473,6 +1519,8 @@ are often treated as identical concepts when in fact they are not.
   relevance to the algorithm? How does this work with a specific MSM.
 \item
   Show why hazard ratios are not collapsible.
+\item
+  Explain why models with product terms are clearly not collapsible
 \end{itemize}
 
 \paragraph{Simulation algorithms literature
