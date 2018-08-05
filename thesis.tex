@@ -514,6 +514,22 @@ outcomes, not the counterfactuals. - the collection of outcomes on a
 subject are called the potential outcomes and only one of these is
 observed
 
+\begin{itemize}
+\tightlist
+\item
+  recently several studies have leveraged the missing data idea
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \citet{Ding2017}
+  \item
+    \citet{Howe2015}
+  \item
+    \citet{Edwards2015}
+  \end{itemize}
+\end{itemize}
+
     \subsection{Confounding}\label{confounding}
 
 Continuing the example, if group A consists of thirty of the headache
@@ -790,11 +806,10 @@ confoudning or stratification methods.
 \begin{itemize}
 \tightlist
 \item
-  introduce survival analysis?
-\item
   Intuition from Pearl 2009 book pp. 17 on sprinklers.
 \item
-  Simpson's paradox linked to making comparisons within strata
+  Simpson's paradox linked to making comparisons within strata -
+  collapsibility
 \item
   explain that we are often interested in parsimnonious models so cannot
   have all covariates \(U\) that will create associations between \(X\)
@@ -1311,6 +1326,22 @@ likely a zero problem.
   and also in the weight model. The reason why positivity is more
   important in the weight model is because when the weights are unstable
   the estimates can be very wrong as a result.
+\item
+  read and add \citet{Naimi2011} who have already done a simulation
+  study of non-positivity
+
+  \begin{itemize}
+  \tightlist
+  \item
+    in context of healthy worker effect
+  \item
+    explain why this doesn't get to the heart of the issue of
+    non-positivity
+  \item
+    a relevant question highlighted by \citet{Naimi2011} is whether the
+    effect of non-positivity is amplified with more than two time
+    periods.
+  \end{itemize}
 \end{itemize}
 
     Have been used for missing data problems. see pp.442 of Hernan,
@@ -1326,20 +1357,42 @@ observational model.
     \section{Key concepts in survival
 analysis}\label{key-concepts-in-survival-analysis}
 
-This chapter briefly reviews important concepts in survival analysis
-which come up in the simulation algorithm.
+This chapter briefly reviews several important concepts in survival
+analysis which are pertinent to this thesis and specifically the
+simulation algorithm used to generate the data used in this thesis.
+Survival analysis is the study of the distribution of life times. The
+basic concepts reviewed here are a condensed version of those presented
+in \citet{JohnP.Klein2003}.
 
-\paragraph{Survival function}\label{survival-function}
+\subsubsection{Survival function}\label{survival-function}
 
-\begin{itemize}
-\tightlist
-\item
-  Naturally survival is measured at each follow up point, but as the
-  person is alive until their final follow up then we are always
-  conditioning on Y = 0 until the final follow up.
-\end{itemize}
+The survival time \(T\) is the time between a well defined start point
+and a well defined end point. The survival function is the probability
+that a certain individual survives until time \(t\) or equivalently the
+probability that the survival time \(T\) is greater than \(t\),
+\[S(t) = P(T > t)\]
 
-\paragraph{Hazard function}\label{hazard-function}
+In the continuous case the survival function can be written
+
+\[S(t) = P(T > t) = \int_{x}^{\infty}f(t)dt\]
+
+In words, survival
+
+In the discrete case the survival function
+
+\[S(t) = P(T > t) = \sum_{x_j > x}p(x)\]
+
+\subsubsection{Hazard function}\label{hazard-function}
+
+The hazard function or hazard rate expresses \emph{the ``approximate''
+probability of an individual of age x experiencing the event in the next
+instant.}
+
+\[h(x) = \lim\limits_{\Delta x \to 0}\frac{P(x \le X \le x + \Delta x\ |\ X \ge x)}{\Delta x}\]
+
+In the discrete case, the hazard function is given
+
+\[h(x) = Pr(X = x_j\ |\ X \ge x_j) = \frac{p(x_j)}{S(x_{j - 1})}\]
 
 \begin{itemize}
 \tightlist
@@ -1354,6 +1407,20 @@ which come up in the simulation algorithm.
   and ORs are cumulative over an entire study, using a defined endpoint,
   while HRs represent instantaneous risk over the study time period, or
   some subset thereof.
+\item
+  compare hazard rate and hazard function with the hazard ratio. The
+  hazard ratio could be between men and women for example.
+\item
+  the hazard rate and hazard function are the same
+\item
+  relate survival to hazard function in order to show that survival is
+  completely determined by hazard rate.
+\item
+  Naturally survival is measured at each follow up point, but as the
+  person is alive until their final follow up then we are always
+  conditioning on Y = 0 until the final follow up.
+\item
+  Explain what the hazard ratio is
 \end{itemize}
 
     \newpage
@@ -1364,83 +1431,162 @@ models}\label{simulating-from-marginal-structural-models}
 In order to assess the impact of violations of the positivity assumption
 on the performance of the IPTW estimator we simulate data from a
 specific marginal structural model in a series of monte carlo
-simulations. In this chapter we start by describing the logic behin
-monte carlo simulations in general terms. Next, we consider several
-important criteria that a simulation model must exhibit in the context
-of MSMs. In particular we require an algorithm that can simulate from a
-specific MSM, has the observational structure described earlier and we
-also define noncollapsibility. Several algorithms have been proposed in
-the literature and these are briefly discussed and compared. We then
-focus on the algorithm suggested in \citet{Havercroft2010} and explain
-why it satisfies our requirements. The most salient aspects of this
-algorithm for the purposes of this thesis are described.
+simulations. Several algorithms for simulating from marginal structural
+models have been suggested in the literature. To test the effect of
+positivity violations on the performance of marginal structural models
+we use the algorithm of \citet{Havercroft2010}. This algorithm has
+several key features which are described in detail in this chapter. We
+start with an overview of the logic behind monte carlo simulations in
+general terms.
+
+In this section we first describe in general terms the logic behind
+monte carlo simulations. The specific In this chapter we start by
+describing the logic behin monte carlo simulations in general terms.
+Next, we consider several important criteria that a simulation model
+must exhibit in the context of MSMs. In particular we require an
+algorithm that can simulate from a specific MSM, has the observational
+structure described earlier and we also define noncollapsibility.
+Several algorithms have been proposed in the literature and these are
+briefly discussed and compared. We then focus on the algorithm suggested
+in \citet{} and explain why it satisfies our requirements. The most
+salient aspects of this algorithm for the purposes of this thesis are
+described.
 
 \paragraph{Monte Carlo Simulations}\label{monte-carlo-simulations}
 
 In statistical research interest often lies in the estimation of a
 population parameter \(\theta\). When only a sample \(X_1\) from the
-population is available, statistical methods are applied to obtain an
-estimate of the population parameter \(\hat \theta_1\). If a second
-sample \(X_2\) is drawn from the population it will result in second
-estimate \(\hat \theta_2\) and so on for more samples.
+population is available, statistical procedures are applied to obtain an
+estimate of the population parameter \(\hat \theta_1\). The same
+procedure applied to a second sample \(X_2\) drawn from the same
+population will result in second estimate \(\hat \theta_2\), and so on
+for more samples. Because only one sample is tyically available, the
+sampling distribution of \(\hat \theta_i\) is used to make inferences.
+\linebreak 
 
-Alternatively, a known "true" model governing key relationships can be
-specified and a sample of data generated according to that model. For
-example, a logistic model for a binary covariate aThe success of a
-technique can be compared to the true model. Any single sample generated
+In methodological research, simulations can flip this process on its
+head. We start with a known true model and generate multiple samples
+according to this model. The properties of a statistical method Rather
+than being a process of dicoverey we can use simulations as a process of
+rediscovery and appraise a method by its ability to correctly rediscover
+the parameter. \linebreak
+
+a known "true" model governing a population can be specified and a
+sample of data generated according to that model. For instance, the
+probability that a headache is alleviated after one hour could be
+expressed using a logistic model.
+
+\[Pr(Y=1\ |\ X=x) = \frac{e^{\beta_0 + \beta_1 \times x}}{e^{\beta_0 + \beta_1 \times x} + 1} = \frac{1}{1 + e^{-(\beta_0 + \beta_1 \times x)}}\]
+
+So that the log odds ratio between those who received treatment and
+those who did not is given as
+
+\[log \frac{P(Y = 1\ |\ X = 1)}{P(Y = 1\ |\ X = 0)} = \beta_0 + \beta_1 \times x \]
+
+By specifying \({\beta_0, \beta_1}\) we can simulate outcome from this
+model by first generating values for \(x\) and then using the values of
+\(x\) to generate \(Y\) using calcualting y by rounding probabilities.
+Each time we sample we get \((Y, X)\) and we can perform logistic
+regression to see whether the correct parameters are resolved. We could
+then change something like the model form and see what happens to the
+model under changes. Or we may just want to see how accurate the model
+is using finite a finite sample rather than asymptotics, say a sample of
+n = 1000 observations.
+
+More generally, the steps taken in a simulation study can be summarized:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Specify the articifial population
+\item
+  Sample from that population
+\item
+  Calculate the parameter of interest
+\item
+  repeat steps 2 and 3 a certain number of times
+\item
+  draw conclusions.
+\end{enumerate}
+
+Naturally, generating data in this way requires knowing the parameters
+in advance in order to simulate from the model. In the case of MSMs this
+requires simulating from a specific MSM
+
+Explain why simulations still need to be treated critically.
+\citet{Greenland1997}
 
 \begin{itemize}
 \tightlist
 \item
-  estimate method
-\item
-  variability hence do this many times
-\item
-  aggregate results and calculate SE
-\item
-  to study finite sample properties we simulate a finite sample (of size
-  n = 1000 for example.)
+  advantage of no measurement error, no model misspecification
 \end{itemize}
-
-specify general steps in the agorithm
-
-Naturally this requires knowing the parameters in advance in order to
-simulate from the model. In the case of MSMs this requires simulating
-from a specific MSM
 
 \paragraph{Specific MSM}\label{specific-msm}
 
-Testing positivity violations requires generating data from a known MSM.
+The previous section described how data generated from a specific model
+can be used to assess statistical methodology and departures from key
+assumptions. In the case of MSM this entails specifying a specific form
+for the MSM from which data can be generated.
+
 For example, suppose that the chosen MSM was
 \(P(Y\ |\ do(a)) = \alpha + \beta a\), then the observational data from
 which this is derived would be \(Y\), \(A\) and \(L\). The simulation
 needs to allow \(\beta\) to be estimated from only that observational
-data. In order to simulating from a specific MSM we need to generate
+data. In order to simulate from a specific MSM we need to generate
 observational data in such a way that it conforms to a specific MSM. For
 instance, one specific MSM could be written as
 \(P(Y\ |\ do(a)) = \alpha + \beta a\). However, we never see this so we
 need to generate data in such a way that we get this model from
 observational data and that we can then return to it.
 
-\paragraph{observational structure}\label{observational-structure}
-
-The discussion of confounding and time dependent confounding above
-highlighted several important aspects of observational data. Firstly,
-confounding arises in observational data when subjects from the treated
-and untreated groups are not exchangeable. In other words, The
-observational structure needs to include the central parts of time
-dependent confounding - in particular Y and A are common effects of U
-which creates a confounding relationship. We also need selection bias,
-some models like hazard ratios have a built in selection bias so this is
-particularly important.
-
 \paragraph{noncollapsibility}\label{noncollapsibility}
+
+In the example of ibuprofen on headaches it was reasonable to ask
+whether the effect of ibuprofen \(X\) on headache alleviation \(Y\) was
+different amongst men and women. An effect measure like a rate
+difference, rate ratio or odds ratio is collapsible when the effect is
+equal in both strata and equal to marginal (over \(C\)) effect.
+Collapsibility is a useful property because it means that analysis can
+be carried out on a subset of variables after marginalizing over the
+others \citet{Didelez2010}. In this case that could mean marginalizing
+over sex and looking at just the relationship between \(Y\) and \(X\).
+\linebreak  
 
 \begin{itemize}
 \tightlist
 \item
-  Define noncollapsibility and give example
+  see greenland 1999 collapsibility regression formulation for an
+  example in regression context.
 \end{itemize}
+
+An effect measure for the association between \(Y\) and \(X\) such as an
+rate ratio or an odds ratio is noncollapsible when conditioning on a
+covariate a to \(Y\) changes the size of the odds ratio even when .
+Collapsibility is useful when
+
+Not collapsible when effect measure in two strata is equal but not equal
+to marginal.
+
+\begin{itemize}
+\tightlist
+\item
+  Why is this a problem generally or something that should be accounted
+  for by researchers
+\item
+  Why is this a problem in this case.
+\item
+  show that it is hard to get a specific MSM.
+\end{itemize}
+
+An effect measure is non-collapsible across strata defined in the
+analysis if the constant effect measure does not equal the strata
+specific effect measure. greenland 1996
+
+Even when the odds ratio is the same over all values of \(C\) it is not
+always collapsible in the sense that the effect (measured by odds ratio)
+is the same in group \(C\) and group \(C'\)
 
 conditional odds ratio constant over levels of \(Z\)
 
@@ -1448,6 +1594,9 @@ example of ranomized trial, there being no confounding because it is a
 randomized trial, same result in men and women, different result in
 whole population. Not confounding because we eliminate confounding by
 randomization.
+
+Greenland 1999 - if the model with Z is correct then the model without Z
+is unlikely to have the same coefficient
 
 Noncollapsibility arises when the marginal effect measure (marginal over
 any covariates, i.e. unstratified or with no confounder control, crude)
@@ -1521,6 +1670,35 @@ are often treated as identical concepts when in fact they are not.
   Show why hazard ratios are not collapsible.
 \item
   Explain why models with product terms are clearly not collapsible
+\item
+  relation to a hazard function
+\end{itemize}
+
+\paragraph{observational structure}\label{observational-structure}
+
+The previous chapter included a discussion of the role of confounding
+covariates and time dependent confounding. In the time fixed context,
+blocking the path from a confounding covariate by conditioning was
+sufficient to consistently estimate the effect of treatment on outcome
+in the absence of unmeasured confounders. In the time dependent context,
+conditioning on confounding covariates may biases estimates in two ways.
+First, in a time dependent context, both treatment and covariates can
+change over time. Some effect of treatment may be transmitted through
+the covariate to the outcome or future treatment. Blocking this path
+also blocks the indirect effect of treatment on outcome through the
+confounding covariate. At the same time, selection bias arises due to
+conditioning on a colider. The hazard ratio, the ratio of the hazard
+function/rate at two levels of an explanatory variable, typically
+exhibits selection bias. Failing to condition \linebreak 
+
+\begin{itemize}
+\tightlist
+\item
+  why important for observational studies
+\item
+  examples of it in observational studies
+\item
+  need algorithm with this structure.
 \end{itemize}
 
 \paragraph{Simulation algorithms literature
@@ -1529,11 +1707,15 @@ review.}\label{simulation-algorithms-literature-review.}
 Several algorithms for simulating from a specific MSM have ben suggested
 in the literature.
 
-\citet{Havercroft2012} \citet{Bryan2004} \citet{Westreich2012}
-\citet{Young2014}
-
 \begin{itemize}
-\tightlist
+\item
+  \citet{Havercroft2012}
+\item
+  \citet{Bryan2004}
+\item
+  \citet{Westreich2012} not in review by \citet{Havercroft2012}
+\item
+  \citet{Young2014}
 \item
   Bryan 2004: fixes the vector L at the beginning which means A never
   affects L which don't make no sense. In other words it doesn't have
@@ -1551,26 +1733,81 @@ in the literature.
   under positivity it should be fine to use the Havercroft algorithm.
 \end{itemize}
 
+\citet{Havercroft2012} also make these comparisons in their paper in a
+few paragraphs.
+
+What we add here is how control over \(L\) allows us to introduce
+positivity violations.
+
 \subsection{Algorithm}\label{algorithm}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwResult{Marginal Structural Model Under Time Dependent Confounding}
+ \For{i in 1, \dots , n}{
+  $U_{0, i} \sim U[0, 1]$\\
+  $\epsilon_{0, i} \sim N(\mu, \sigma^2)$\\
+  $L_{0, i} \gets F^{-1}_{\Gamma(k,\theta)}(U_{i, 0}) + \epsilon_{0, i}$\\
+  $A_{-1, i} \gets 0$\\
+  $A_{0, i} \gets Bern(expit(\theta_0 + \theta_2 (L_{0, i} - 500)))$\\
+  \If{$A_{0, i}= 1$}{
+   $T^* \gets 0$;
+  }
+  $\lambda_{0, i} \gets expit(\gamma_0 + \gamma_2 A_{0, i})$\\
+  \eIf{$\lambda_{0, i} \ge U_{0, i}$}{
+   $Y_{1, i} \gets 0$\\
+   }{
+   $Y_{1, i} \gets 1$\\
+  }
+  \For{k in 1, \dots , T}{
+   \If{$Y_{t, i} = 0$}{
+    $\Delta_{t, i} \sim N(\mu_2, \sigma^2_2)$\\
+    $U_{t, i} \gets min(1, max(0, U_{t-1, i} + \Delta_{t, i}))$\\
+    \eIf{$t \neq 0\ (mod\ k)$}{
+     $L_{t, i} \gets L_{t-1, i}$\\
+     $A_{t, i} \gets A_{t-1, i}$\\
+     }{
+     $\epsilon_{t, i} \sim N(100(U_{t, i}-2), \sigma^2)$\\
+     $L_{t, i} \gets max(0, L_{t-1, i} + 150A_{t-k,i}(1-A_{t-k-1,i}) + \epsilon_{t, i})$\\
+     \eIf{$A_{t-1, i} = 0$}{
+      $A_{t, i} \sim Bern(expit(\theta_0 + \theta_1t + \theta_2(L_{t, i}-500)))$\\
+      }{
+      $A_{t, i} \gets 1$\\
+     }
+     \If{$A_{t, i} = 1 \and A_{t-k, i} = 0$}{
+      $T^* \gets t$\\
+     }
+    }
+    $\lambda_{t, i} \gets expit()\gamma_0 + \gamma_1[(1 - A_{t, i})t + A_{t, i}T^*] + \gamma_2 A_{t, i} + \gamma_3 A_{t, i}(t-T^*))$\\
+    \eIf{$1 - \prod_{\tau=0}^t(1 - \lambda_{\tau, i}) \ge U_{0, i}$}{
+     $Y_{t+1, i} = 1$\\     
+    }{
+     $Y_{t+1, i} = 0$\\
+    }
+   }
+  }
+ }
+ \caption{Simulation Algoirthm MSM}
+\end{algorithm}
 
 \begin{itemize}
 \tightlist
 \item
   describe how the algorithm works, is derived and how it acheives a
-  specific MSM, the observational structure and collapsibiity
-\item
-  collapsibility is a problem because we cannot collapse over L to get
-  the marginal model of Y given A alone.
+  specific MSM, the observational structure and a specific MSM
+  (collapsibility)
 \end{itemize}
 
 \subsection{Algorithm with positivity
 violations.}\label{algorithm-with-positivity-violations.}
 
-The confounding structure occurs because there is a relationship between
-A and Y confounded through L through U? Y and A are common effects of U
-which creates an association between A and Y other than the causal
-association we want to study in the MSM - refer to structural bias
-paper.
+\begin{itemize}
+\tightlist
+\item
+  show parts of algorithm which change
+\item
+  present full algorithm with all changes in appendix
+\end{itemize}
 
 The parameter of interest could be expected survival or the five year
 survival probability
@@ -1591,13 +1828,6 @@ investigate positivity we can still only do so for collapsible models?
 
 Equivalent way of motivating dividing the joint distribution by
 Pr(A\textbar{}L) is through IPTW.
-
-The important point is to resolve the correct, causal parameter on a
-
-How does selection bias relate to \(U\)?
-
-Explain why the algoritm allows positivity to be propagated throught the
-patients history.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1696,16 +1926,19 @@ itself.
 \item
   treatment regime is determined by t* (starting point of treatment
   because it is a vector of \{0, 0, 0, 1, 1, 1\}
+\item
+  Explain why we can introduce positivity in this algorithm but not in
+  others as easily.
 \end{itemize}
 
     \section{Violations of Positivity}\label{violations-of-positivity}
 
 The motivation for using the algorith of \citet{Havercroft2012} is that
-we have control over how \(L\) affects \(Y\), so we can itroduce
-positivity using a threshold. In other algorithms there would be a
-direct link between \(L\) and \(Y\), this would be a problem because
-altering treatment decisions based on \(L\) would affect \(Y\)
-directly.\\
+we have control over how \(L\) affects \(Y\) whereas in other algorithms
+\(L\) would be fixed in advance., so we can itroduce positivity using a
+threshold. In other algorithms there would be a direct link between
+\(L\) and \(Y\), this would be a problem because altering treatment
+decisions based on \(L\) would affect \(Y\) directly.\\
 - creating an artificial population in which positivity is violated in
 specific ways.
 
@@ -1762,8 +1995,7 @@ in a similar manner to CD4 counts such that a low value of \(L_t\)
 represents a more severe illness and hence a higher probability of both
 tratemnt and failure in the following period. In addition to \(L_t\),
 the variable \(U_t\) represents subject specific general health at time
-\(t\). Although we will simulate \(U_t\), in a real world application
-\(U_t\) is an unmeasured confounder which
+\(t\).
 
 Each time period is either a check up visit or is between two check up
 visits. If \(t\) is a check-up visit and treatment has not yet
@@ -1805,55 +2037,6 @@ time periods. The outer loop in the following algorithm
 \(t \in {1, \dots, T}\) refers to the subsject specific time periods
 from baseline to failure or the end of the study. There will be at least
 one, and at most \(T\) records for each patient.
-
-\begin{algorithm}[H]
-\SetAlgoLined
-\KwResult{Marginal Structural Model Under Time Dependent Confounding}
- \For{i in 1, \dots , n}{
-  $U_{0, i} \sim U[0, 1]$\\
-  $\epsilon_{0, i} \sim N(\mu, \sigma^2)$\\
-  $L_{0, i} \gets F^{-1}_{\Gamma(k,\theta)}(U_{i, 0}) + \epsilon_{0, i}$\\
-  $A_{-1, i} \gets 0$\\
-  $A_{0, i} \gets Bern(expit(\theta_0 + \theta_2 (L_{0, i} - 500)))$\\
-  \If{$A_{0, i}= 1$}{
-   $T^* \gets 0$;
-  }
-  $\lambda_{0, i} \gets expit(\gamma_0 + \gamma_2 A_{0, i})$\\
-  \eIf{$\lambda_{0, i} \ge U_{0, i}$}{
-   $Y_{1, i} \gets 0$\\
-   }{
-   $Y_{1, i} \gets 1$\\
-  }
-  \For{k in 1, \dots , T}{
-   \If{$Y_{t, i} = 0$}{
-    $\Delta_{t, i} \sim N(\mu_2, \sigma^2_2)$\\
-    $U_{t, i} \gets min(1, max(0, U_{t-1, i} + \Delta_{t, i}))$\\
-    \eIf{$t \neq 0\ (mod\ k)$}{
-     $L_{t, i} \gets L_{t-1, i}$\\
-     $A_{t, i} \gets A_{t-1, i}$\\
-     }{
-     $\epsilon_{t, i} \sim N(100(U_{t, i}-2), \sigma^2)$\\
-     $L_{t, i} \gets max(0, L_{t-1, i} + 150A_{t-k,i}(1-A_{t-k-1,i}) + \epsilon_{t, i})$\\
-     \eIf{$A_{t-1, i} = 0$}{
-      $A_{t, i} \sim Bern(expit(\theta_0 + \theta_1t + \theta_2(L_{t, i}-500)))$\\
-      }{
-      $A_{t, i} \gets 1$\\
-     }
-     \If{$A_{t, i} = 1 \and A_{t-k, i} = 0$}{
-      $T^* \gets t$\\
-     }
-    }
-    $\lambda_{t, i} \gets expit()\gamma_0 + \gamma_1[(1 - A_{t, i})t + A_{t, i}T^*] + \gamma_2 A_{t, i} + \gamma_3 A_{t, i}(t-T^*))$\\
-    \eIf{$1 - \prod_{\tau=0}^t(1 - \lambda_{\tau, i}) \ge U_{0, i}$}{
-     $Y_{t+1, i} = 1$\\     
-    }{
-     $Y_{t+1, i} = 0$\\
-    }
-   }
-  }
- }
- \caption{Simulation Algoirthm MSM}
-\end{algorithm}
 
 Within the inner loop (\(t \in {1, \dots, T}\)) we see that the data is
 only updated at time \(t \neq 0\ (mod\ k)\), where \(k\) refers to
@@ -1970,9 +2153,13 @@ based on parameters that closely match the Swiss HIV Cohort Study
   we don't confirm the results of the havercroft of Bryan papers,
   instead refer readers to these papers to see how IPTW outperforms the
   naive estimators.
+\item
+  Explain why we use MSE or other measures to assess simulation results.
 \end{itemize}
 
     \section{Discussion and Conclusion}\label{discussion-and-conclusion}
+
+The focus of this thesis was the effect of positivity violations on
 
 \subsection{Limitations}\label{limitations}
 
