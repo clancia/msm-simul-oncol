@@ -71,6 +71,7 @@
 \usepackage{pgf}
 \usepackage{tikz}
 \usetikzlibrary{positioning}
+\usetikzlibrary{arrows}
 \usepackage{algorithmic}
 \usepackage[ruled, vlined, linesnumbered]{algorithm2e}
 
@@ -303,6 +304,17 @@
     \newpage
 
 \section{Introduction}\label{introduction}
+
+\begin{itemize}
+\tightlist
+\item
+  set up problem and why we need to study positivty - give this
+  motivation before anything else
+\item
+  exhchangeability/confounder control vs positivity
+\item
+  thresholding/positivty compliant doctors.
+\end{itemize}
 
 Marginal structural models (MSMs) are a popular class of models for
 performing causal inference in the presence of time dependent
@@ -1420,7 +1432,10 @@ In the discrete case, the hazard function is given
   person is alive until their final follow up then we are always
   conditioning on Y = 0 until the final follow up.
 \item
-  Explain what the hazard ratio is
+  Explain what the hazard ratio is.
+\item
+  a logistic model is one where the log-odds of the probability of an
+  event is a linear combination of independent or predictor variables.
 \end{itemize}
 
     \newpage
@@ -1452,7 +1467,7 @@ in \citet{} and explain why it satisfies our requirements. The most
 salient aspects of this algorithm for the purposes of this thesis are
 described.
 
-\paragraph{Monte Carlo Simulations}\label{monte-carlo-simulations}
+    \paragraph{Monte Carlo Simulations}\label{monte-carlo-simulations}
 
 In statistical research interest often lies in the estimation of a
 population parameter \(\theta\). When only a sample \(X_1\) from the
@@ -1523,7 +1538,14 @@ Explain why simulations still need to be treated critically.
   advantage of no measurement error, no model misspecification
 \end{itemize}
 
-\paragraph{Specific MSM}\label{specific-msm}
+    \paragraph{Specific MSM}\label{specific-msm}
+
+\begin{itemize}
+\tightlist
+\item
+  specifying a specific MSM means postulating a model for the causal
+  relationship between \(Y\) and \(X\)
+\end{itemize}
 
 The previous section described how data generated from a specific model
 can be used to assess statistical methodology and departures from key
@@ -1541,7 +1563,7 @@ instance, one specific MSM could be written as
 need to generate data in such a way that we get this model from
 observational data and that we can then return to it.
 
-\paragraph{noncollapsibility}\label{noncollapsibility}
+    \paragraph{noncollapsibility}\label{noncollapsibility}
 
 In the example of ibuprofen on headaches it was reasonable to ask
 whether the effect of ibuprofen \(X\) on headache alleviation \(Y\) was
@@ -1674,7 +1696,7 @@ are often treated as identical concepts when in fact they are not.
   relation to a hazard function
 \end{itemize}
 
-\paragraph{observational structure}\label{observational-structure}
+    \paragraph{observational structure}\label{observational-structure}
 
 The previous chapter included a discussion of the role of confounding
 covariates and time dependent confounding. In the time fixed context,
@@ -1701,8 +1723,18 @@ exhibits selection bias. Failing to condition \linebreak
   need algorithm with this structure.
 \end{itemize}
 
-\paragraph{Simulation algorithms literature
+    \paragraph{Simulation algorithms literature
 review.}\label{simulation-algorithms-literature-review.}
+
+\begin{itemize}
+\tightlist
+\item
+  briefly summarise the litrature in \citet{Havercroft2012}
+\item
+  update with more recent algorithms like \citet{Young2014}
+\item
+  discuss \citet{Naimi2011} limitations of simulation algorithm.
+\end{itemize}
 
 Several algorithms for simulating from a specific MSM have ben suggested
 in the literature.
@@ -1739,7 +1771,61 @@ few paragraphs.
 What we add here is how control over \(L\) allows us to introduce
 positivity violations.
 
-\subsection{Algorithm}\label{algorithm}
+    \subsection{Simulation algorithm}\label{simulation-algorithm}
+
+The base algorithm used in this paper is drawn from
+\citet{Havercroft2012}. In that paper, an algorithm for simulating data
+from a specific MSM is derived from the joint factorization of a DAG
+which exhibits time dependent confounding. The algorithm generates
+subject data for multiple visits. The central concepts of the algorithm
+can be explained using a simpliefies two period version of the algorith,
+see figure ?. \linebreak
+
+\begin{itemize}
+\tightlist
+\item
+  stress that we still simulate from conditionals.
+\end{itemize}
+
+    \begin{figure}
+\centering
+\begin{tikzpicture}[->,>=stealth',auto,node distance=3cm,
+  thick,main node/.style={circle,draw=none,font=\sffamily\Large\bfseries}]
+
+  \node[main node, circle, draw] (1) {$U_0$}; %unmeasured
+  \node[main node] (2) [right of=1] {$A_0$};
+  \node[main node] (3) [above of=2] {$L_0$};
+  \node[main node] (4) [below of=2] {$Y_1$};
+  \node[main node] (5) [right of=2] {$A_1$};
+  \node[main node] (6) [above of=5] {$L_1$};
+  \node[main node] (7) [below of=5] {$Y_2$};
+  \node[main node, circle, draw] (8) [above of=6] {$U_1$}; %unmeasured
+
+  \path[every node/.style={font=\sffamily\small}]
+    (1) edge node [right] {} (2)
+    (1) edge node [right] {} (3)
+    (1) edge node [right] {} (4)
+    (1) edge[bend right = 60] node [left] {} (7)
+    (1) edge[bend left] node [left] {} (8)
+    (2) edge node [right] {} (3)
+    (2) edge node [right] {} (4)
+    (2) edge node [right] {} (5)
+    (2) edge node [right] {} (6)
+    (2) edge node [right] {} (7)
+    (3) edge node [right] {} (6)
+    (4) edge node [right] {} (7)
+    (5) edge node [right] {} (6)
+    (5) edge node [right] {} (7)
+    (8) edge node [right] {} (6);
+\end{tikzpicture}
+\caption{Causal graph}
+\end{figure}
+
+    The DAG corresponding to their simulation algorithm is shown in figure
+?. This DAG who derive their algorithm according to a specific DAG. Here
+a sketch of the key points in this algorithm is presented, the full
+proof demonstrating that the algorithm simulates data from a specific
+MSM is presented in Appendix B of \citet{Havercroft2012}.
 
 \begin{algorithm}[H]
 \SetAlgoLined
@@ -1798,7 +1884,7 @@ positivity violations.
   (collapsibility)
 \end{itemize}
 
-\subsection{Algorithm with positivity
+    \subsection{Algorithm with positivity
 violations.}\label{algorithm-with-positivity-violations.}
 
 \begin{itemize}
@@ -1858,13 +1944,9 @@ The relationship between Y and L is then dependent on A. There is no
 relationship between A and U because of the set-up in the DAG. The
 variable L blocks this relationship.
 
-In their paper \citet{Havercroft2012} develop an algorithm that allows
-simulating data that corresponds to a particular parameterisation of an
-MSM. This algorithm provides the bedrock of the simulation structure
-considered in this thesis. Figure 1 represents the system under
-consideration. The DAG in figure 1 represents the one-shot
-non-longitudinal case. Factorising the joint distributions of the
-variables in figure 1 yields
+Figure 1 represents the system under consideration. The DAG in figure 1
+represents the one-shot non-longitudinal case. Factorising the joint
+distributions of the variables in figure 1 yields
 
 \[P(U,\ L,\ W,\ A,\ Y) = P(W)P(U)P(W)P(L\ |\ U)P(A\ |\ L,W)P(Y\ |\ U,A)\]
 
