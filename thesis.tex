@@ -314,6 +314,9 @@
   exhchangeability/confounder control vs positivity
 \item
   thresholding/positivty compliant doctors.
+\item
+  in a survival context, need to choose simulation algorithm carefull
+  because survival models are noncollapsible.
 \end{itemize}
 
 Marginal structural models (MSMs) are a popular class of models for
@@ -650,6 +653,8 @@ unmeasured confounding". \linebreak
 \item
   conditioning and adjustment not the same thing. Control is used as a
   synonym for asjutment.
+\item
+  in randomization, confounding is absent in expectation
 \end{itemize}
 
     \subsection{Directed Acyclic Graphs: graphical representations of
@@ -802,7 +807,9 @@ will look at toxicity of treatment. Somepeople will be suceptible and
 drop out leaving more people in the untreated arm of the study.
 
 general point about selection bias is that the general population is not
-a valid control group.
+a valid control group. This is interesting because it links very closely
+with the counterfactual approach which defines the causal effect, not
+with references to a population but to an individual.
 
 Conclusion, 1) clearly a different technique is required for analysis 2)
 the nature of time dependent case needs to be described fully enough to
@@ -850,6 +857,14 @@ confoudning or stratification methods.
 \item
   Because treatment is randomized (at baseline) in expectation the
   proportion of men and women in each group is the same.
+\item
+  The reason why summary values are a problem for selection bias is in
+  \citet{Robins1992} is similar/the same as hernan on hazards of hazard
+  ratios.
+\item
+  explain that Z is a mediator variable and also explain colliders and
+  why conditioning on a collider creates an association between A and U
+  and hence A and Y
 \end{itemize}
 
     \begin{figure}
@@ -1155,7 +1170,7 @@ following.
 In words, the probability that the potential outcome \(Y_x\) is equal to
 the observed outcome \(y\) is itself equal to the probability that the
 observed outcome equals \(y\) whenever \(X = x\) and for any covariate
-\(Z\).
+\(Z\). \linebreak  
 
 Several authors have discussed whether the consistency assumption is
 really an assumption or if it is a definition or axiom. The interested
@@ -1376,13 +1391,22 @@ Survival analysis is the study of the distribution of life times. The
 basic concepts reviewed here are a condensed version of those presented
 in \citet{JohnP.Klein2003}.
 
+\begin{itemize}
+\tightlist
+\item
+  typically interested in effect of treatment on survival
+\item
+  Need to adjust for confounding variables and independent or other
+  variables.
+\end{itemize}
+
 \subsubsection{Survival function}\label{survival-function}
 
 The survival time \(T\) is the time between a well defined start point
 and a well defined end point. The survival function is the probability
 that a certain individual survives until time \(t\) or equivalently the
 probability that the survival time \(T\) is greater than \(t\),
-\[S(t) = P(T > t)\]
+\[S(t) = P(T > t)\].
 
 In the continuous case the survival function can be written
 
@@ -1406,12 +1430,17 @@ In the discrete case, the hazard function is given
 
 \[h(x) = Pr(X = x_j\ |\ X \ge x_j) = \frac{p(x_j)}{S(x_{j - 1})}\]
 
+\[Pr(Y=1\ |\ X=x) = \frac{e^{\beta_0 + \beta_1 \times x}}{e^{\beta_0 + \beta_1 \times x} + 1} = \frac{1}{1 + e^{-(\beta_0 + \beta_1 \times x)}}\]
+
+The shape of the hazard function depends on the context. In some cases
+it can be an increasing function reflecting an increased chance of
+failure over time. In other cases it can be increasing or hump shaped.
+The shape of the hazard rate can be made to depend on
+
 \begin{itemize}
 \tightlist
 \item
-  show that hazard function is not collapsible
-\item
-  show that the hazard ratio has a built-in selection bias?
+  show that hazard function is not collapsible or hazard ratio.
 \item
   condition on survival up to a certain point?
 \item
@@ -1436,6 +1465,18 @@ In the discrete case, the hazard function is given
 \item
   a logistic model is one where the log-odds of the probability of an
   event is a linear combination of independent or predictor variables.
+\end{itemize}
+
+\subsubsection{Proportional hazards}\label{proportional-hazards}
+
+In a typical study we want to adjust for confounders and other variables
+in order to get a better estimate than just looking at treated versus
+non-treated patients.
+
+\begin{itemize}
+\tightlist
+\item
+  explain how we let the survival time dependent on covariates.
 \end{itemize}
 
     \newpage
@@ -1469,15 +1510,16 @@ described.
 
     \paragraph{Monte Carlo Simulations}\label{monte-carlo-simulations}
 
-In statistical research interest often lies in the estimation of a
+In statistical research, interest often lies in the estimation of a
 population parameter \(\theta\). When only a sample \(X_1\) from the
 population is available, statistical procedures are applied to obtain an
-estimate of the population parameter \(\hat \theta_1\). The same
-procedure applied to a second sample \(X_2\) drawn from the same
-population will result in second estimate \(\hat \theta_2\), and so on
-for more samples. Because only one sample is tyically available, the
-sampling distribution of \(\hat \theta_i\) is used to make inferences.
-\linebreak 
+estimate of the population parameter \(\hat \theta_1\) based on that
+sample. That is, \(\hat \theta_1\) is an estimate of \(\theta\)
+estimated from the sample \(X_1\). The same procedure applied to a
+second sample \(X_2\) drawn from the same population will result in
+second estimate \(\hat \theta_2\), and so on for more samples. Because
+only one sample is tyically available, the sampling distribution of
+\(\hat \theta_i\) is used to make inferences. \linebreak 
 
 In methodological research, simulations can flip this process on its
 head. We start with a known true model and generate multiple samples
@@ -1491,7 +1533,17 @@ sample of data generated according to that model. For instance, the
 probability that a headache is alleviated after one hour could be
 expressed using a logistic model.
 
-\[Pr(Y=1\ |\ X=x) = \frac{e^{\beta_0 + \beta_1 \times x}}{e^{\beta_0 + \beta_1 \times x} + 1} = \frac{1}{1 + e^{-(\beta_0 + \beta_1 \times x)}}\]
+\[log \frac{P(Y = 1\ |\ X = 1)}{P(Y = 1\ |\ X = 0)} = \alpha + \beta \times x\]
+
+\begin{itemize}
+\tightlist
+\item
+  show that the logistic model is the log odds model or odds ratio
+  model.
+\item
+  explain that the cox prop hazard model discrete time equivalent is the
+  logistic model.
+\end{itemize}
 
 So that the log odds ratio between those who received treatment and
 those who did not is given as
@@ -1563,24 +1615,76 @@ instance, one specific MSM could be written as
 need to generate data in such a way that we get this model from
 observational data and that we can then return to it.
 
-    \paragraph{noncollapsibility}\label{noncollapsibility}
+    \paragraph{Noncollapsibility}\label{noncollapsibility}
 
-In the example of ibuprofen on headaches it was reasonable to ask
-whether the effect of ibuprofen \(X\) on headache alleviation \(Y\) was
-different amongst men and women. An effect measure like a rate
-difference, rate ratio or odds ratio is collapsible when the effect is
-equal in both strata and equal to marginal (over \(C\)) effect.
-Collapsibility is a useful property because it means that analysis can
-be carried out on a subset of variables after marginalizing over the
-others \citet{Didelez2010}. In this case that could mean marginalizing
-over sex and looking at just the relationship between \(Y\) and \(X\).
-\linebreak  
+In the example of the effect of ibuprofen on headache alleviation it was
+reasonable to ask whether that effect differed between male and female
+subjects. That effect could be captured by effect measures such as the
+risk difference, risk ratio or odds ratio. If treatment affects the
+outcome in males and females differently then the effect in the male
+strata will be different from the effect in the female strata.
+Marginalizing over the two strata will lead to biased effect measure
+because comparisons will not be between exchangeable subjects which will
+propogate up to the effect measure of interest. \linebreak
+
+On the other hand, if treatment affects males and females equally then
+it seems reasonable that the marginal effect (after marginalizing over
+sex - pooling subjects) would also be equal to the male and female
+specific effects. In other words, if the effect in males is the same as
+in females then it is reasonable to think that the effect is the same in
+the total population, which is made up of males and females. In that
+case, the effect measure is collapsible because sex is unrelated to
+exposure to ibuprofen and pooling males and females together and
+collapsing over sex, correct analysis can be performed using a marginal
+or naive analysis. This extends to the case of many subgroups defined
+by, for example, age or race. Collapsibility is useful because it helps
+to reduce the dimensionality and computational effort which arises when
+many subgroups need to be taken account of in the analysis
+\citet{Didelez2010}. \linebreak
+
+However, some effect measures are noncollapsible, in the sense that even
+when their strata specific effects are equal, collapsing over strata the
+marginal or naive effect measure does not equal the strata specific
+effect measures. Simpson's paradox (\citet{}). Examples of
+non-collapsible effect measures include the odds ratio and rate
+difference. The odds ratio is estimated using logistic regression
+
+In a practical setting, the odds ratio may be used and there may be
+confounding and there may be noncollapsibility. In fact, the ability of
+the inverse probability to correctly estimate the causal effect of
+treatment on outcome in the presence of time dependent confounding make
+it possible to separate the confounding and collapsibility elements and
+quantfy the extend to which collapsibility affects results
+\citet{Pang2016}. \linebreak
+
+The relevance of noncollapsibility to this thesis is the need to
+simulate data from a known MSM model. The conditionals from which we
+draw data will not typically be collapsible.
+
+is the same it seems reasonable that the effect in the population would
+also be the same. Naturally the difference could be due to the
+differening effect in the population in which case confounding is
+present. the same we could conclude that sex made no difference and look
+at marginal associations instead. Reducing the number of variables
+required in analysis is often useful because it reduces dimensionality
+and computational effort allowing subgroups to be pooled together
+
+An effect measure like a rate difference, rate ratio or odds ratio is
+collapsible when the effect is equal in both strata and equal to
+marginal (over \(C\)) effect. Collapsibility is a useful property
+because it means that analysis can be carried out on a subset of
+variables after marginalizing over the others . In this case that could
+mean marginalizing over sex and looking at just the relationship between
+\(Y\) and \(X\). \linebreak  
 
 \begin{itemize}
 \tightlist
 \item
   see greenland 1999 collapsibility regression formulation for an
   example in regression context.
+\item
+  mixed up with confounding and concluded that there is no confounding
+  when the conditional odds ratio equals the conditional odds ratio.
 \end{itemize}
 
 An effect measure for the association between \(Y\) and \(X\) such as an
@@ -1588,31 +1692,18 @@ rate ratio or an odds ratio is noncollapsible when conditioning on a
 covariate a to \(Y\) changes the size of the odds ratio even when .
 Collapsibility is useful when
 
-Not collapsible when effect measure in two strata is equal but not equal
-to marginal.
-
 \begin{itemize}
 \tightlist
 \item
-  Why is this a problem generally or something that should be accounted
-  for by researchers
-\item
-  Why is this a problem in this case.
-\item
-  show that it is hard to get a specific MSM.
+  Explain that the effect of interest depends on the question (also cite
+  \citet{Pearl2014} on this)
 \end{itemize}
 
 An effect measure is non-collapsible across strata defined in the
 analysis if the constant effect measure does not equal the strata
 specific effect measure. greenland 1996
 
-Even when the odds ratio is the same over all values of \(C\) it is not
-always collapsible in the sense that the effect (measured by odds ratio)
-is the same in group \(C\) and group \(C'\)
-
-conditional odds ratio constant over levels of \(Z\)
-
-example of ranomized trial, there being no confounding because it is a
+example of randomized trial, there being no confounding because it is a
 randomized trial, same result in men and women, different result in
 whole population. Not confounding because we eliminate confounding by
 randomization.
@@ -1638,9 +1729,6 @@ because the correct marginal structural model
 
 \[correct marginal structural model\] \[model with covariates\]
 \[collapsed over covariates and not equal to marginal model\]
-
-In previous sections we descrie the necessity of controlling for
-confounding variables when estimating causal effects.
 
 Collapsibility starts with the notion of confounders. We assume that
 within strata of confounders that the effect of the confounder is
@@ -1673,12 +1761,9 @@ Models are noncollapsible when conditioning on a covariate
 when the covariate is unrelated to the exposure. Illustrate why this
 happens with survival models.
 
-Collapsability comes in because we cannot collapse a model conditional
-on L into one conditional on only A.
-
 Survival models are non-collapsible. Hence we cannot eaily simulate from
 them. Instead we use U as a sneaky trick. Explain why survival models
-are non-collapsible
+are non-collapsible - through the hazard function.
 
 This is particularly important because collapsibility and confounding
 are often treated as identical concepts when in fact they are not.
@@ -1694,9 +1779,11 @@ are often treated as identical concepts when in fact they are not.
   Explain why models with product terms are clearly not collapsible
 \item
   relation to a hazard function
+\item
+  link to lack of exchangeability
 \end{itemize}
 
-    \paragraph{observational structure}\label{observational-structure}
+    \paragraph{Observational structure}\label{observational-structure}
 
 The previous chapter included a discussion of the role of confounding
 covariates and time dependent confounding. In the time fixed context,
@@ -1778,7 +1865,7 @@ The base algorithm used in this paper is drawn from
 from a specific MSM is derived from the joint factorization of a DAG
 which exhibits time dependent confounding. The algorithm generates
 subject data for multiple visits. The central concepts of the algorithm
-can be explained using a simpliefies two period version of the algorith,
+can be explained using a simplifies two period version of the algorithm,
 see figure ?. \linebreak
 
 \begin{itemize}
