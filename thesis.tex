@@ -577,6 +577,10 @@ sex. We cannot establish whether the outcome is due to a causal
 relationship between ibuprofen and headache alleviation, a relationship
 between sex and headache alleviation or a mixture of the two. \linebreak
 
+One explanation for confounding is .... missing covariates (refer to
+greenland paper where confounding variables are one reason why there is
+confounding.)
+
 Closely related to confounding, exchangeability is the assumption that
 the distribution of the counterfactual outcomes \(Y_{x}\) is independent
 of the actually observed treatment \(X\). When exchangeability holds,
@@ -655,6 +659,15 @@ unmeasured confounding". \linebreak
   synonym for asjutment.
 \item
   in randomization, confounding is absent in expectation
+\item
+  explain how we standardize measures across strata but weighted
+  combination and link to standardization itself
+\item
+  use conditional exchangeability to show why we can standardize across
+  populations
+\item
+  Also allows a way in to positivity by looking at Technical Point 3.1
+  in hernan robins causality book.
 \end{itemize}
 
     \subsection{Directed Acyclic Graphs: graphical representations of
@@ -715,6 +728,9 @@ assocations to allow causal estimation
 \item
   Didelez 2010 and Pearl 2009 for connecting DAGs to probability
   distributions and factorizations.
+\item
+  explain how colliders block relationships so that variables are
+  independent if there is a collider on their path
 \end{itemize}
 
     \begin{figure}
@@ -1129,6 +1145,12 @@ of the relationship which had existed before hand between the covariate
 and treatment, a new relationship between \(A\) and \(Y\) exists in
 which the covariate has no say.
 
+\begin{itemize}
+\tightlist
+\item
+  stabilized weights should have a mean of 1
+\end{itemize}
+
 \subsubsection{Applications of IPTW}\label{applications-of-iptw}
 
 Different from application of MSMs - IPW is a technique which has been
@@ -1141,51 +1163,83 @@ applied to MSMs - i.e. MSMs are on example of how IPTW can be used.
   new population. I.e. the marginal structural model is the same.
 \end{itemize}
 
+Have been used for missing data problems. see pp.442 of Hernan,
+Brumback, Robins 2001 for a list of papers linked to this
+
     \subsection{Assumptions}\label{assumptions}
 
-This section presents a more formalises the definition of the five
-assumptions underlying MSMs. The assumption of no unmeasured confounders
-has received the most attention in the literature (). Most attention
-will be given to positivity. Conditions under which IPTW work are
-largely untestable (westreich 2012)
+This section formalises the five assumptions under which inverse
+probability weighting can be used to correctly estimate MSMs. The first
+three assumptions of consistency, correct model specification and no
+measurement error are dealt with briefly. The exchangeability . There is
+a trade off between finer confounder control and positovity. As a
+result, this section will mainly focus on exchangeability and positivity
+assumptions with only brief exposition of the consistency, correct model
+specification and measurement bias assumptions. Where necessary the
+reader is referred to further work on these assumptions. The assumption
+of no unmeasured confounders has received the most attention in the
+literature (). Most attention will be given to positivity. Conditions
+under which IPTW work are largely untestable (westreich 2012)
 
 \subsubsection{No unmeasured
 confounders}\label{no-unmeasured-confounders}
 
+The assumption of no unmeasured confounders has already been discussed
+with respect to confounding
+
 \[Y_{x} \perp\!\!\!\perp X\]
+
+\begin{itemize}
+\tightlist
+\item
+  necessity of identifying the most important confounders \citet{},
+  \citet{}
+\item
+  conditional exchangeability.
+\item
+  this assumption is not empirically verifiable.
+\end{itemize}
 
 \subsubsection{Consistency}\label{consistency}
 
-The consistency assumption states that the actual outcome is equal to
-the potential outcome under the treatment assignment which is actually
-taken. Every subject has a set of potential outcomes associated with the
-possible treatment or treatment history they can receive. Only one of
-these potential outcomes is factual and what the consistency assumption
-tells us is that factual outcome is equal to the potential outcome
-corresponding to the factual treatment. As a result we can write the
-following.
+The consistency assumption states that the actual outcome
+\(Y_{i}^{obs}\) for a subject \(i\) is equal to the potential outcome
+\(Y_{i}^{x}\) when the treatment received by subject \(i\) is \(x\),
+that is \(X_i = x\) (\citet{Cole2009}). The consistency assumption is
+required to make inferences about \(y^{x}\) using observational data
+because it connects the observational data to the potential outcomes.
+For example, if it was known for a subject \(i\) that ibuprofen did not
+alleviate headaches, then \(Y_{i}^{x=1} = 0\) is the potential outcome
+associated with these events. However, if the same subject drank a glass
+of water along with the ibuprofen and this action did alleviate the
+headache, then \(Y_{i}^{obs} = 1\) and the potential outcome is not
+equal to the observed outcome despite the fact that \(X_i=1\). In other
+words, the consistency assumption rules out side effects of exposure and
+anchors the observational outcome to the potential outcome framework. As
+a result, expressions involving probabilities of counterfactuals can be
+cast in terms of ordinary conditional probabilities of measured
+variables \citet{Pearl2010} and equated as follows.
 
-\[P(Y_x = y\ |\ Z = z, X = x) = P(Y = y\ |\ Z = z, X = x)\]
+\[P(Y^x = y\ |\ Z = z, X = x) = P(Y = y\ |\ Z = z, X = x)\]
 
-In words, the probability that the potential outcome \(Y_x\) is equal to
-the observed outcome \(y\) is itself equal to the probability that the
-observed outcome equals \(y\) whenever \(X = x\) and for any covariate
-\(Z\). \linebreak  
-
-Several authors have discussed whether the consistency assumption is
-really an assumption or if it is a definition or axiom. The interested
-reader is referred to \citet{VanderWeele2009}, \citet{Cole2009} and
+In words, the probability that \(Y^x = y\) when \(Z = z\) and \(X = x\)
+are observed is equal to the conditional probability that \(Y = y\). The
+consistency assumption has generated discussion over whether it is
+really an assumption an axiom or definition. The interested reader is
+referred to \citet{VanderWeele2009}, \citet{Cole2009} and
 \citet{Pearl2010}.
 
 \subsubsection{No model mispecification}\label{no-model-mispecification}
 
-Two models are estimated in marginal structural models. The structural
-model itself and the weight model. In both cases correct model
-specification is necessary to achieve consistent results. Typically the
-time the "no model mispecification" assumption refers to the weight
-model. Within a simulation context we can study the performance of the
-IPTW model in the complete absence of model mispecification because we
-specify the model.
+Estimating MSMs involves a parametric model for the weights and for
+structural model relating exposure to outcome. To obtain unbiased
+estimation of the causal effect of exposure on outcome correct model
+specification is required for both models. Parametric models are
+unlikely to be perfectly specified but should provide a good
+approximation of the true model.
+
+Several studies have examined the effect of model mispecification in the
+estimatuion of MSMs including \citet{Cole2009}. some key findings
 
 Correct specifcation of the inverse probability weighting (IPW) model is
 necessary for consistent inference from a marginal structural Cox model
@@ -1194,12 +1248,55 @@ necessary for consistent inference from a marginal structural Cox model
 \begin{itemize}
 \tightlist
 \item
-  What effect does this have? Are weights more unstable?
+  link to why simulation studies make it possible to isolate model
+  specification as an error.
+\item
+  stabilized weights should have a mean of 1 - indicative of model
+  mispecification if they do not
+\item
+  results in some confounding if the model is mispecified, think about
+  using splines to mop up residual confounding
+\item
+  IPW cannot correctly adjust for all confounding under model
+  miscpecification
 \end{itemize}
+
+In this thesis we simulate data from a known weight and structural
+model. In other words, we simulate data in the absence of model
+mispecification elimiating this as a source of bias. Importantly, this
+makes it possible to isolate effects of interest without worrying about
+model miscpecification.
 
 \subsubsection{No measurement error}\label{no-measurement-error}
 
+Measurement error can arise in observational settings can arise in many
+ways. Give example of bread,loaves and grams.
+
+Second, all variables used in the analysis need to be correctly
+measured. Measurement error in the treatment A, the outcome Y , or the
+confounders L will generally result in bias (Chapter 9).
+
+\begin{itemize}
+\tightlist
+\item
+  measurement bias in causal structures \citet{Hernan2009}
+\item
+  similar to misscpecification we have no measurement error in
+  simulations.
+\item
+  causal measures will differ from associational measures because the
+  causal ones by definition have no mismeasurement.
+\end{itemize}
+
 \subsubsection{Positivity.}\label{positivity.}
+
+\begin{itemize}
+\tightlist
+\item
+  use intuition of making comparisons within strata as a means to
+  introduce positivity and link to weight model and standardization as
+  examples.
+\end{itemize}
 
 The final assumption underlying MSMs, and the central topic of this
 thesis, is the positivity assumption. MSMs are used to estimate average
@@ -1371,10 +1468,7 @@ likely a zero problem.
   \end{itemize}
 \end{itemize}
 
-    Have been used for missing data problems. see pp.442 of Hernan,
-Brumback, Robins 2001 for a list of papers linked to this
-
-A model that parameterises \(P(Y\ |\ do(A=a))\) is called a marginal
+    A model that parameterises \(P(Y\ |\ do(A=a))\) is called a marginal
 structural model (MSM) as it is marginal over any covariates and
 structural in the sense that it represents an interventional rather than
 observational model.
@@ -1469,14 +1563,18 @@ The shape of the hazard rate can be made to depend on
 
 \subsubsection{Proportional hazards}\label{proportional-hazards}
 
-In a typical study we want to adjust for confounders and other variables
-in order to get a better estimate than just looking at treated versus
-non-treated patients.
+Often interest lies in the relationships between In a typical study we
+want to adjust for confounders and other variables in order to get a
+better estimate than just looking at treated versus non-treated
+patients.
 
 \begin{itemize}
 \tightlist
 \item
   explain how we let the survival time dependent on covariates.
+\item
+  link to causal framework, introduce marginal structural logistic
+  regression or marginal structural cox proportional hazards model.
 \end{itemize}
 
     \newpage
@@ -1980,6 +2078,11 @@ violations.}\label{algorithm-with-positivity-violations.}
   show parts of algorithm which change
 \item
   present full algorithm with all changes in appendix
+\item
+  interesting question is how the positivity violations are propogated
+  through time. This can be checked by lengthening the number of visits
+  sequentially. For example, do positivty violations with a time horizon
+  of 5 visits have less of an effect than 10 visits.
 \end{itemize}
 
 The parameter of interest could be expected survival or the five year
