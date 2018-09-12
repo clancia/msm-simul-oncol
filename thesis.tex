@@ -291,7 +291,7 @@
     
     \newpage
 
-    \textbf{Abstract}
+    \pagenumbering{roman} \textbf{Abstract}
 
     \newpage
 
@@ -303,7 +303,7 @@
 
     \newpage
 
-\section{Introduction}\label{introduction}
+\pagenumbering{arabic} \# Introduction
 
 \begin{itemize}
 \tightlist
@@ -463,30 +463,19 @@ thesis.
 
 Marginal structural models (MSMs) are a class of models for the
 estimation of causal effects from observational data \citet{Robins2000}.
-More specifically, marginal structural models allow us to make causal
-statements in the presence of time dependent confounding. Several key
-assumptions need to be met to achieve this. In this section we describe
-MSMs and focus on those assumtpions. This section explains the central
-concepts behind marginal structural models and introduces the notation
-that will be used in this thesis. Marginal structural models use only
-observed data and a set of assumptions to investigate causal effects.
-Positivity, the focus of this paper, is tied closely to confounder and,
-as we shall see, there is a trade-off between finer confounder control
-and positivity. The algorithm adapted in this paper simulates
-longitudinal data and hence we discuss time dependent confounding and
-the extra bits required for this. In particular, we draw attention to
-the core parts of MSMs needed for this study - linking to positivity.
+In this chapter we introduce the central concepts and assumptions behind
+MSMs as well as the notation that will be used throughout this thesis.
 
 \begin{itemize}
 \tightlist
 \item
-  describe other methods like g formula as alternative to MSMs
+  describe other methods like g-formula as alternative to MSMs
 \item
   MSMs are models for some aspect (like the mean) of the distribution of
   counterfactuals.
 \item
-  many types like a marginal structural cox model (maybe let this follow
-  on after weights part.
+  Marginal structural models use only observed data and a set of
+  assumptions to investigate causal effects.
 \end{itemize}
 
     \subsection{Counterfactuals and
@@ -494,63 +483,42 @@ causality}\label{counterfactuals-and-causality}
 
 In the counterfactual framework (\citet{Neyman1923}, \citet{Rubin1978},
 \citet{Robins1986}) the causal effect of treatment \(X\) on outcome
-\(Y\) for one subject can be defined as the difference between that
-subject's outcome had they been exposed and unexposed to X. In other
-words, one outcome is necessarily counterfactual because in reality the
-same subject cannot be both exposed and unexposed to \(X\). If we denote
-the outcome when exposed as \(Y_{x=1}\) and the outcome when not exposed
-as \(Y_{x=0}\) then the causal effect for one subject can be expressed
-as \(Y_{x=1} - Y_{x=0}\). For example, suppose a subject with a headache
-takes ibuprofen (\(X = 1\)), a popular treatment for headaches. After a
-suitable amount of time, say one hour, the headache either remains
-\(Y_{x=1} = 1\) or has passed \(Y_{x=1} = 0\). The outcome which is not
-observed is the counterfactual outcome that prevails had the subject,
-contrary to fact, not taken ibuprofen. In other words, we don't observe
-\(Y_{x=0}\). \linebreak
+\(Y\) for a subject can be defined as the difference between that
+subject's outcome when they are exposed to \(X\) and the same subject's
+outcome when they are unexposed to \(X\). In other words, one outcome is
+necessarily counterfactual because the same subject cannot be both
+exposed and unexposed. If we denote the outcome for subject \(i\) when
+exposed as \(Y_{i}^{x=1}\) and the outcome when not exposed as
+\(Y_{i}^{x=0}\) then the causal effect can be expressed as
+\(Y_{i}^{x=1} - Y_{i}^{x=0}\). For example, suppose a subject with a
+headache takes ibuprofen (\(X = 1\)), a popular treatment for headaches.
+After a suitable amount of time, say one hour, the headache either
+remains \(Y_{i}^{x=1} = 1\) or has passed \(Y_{i}^{x=1} = 0\). If the
+subject had not taken ibuprofen the outcome would be either
+\(Y_{i}^{x=0} = 1\) or \(Y_{i}^{x=0} = 0\). \linebreak
 
 Often we are interested in the average causal effect for a population
 rather than for one subject. Suppose sixty subjects are suffering from a
-headache and every subject was given ibuprofen. After one hour each
-subject will either have a headache (\(Y_{x=1}=1\)) or their headache
-will have passed (\(Y_{x=1}=0\)). The average outcome across all
-subjects is \(\mathbb{E}(Y_{x = 1})\) or equivalently when \(Y\) is a
-dichotomous variable, \(\mathbb{P}(Y_{x = 1})\). The relevant causal
-comparison is now between \(\mathbb{P}(Y_{x = 1})\) and
-\(\mathbb{P}(Y_{x = 0})\), the latter being the counterfactual had none
-of sixty subjects been exposed. We do not observe the quantity
-\(Y_{x=0}\) for any subject, and consequently we do not observe the
-quantity \(\mathbb{P}(Y_{x = 0})\). \linebreak
-
-Dawid 1979 - we can vary the individual I and treatment X but this is
-largely a conceptual entity because only one treatment can in fact be
-applied to any unit. - Can also use the odds ratio as the comparison
-instead of the risk difference. - only have the data and observed
-outcomes, not the counterfactuals. - the collection of outcomes on a
-subject are called the potential outcomes and only one of these is
-observed
-
-\begin{itemize}
-\tightlist
-\item
-  recently several studies have leveraged the missing data idea
-
-  \begin{itemize}
-  \tightlist
-  \item
-    \citet{Ding2017}
-  \item
-    \citet{Howe2015}
-  \item
-    \citet{Edwards2015}
-  \end{itemize}
-\end{itemize}
+headache and everyone was given ibuprofen. After one hour each subject
+\(i\) will either have a headache (\(Y_{i}^{x=1}=1\)) or their headache
+will have passed (\(Y_{i}^{x=1}=0\)). The average outcome across all
+subjects is \(\mathbb{E}(Y_{i}^{x = 1})\) or equivalently when \(Y\) is
+a dichotomous variable, \(\mathbb{P}(Y_{i}^{x = 1})\). The relevant
+causal comparison is now between \(\mathbb{P}(Y_{i}^{x = 1})\) and
+\(\mathbb{P}(Y_{i}^{x = 0})\). As all sixty subjects were exposed we do
+not observe the quantity \(Y_{x=0}\) for any subject, and consequently
+we do not observe the quantity \(\mathbb{P}(Y_{x = 0})\). The fact that
+the counterfactual outcome for a subject is never observed has led
+several authors to cast causal problems in terms of missing data
+problems where the counterfactual outcome is viewed as missing
+(\citet{Ding2017}, \citet{Howe2015}, \citet{Edwards2015}). \linebreak
 
     \subsection{Confounding}\label{confounding}
 
-Continuing the example, if group A consists of thirty of the headache
-sufferers who all took ibuprofen, we would ideally compare the quantity
-\(\mathbb{P}(Y_{x = 1}|X = 1) = \mu_{A_{x = 1}}\) with the quantity
-\(\mathbb{P}(Y_{x = 0}|X = 1) = \mu_{A_{x = 0}}\). As
+Continuing the headache example, if group A consists of thirty of the
+headache sufferers who all took ibuprofen, we would ideally compare the
+quantity \(\mathbb{P}(Y_{x = 1}|X = 1) = \mu_{A_{x = 1}}\) with the
+quantity \(\mathbb{P}(Y_{x = 0}|X = 1) = \mu_{A_{x = 0}}\). As
 \(\mu_{A_{x = 0}}\) is not actually observed, we could instead compute
 the observable quantity \(\mathbb{P}(Y_{x = 0}|X = 0) = \mu_{B_{x=0}}\)
 from the remaining thirty subjects who did not use ibuprofen and belong
@@ -672,6 +640,8 @@ unmeasured confounding". \linebreak
   explain residual confounding so that it can be reffered to later when
   estimating weights - for example explaining why splines help to remove
   any residual confounding.
+\item
+  explain that we can use other effect measures not just the difference.
 \end{itemize}
 
     \subsection{Directed Acyclic Graphs: graphical representations of
@@ -1190,6 +1160,13 @@ applied to MSMs - i.e. MSMs are on example of how IPTW can be used.
 Have been used for missing data problems. see pp.442 of Hernan,
 Brumback, Robins 2001 for a list of papers linked to this
 
+\begin{itemize}
+\tightlist
+\item
+  many types like a marginal structural cox model (maybe let this follow
+  on after weights part.
+\end{itemize}
+
     \subsection{Assumptions}\label{assumptions}
 
 This section formalises the five assumptions under which inverse
@@ -1222,6 +1199,8 @@ with respect to confounding
   conditional exchangeability.
 \item
   this assumption is not empirically verifiable.
+\item
+  no unmeasured confounding in the simulation
 \end{itemize}
 
 \subsubsection{Consistency}\label{consistency}
@@ -1670,28 +1649,55 @@ described.
 
 In statistical research, interest often lies in the estimation of a
 population parameter \(\theta\). When only a sample \(X_1\) from the
-population is available, statistical procedures are applied to obtain an
-estimate of the population parameter \(\hat \theta_1\) based on that
-sample. That is, \(\hat \theta_1\) is an estimate of \(\theta\)
-estimated from the sample \(X_1\). The same procedure applied to a
-second sample \(X_2\) drawn from the same population will result in
-second estimate \(\hat \theta_2\), and so on for more samples. Because
-only one sample is tyically available, the sampling distribution of
-\(\hat \theta_i\) is used to make inferences. \linebreak 
+population is available, statistical procedures are applied to estimate
+the population parameter \(\hat \theta_1\) based on that sample. The
+same procedure applied to a second sample \(X_2\) drawn from the same
+population will result in second estimate \(\hat \theta_2\), and so on
+for more samples. We rely on the sampling distribution of the
+\(\hat \theta_i\) to draw statistical inferences. \linebreak 
 
-In methodological research, simulations can flip this process on its
-head. We start with a known true model and generate multiple samples
-according to this model. The properties of a statistical method Rather
-than being a process of dicoverey we can use simulations as a process of
-rediscovery and appraise a method by its ability to correctly rediscover
-the parameter. \linebreak
+Monte Carlo simulations flip this process on its head. We start with a
+known true model governed by parameters \(\theta\) and generate a sample
+of data according to this model. We then apply a statistical procedure
+to rediscover the true parameters governing the data generating process.
+Most often we are interested in the finite sample properties of
+techniques. In other words, we are interested in how the technique
+behaves with, say, only one thousand observations rather than one
+million or one billion. A single sample of one thousand observations we
+never truly simulated data and check how closely the to Where
+statistical inference is a process of discovering The properties of a
+statistical method Rather than being a process of dicoverey we can use
+simulations as a process of rediscovery and appraise a method by its
+ability to correctly rediscover the parameter. For example, the effect
+of a ibuprofe on headaches can be expressed in by an effect measure such
+as the odds ratio \linebreak
 
-a known "true" model governing a population can be specified and a
-sample of data generated according to that model. For instance, the
-probability that a headache is alleviated after one hour could be
-expressed using a logistic model.
+\[OR = \frac{P(Y = 1\ |\ X = 1)/(P(Y = 1\ |\ X = 0))}{P(Y = 0\ |\ X = 1)/(P(Y = 0\ |\ X = 0))}\]
+
+Or the log odds ratio
+
+\[log(OR) = log(P(Y = 1\ |\ X = 1)/(P(Y = 1\ |\ X = 0)) - log(P(Y = 0\ |\ X = 1)/(P(Y = 0\ |\ X = 0))\]
+
+When \$P(Y = y~\textbar{}~X = x) = \$
 
 \[log \frac{P(Y = 1\ |\ X = 1)}{P(Y = 1\ |\ X = 0)} = \alpha + \beta \times x\]
+
+These steps can be summarised
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Specify the articifial population
+\item
+  Sample from that population
+\item
+  Calculate the parameter of interest
+\item
+  repeat steps 2 and 3 a certain number of times
+\item
+  draw conclusions.
+\end{enumerate}
 
 \begin{itemize}
 \tightlist
@@ -1720,25 +1726,6 @@ n = 1000 observations.
 
 More generally, the steps taken in a simulation study can be summarized:
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Specify the articifial population
-\item
-  Sample from that population
-\item
-  Calculate the parameter of interest
-\item
-  repeat steps 2 and 3 a certain number of times
-\item
-  draw conclusions.
-\end{enumerate}
-
-Naturally, generating data in this way requires knowing the parameters
-in advance in order to simulate from the model. In the case of MSMs this
-requires simulating from a specific MSM
-
 Explain why simulations still need to be treated critically.
 \citet{Greenland1997}
 
@@ -1746,32 +1733,11 @@ Explain why simulations still need to be treated critically.
 \tightlist
 \item
   advantage of no measurement error, no model misspecification
-\end{itemize}
-
-    \paragraph{Specific MSM}\label{specific-msm}
-
-\begin{itemize}
-\tightlist
 \item
-  specifying a specific MSM means postulating a model for the causal
-  relationship between \(Y\) and \(X\)
+  Add in confidence intervals.
+\item
+  end with why we need to sample from a specific MSM
 \end{itemize}
-
-The previous section described how data generated from a specific model
-can be used to assess statistical methodology and departures from key
-assumptions. In the case of MSM this entails specifying a specific form
-for the MSM from which data can be generated.
-
-For example, suppose that the chosen MSM was
-\(P(Y\ |\ do(a)) = \alpha + \beta a\), then the observational data from
-which this is derived would be \(Y\), \(A\) and \(L\). The simulation
-needs to allow \(\beta\) to be estimated from only that observational
-data. In order to simulate from a specific MSM we need to generate
-observational data in such a way that it conforms to a specific MSM. For
-instance, one specific MSM could be written as
-\(P(Y\ |\ do(a)) = \alpha + \beta a\). However, we never see this so we
-need to generate data in such a way that we get this model from
-observational data and that we can then return to it.
 
     \paragraph{Noncollapsibility}\label{noncollapsibility}
 
@@ -2022,6 +1988,13 @@ few paragraphs.
 
 What we add here is how control over \(L\) allows us to introduce
 positivity violations.
+
+\begin{itemize}
+\tightlist
+\item
+  should explain all the reasons why we choose Havercroft algorithm over
+  others.
+\end{itemize}
 
     \subsection{Simulation algorithm}\label{simulation-algorithm}
 
