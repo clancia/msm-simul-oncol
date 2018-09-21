@@ -305,8 +305,48 @@
 
 \pagenumbering{arabic} \# Introduction
 
+\subsection{paragraph 1 - centrality of studying positivty to
+inference.}\label{paragraph-1---centrality-of-studying-positivty-to-inference.}
+
 \begin{itemize}
 \tightlist
+\item
+  intuitive definition of positivty
+\end{itemize}
+
+Does a drug reduce mortality? Does a headache reliever realy relieve
+headaches? Does fertilizer make crops and does smoking really cause lung
+cancer. Inherent in all of these questions is a causal comparison
+between the group which smokes and the group which does not, the
+
+Inuitively, comparisons . It is only a small leap to see that making
+comparisons between treated and utreated within each strata. For
+example, people with and without ibuprofen within gene types.
+
+\begin{itemize}
+\tightlist
+\item
+  formal(ish) definition of positivity
+\item
+  importance of studying positivty
+\end{itemize}
+
+The positivity assumption is essential for the study of causal infrence
+
+Despite its central importance to inference, a systematic study of
+positivty violations has received relatively little attention in the
+literature, notable exceptions being , , ,
+
+Marginal structural models are a class of models for the estimation of
+causal effects from observational data in the presence of time dependent
+confounding. Underlying this class of models are five assumptions:
+exchangeability, consistency, no model mispecification, no measurement
+error and positivty. The last of these, positivty, is violated w
+
+In a protocol study, below a certain strata there may not exist any
+patients who receive treatment
+
+\begin{itemize}
 \item
   set up problem and why we need to study positivty - give this
   motivation before anything else
@@ -317,7 +357,24 @@
 \item
   in a survival context, need to choose simulation algorithm carefull
   because survival models are noncollapsible.
+\item
+  G-formula can be used to circumvent nonpositivity, explain why we need
+  MSMs anyway. (Robins 1987, Cole 2013)
+\item
+  look at pros and cons from Daniel paper to justify why we will still
+  want to study MSMs
+\item
+  exchangeability, positivty and loss of efficiency due to over
+  stratification. (something for conclusion, that we do not study? Or
+  how do we study coverage in this case if
 \end{itemize}
+
+\subsection{exchangeability and
+positivity}\label{exchangeability-and-positivity}
+
+\subsection{thresholding, positivity compliant doctors and multiple
+visits. Increasing number of confounders - allowing more opportunity for
+positivity.}\label{thresholding-positivity-compliant-doctors-and-multiple-visits.-increasing-number-of-confounders---allowing-more-opportunity-for-positivity.}
 
 Marginal structural models (MSMs) are a popular class of models for
 performing causal inference in the presence of time dependent
@@ -408,6 +465,13 @@ dependent confounding.
 
 Look through literature for applications of MSMs
 
+\begin{itemize}
+\tightlist
+\item
+  Greenland 1999 pp35 on protocols and how they can cause nonpositivity
+  - motivation for this thesis.
+\end{itemize}
+
     Allow for the joint determination of outcomes and treatment status or
 omitted variables related to both treatment status and outcomes (Angrist
 2001).
@@ -461,90 +525,164 @@ thesis.
 
     \section{Marginal structural models}\label{marginal-structural-models}
 
+Marginal structural models (MSMs) are one of several techniques
+developed to estimate causal effects from observational data where time
+dependent confounding precludes the use of standard approaches. Other
+techniques that can also be used to estimate causal effects from
+observational data include the g-computation formula and g-estimation of
+structural nested models \citet{Daniel2013}.
+
+A MSM is a model for some aspect of the distribution of counterfactual
+outcomes, such as the mean. In this chapter we introduce several
+concepts behind MSMs including the counterfactual framework for causal
+inference, confounding and time dependent confounding. The parameters of
+a MSM can be consistenly estimated using a class of estimators called
+the inverse probability of treatment weighted estimators. Marginal
+structural
+
+This estimator allows for adjustment for time dependent confounding in
+complex longitudinal settings where time dependent confounders are
+predictors of future outcomes and are themselves affected by previous
+treatment \citet{}
+
+A necessary condition for estimating marginal structural models, and
+causal inference more generally, is the positivity assumption. This
+thesis focuses on violations of the positivity or experimental treatment
+assumption, a necessary assumption for causal inference, in marginal
+structural models.
+
 Marginal structural models (MSMs) are a class of models for the
 estimation of causal effects from observational data \citet{Robins2000}.
-In this chapter we introduce the central concepts and assumptions behind
-MSMs as well as the notation that will be used throughout this thesis.
+Several techniques This chapter begins by briefly describing the
+counterfactual and potential outcomes framework which defines causal
+effects. This is follwed by an explanation of confounding and directed
+acyclic graphs (DAGs). MSMs can resolve the correct causal parameters in
+a complex time dependent setting. Time dependent confounding is first
+explained followed by a description of the inverse probability of
+weighting (IPTW) technique which is used to account for time dependent
+confounding.
+
+Marginal structural models are valid under five assumptions. These are
+the no unmeasured confounding, consistency, no model mispecification, no
+measurement error and positivity assumptions. Each of these is dealt
+with in turn and special emphasis is placed on positivity which is the
+central topic of this thesis.
 
 \begin{itemize}
 \tightlist
-\item
-  describe other methods like g-formula as alternative to MSMs
 \item
   MSMs are models for some aspect (like the mean) of the distribution of
   counterfactuals.
 \item
   Marginal structural models use only observed data and a set of
   assumptions to investigate causal effects.
+\item
+  explain the name (marginal over covariates, structural in sense of
+  causal)
 \end{itemize}
 
     \subsection{Counterfactuals and
 causality}\label{counterfactuals-and-causality}
 
-In the counterfactual framework (\citet{Neyman1923}, \citet{Rubin1978},
-\citet{Robins1986}) the causal effect of treatment \(X\) on outcome
-\(Y\) for a subject can be defined as the difference between that
-subject's outcome when they are exposed to \(X\) and the same subject's
-outcome when they are unexposed to \(X\). In other words, one outcome is
-necessarily counterfactual because the same subject cannot be both
-exposed and unexposed. If we denote the outcome for subject \(i\) when
-exposed as \(Y_{i}^{x=1}\) and the outcome when not exposed as
-\(Y_{i}^{x=0}\) then the causal effect can be expressed as
-\(Y_{i}^{x=1} - Y_{i}^{x=0}\). For example, suppose a subject with a
-headache takes ibuprofen (\(X = 1\)), a popular treatment for headaches.
-After a suitable amount of time, say one hour, the headache either
-remains \(Y_{i}^{x=1} = 1\) or has passed \(Y_{i}^{x=1} = 0\). If the
-subject had not taken ibuprofen the outcome would be either
-\(Y_{i}^{x=0} = 1\) or \(Y_{i}^{x=0} = 0\). \linebreak
+In the counterfactual or potential outcomes framework
+(\citet{Neyman1923}, \citet{Rubin1978}, \citet{Robins1986}) the causal
+effect of treatment \(X\) on outcome \(Y\) is defined as the difference
+between potential outcome when exposed to \(X\) and the potential
+outcome when left unexposed to \(X\) for the same subject. For a binary
+treatment, the subject's outcome when exposed is denoted by
+\(Y_{x=1,i} = Y_{1i}\) and as \(Y_{x=0,i} = Y_{0i}\) when left
+unexposed. The causal comparison for a single subject in this framework
+is \(Y_{1i} - Y_{0i}\). As no subject can be both exposed and unexposed
+either \(Y_{1i}\) or \(Y_{0i}\) is counterfactual and unobserved in any
+experimental or observational setting preventing direct evaluation of
+the causal comparison. \linebreak
 
-Often we are interested in the average causal effect for a population
-rather than for one subject. Suppose sixty subjects are suffering from a
-headache and everyone was given ibuprofen. After one hour each subject
-\(i\) will either have a headache (\(Y_{i}^{x=1}=1\)) or their headache
-will have passed (\(Y_{i}^{x=1}=0\)). The average outcome across all
-subjects is \(\mathbb{E}(Y_{i}^{x = 1})\) or equivalently when \(Y\) is
-a dichotomous variable, \(\mathbb{P}(Y_{i}^{x = 1})\). The relevant
-causal comparison is now between \(\mathbb{P}(Y_{i}^{x = 1})\) and
-\(\mathbb{P}(Y_{i}^{x = 0})\). As all sixty subjects were exposed we do
-not observe the quantity \(Y_{x=0}\) for any subject, and consequently
-we do not observe the quantity \(\mathbb{P}(Y_{x = 0})\). The fact that
-the counterfactual outcome for a subject is never observed has led
-several authors to cast causal problems in terms of missing data
-problems where the counterfactual outcome is viewed as missing
-(\citet{Ding2017}, \citet{Howe2015}, \citet{Edwards2015}). \linebreak
+The canonical example in the literature on MSMs is the effect of
+Zidovudine (AZT) on mortality amongst HIV positive subjects
+\citet{Robins2000}. In this example, \(X\) is a binary treatment and
+\(Y\) is a binary outcome. Before treatment is assigned, there are four
+potential outcomes which could occur for a given subject and these are
+enumerated in table 1.
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+X & Y & \(Y_{0}\) & \(Y_{1}\)\tabularnewline
+\midrule
+\endhead
+0 & 0 & 0 & ?\tabularnewline
+0 & 1 & 1 & ?\tabularnewline
+1 & 0 & ? & 0\tabularnewline
+1 & 1 & ? & 1\tabularnewline
+\bottomrule
+\end{longtable}
+
+Once treatment has been decided one potential outcome is observed. In
+the first row the outcome when the subject does not receive treatment is
+\(Y = 0\) and so the potential outcome \(Y_{0}\) is observed. The
+counterfactual outcome \(Y_{1}\) is not observed preventing direct
+evaluation of the causal comparison \(Y_{1i} - Y_{0i}\). The fact that
+only one potential outcome is ever observed per subject has led several
+authors to cast causal problems in terms of missing data problems where
+the counterfactual outcome is are viewed as missing (\citet{Ding2017},
+\citet{Howe2015}, \citet{Edwards2015}). \linebreak
+
+Often interest lies in the average causal effect for a population rather
+than for one subject. The average outcome across all subjects who are
+exposed to treatment is \(\mathbb{E}(Y^{1i})\). The equivalent average
+causal comparison in the counterfactual framework is
+
+\[\mathbb{E}(Y_{1i}\ |\ X = 1) - \mathbb{E}(Y_{0i}\ |\ X = 1)\]
+
+Or in other words, the causal contrast of interest is the difference
+between the average outcome among the treated and the average outcome
+among the treated had they, contrary to fact, remained untreated. When
+\(Y\) is a dichotomous variable,
+\(\mathbb{E}(Y_{0i}) = \mathbb{P}(Y_{xi})\), and the average causal
+contrast is:
+
+\[\mathbb{P}(Y_{1i}\ |\ X = 1) - \mathbb{P}(Y_{0i}\ |\ X = 1)\]
+
+Just as in the case of one subject the average counterfactual outcome is
+never actually observed.
 
     \subsection{Confounding}\label{confounding}
 
-Continuing the headache example, if group A consists of thirty of the
-headache sufferers who all took ibuprofen, we would ideally compare the
-quantity \(\mathbb{P}(Y_{x = 1}|X = 1) = \mu_{A_{x = 1}}\) with the
-quantity \(\mathbb{P}(Y_{x = 0}|X = 1) = \mu_{A_{x = 0}}\). As
-\(\mu_{A_{x = 0}}\) is not actually observed, we could instead compute
+Continuing the example, we could split the HIV patients into two groups,
+A and B, with thirty members in each group. If everyone in group A takes
+Zidovudine, we would ideally compare the quantity
+\(\mathbb{P}(Y_{x = 1}|X = 1) = \mu_{A_{x = 1}}\) with the quantity
+\(\mathbb{P}(Y_{x = 0}|X = 1) = \mu_{A_{x = 0}}\). But
+\(\mu_{A_{x = 0}}\) is not actually observed because the subjects in
+group A cannot be both observed and unobserved. Instead, we can compute
 the observable quantity \(\mathbb{P}(Y_{x = 0}|X = 0) = \mu_{B_{x=0}}\)
-from the remaining thirty subjects who did not use ibuprofen and belong
-to group B. Replacing the comparison between \(\mu_{A_{x = 1}}\) and
-\(\mu_{A_{x = 0}}\) with the comparison between \(\mu_{A_{x = 1}}\) and
-\(\mu_{B_{x=0}}\) will have a causal interpretation if
-\(\mu_{A_{x = 0}} = \mu_{B_{x=0}}\). In other words, if a subject from
-group B can be viewed as an analogue of a subject from group A had they,
-contrary to fact, not received ibuprofen. \linebreak
+from the remaining thirty subjects who were not exposed to Zidovudine
+and belong to group B. Replacing the comparison between
+\(\mu_{A_{x = 1}}\) and \(\mu_{A_{x = 0}}\) with the comparison between
+\(\mu_{A_{x = 1}}\) and \(\mu_{B_{x=0}}\) will have a causal
+interpretation if \(\mu_{A_{x = 0}} = \mu_{B_{x=0}}\). In other words,
+if a subject from group B can be viewed as an analogue of a subject from
+group A had they, contrary to fact, not received ibuprofen. \linebreak
 
-If \(\mu_{A_{x = 1}} \neq \mu_{B_{x=0}}\) then the comparison
-\(\mu_{A_{x = 1}} - \mu_{B_{x=0}}\), a measure of association, is
-confounded for \(\mu_{A_{x = 1}} - \mu_{A_{x = 0}}\), a measure of
-causal effect (\citet{Greenland1999}). For example, if all the subjects
-in group A are male it would be reasonable to ask whether their sex
-influenced their decision to take ibuprofen. Suppose that males also
-tend to have headaches of a shorter duration so that at the end of one
-hour they are less likely to have a headache than females. The result is
-that both the decision to take ibuprofen and the probability of having a
-headache at the end of one hour are dependent on the sex of the subject.
-This obscures the causal effect of ibuprofen on headaches because there
-is a spurious association between \(X\) and \(Y\) through the subject's
-sex. We cannot establish whether the outcome is due to a causal
-relationship between ibuprofen and headache alleviation, a relationship
-between sex and headache alleviation or a mixture of the two. \linebreak
+On the other hand, if \(\mu_{A_{x = 1}} \neq \mu_{B_{x=0}}\) then the
+comparison \(\mu_{A_{x = 1}} - \mu_{B_{x=0}}\), a measure of
+association, is confounded for \(\mu_{A_{x = 1}} - \mu_{A_{x = 0}}\), a
+measure of causal effect (\citet{Greenland1999}). For example, if a
+certain geotype \(G\) the subjects in group A turn out to be male and
+all those in group B turn out to be female it would be reasonable to ask
+whether their sex influenced their decision to take ibuprofen. Suppose
+that males also tend to have headaches of a shorter duration so that at
+the end of one hour they are less likely to have a headache than
+females. The result is that both the decision to take ibuprofen and the
+probability of having a headache at the end of one hour are dependent on
+the sex of the subject. This obscures the causal effect of ibuprofen on
+headaches because there is a spurious association between \(X\) and
+\(Y\) through the subject's sex. We cannot establish whether the outcome
+is due to a causal relationship between ibuprofen and headache
+alleviation, a relationship between sex and headache alleviation or a
+mixture of the two. \linebreak
 
+One explanation for why confounding exists is that In other words, a
+confounding covariate limits our ability to draw a causal comparison.
 One explanation for confounding is .... missing covariates (refer to
 greenland paper where confounding variables are one reason why there is
 confounding.)
@@ -574,13 +712,11 @@ unmeasured confounding". \linebreak
   fixed confounding work
 \item
   Hint that the finer the confounding control the more accurate the
-  analysis but this has consequences for positivty.
+  analysis but this has consequences for positivty and efficiency.
 \item
   from pearl 2001: namely, that if we compare treated vs. untreated
-  subjects having the same
-\item
-  values of the selected factors, we get the correct treatment effect in
-  that subpopulation of subjects.
+  subjects having the same values of the selected factors, we get the
+  correct treatment effect in that subpopulation of subjects.
 \item
   Explain clearly why it is a bias.
 \item
@@ -597,11 +733,10 @@ unmeasured confounding". \linebreak
   distribution of the counterfactuals \(Y_x\)
 \item
   Explain that in a randomized experiment exchangeability is guaranteed
-  because \(X\) is automatically noy related to any other variables.
-\item
-  Randomization ensures that missing values occur by chance. So the
-  counterfactual values that we don't see for some observations are
-  missing randomly and not due to confounding through a covariate.
+  because \(X\) is automatically not related to any other variables so
+  that missing values occur by chance. So the counterfactual values that
+  we don't see for some observations are missing randomly and not due to
+  confounding through a covariate.
 \item
   Any residual confounding cannot be due to the variables that we have
   conditioned on.
@@ -624,7 +759,7 @@ unmeasured confounding". \linebreak
   single values of C) (see Greenland 2011)
 \item
   conditioning and adjustment not the same thing. Control is used as a
-  synonym for asjutment.
+  synonym for adjustment.
 \item
   in randomization, confounding is absent in expectation
 \item
@@ -1232,6 +1367,14 @@ really an assumption an axiom or definition. The interested reader is
 referred to \citet{VanderWeele2009}, \citet{Cole2009} and
 \citet{Pearl2010}.
 
+\begin{itemize}
+\tightlist
+\item
+  may consider linking no interference assumption here too. Potential
+  outcomes are no longer clearly defined if the treatment received by
+  one individual can affect the treatment received by another.
+\end{itemize}
+
 \subsubsection{No model mispecification}\label{no-model-mispecification}
 
 Estimating MSMs with a continuous confounder involves specifying a model
@@ -1479,6 +1622,15 @@ likely a zero problem.
     explain why healthy worker effect and positivty go neatly together
     because as a result of people dropping out there will be empty
     cells/strata.
+  \end{itemize}
+\item
+  Mortimer 2005 has also done a study on positivty (also called the
+  experimental treatment assignment (ETA))
+
+  \begin{itemize}
+  \tightlist
+  \item
+    they use real data, not simulation and
   \end{itemize}
 \end{itemize}
 
