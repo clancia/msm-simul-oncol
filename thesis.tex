@@ -311,6 +311,8 @@ inference.}\label{paragraph-1---centrality-of-studying-positivty-to-inference.}
 \begin{itemize}
 \tightlist
 \item
+  causality as central interest
+\item
   intuitive definition of positivty
 \end{itemize}
 
@@ -586,23 +588,26 @@ causality}\label{counterfactuals-and-causality}
 
 In the counterfactual or potential outcomes framework
 (\citet{Neyman1923}, \citet{Rubin1978}, \citet{Robins1986}) the causal
-effect of treatment \(X\) on outcome \(Y\) is defined as the difference
-between potential outcome when exposed to \(X\) and the potential
+effect of treatment \(X\) on outcome \(Y\) is defined as the contrast
+between the potential outcome when exposed to \(X\) and the potential
 outcome when left unexposed to \(X\) for the same subject. For a binary
 treatment, the subject's outcome when exposed is denoted by
 \(Y_{x=1,i} = Y_{1i}\) and as \(Y_{x=0,i} = Y_{0i}\) when left
-unexposed. The causal comparison for a single subject in this framework
-is \(Y_{1i} - Y_{0i}\). As no subject can be both exposed and unexposed
-either \(Y_{1i}\) or \(Y_{0i}\) is counterfactual and unobserved in any
-experimental or observational setting preventing direct evaluation of
-the causal comparison. \linebreak
+unexposed. The causal contrast for a single subject in this framework is
+\(Y_{1i} - Y_{0i}\). As no subject can be both exposed and unexposed
+either \(Y_{1i}\) or \(Y_{0i}\) is counterfactual and therefore
+unobserved. For example, if the patient receives treatment, \(Y_{1, i}\)
+is observed and \$Y\_\{0, i\} is the outcome that would have occured if
+the patient had not received treatment.\linebreak
 
 The canonical example in the literature on MSMs is the effect of
 Zidovudine (AZT) on mortality amongst HIV positive subjects
-\citet{Robins2000}. In this example, \(X\) is a binary treatment and
-\(Y\) is a binary outcome. Before treatment is assigned, there are four
-potential outcomes which could occur for a given subject and these are
-enumerated in table 1.
+\citet{Robins2000}. In this example, \(X\) is a binary variable equal to
+one if the subject received AZT and zero otherwise. The outcome \(Y\) is
+a binary variable equal to one if the subject is dead and zero if the
+subject is alive, after a suitable time period. Before treatment is
+assigned, there are four potential outcomes which could occur for a
+given subject and these are enumerated in table 1.
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -619,19 +624,20 @@ X & Y & \(Y_{0}\) & \(Y_{1}\)\tabularnewline
 Once treatment has been decided one potential outcome is observed. In
 the first row the outcome when the subject does not receive treatment is
 \(Y = 0\) and so the potential outcome \(Y_{0}\) is observed. The
-counterfactual outcome \(Y_{1}\) is not observed preventing direct
-evaluation of the causal comparison \(Y_{1i} - Y_{0i}\). The fact that
-only one potential outcome is ever observed per subject has led several
-authors to cast causal problems in terms of missing data problems where
-the counterfactual outcome is are viewed as missing (\citet{Ding2017},
+counterfactual outcome \(Y_{1}\) is not observed. The fact that only one
+potential outcome is ever observed per subject has led several authors
+to cast causal problems in terms of missing data problems where the
+counterfactual outcome is viewed as missing (\citet{Ding2017},
 \citet{Howe2015}, \citet{Edwards2015}). \linebreak
 
 Often interest lies in the average causal effect for a population rather
 than for one subject. The average outcome across all subjects who are
-exposed to treatment is \(\mathbb{E}(Y^{1i})\). The equivalent average
+exposed to treatment is \(\mathbb{E}(Y_{1i})\). The equivalent average
 causal comparison in the counterfactual framework is
 
-\[\mathbb{E}(Y_{1i}\ |\ X = 1) - \mathbb{E}(Y_{0i}\ |\ X = 1)\]
+\begin{equation}
+\mathbb{E}(Y_{1i}\ |\ X = 1) - \mathbb{E}(Y_{0i}\ |\ X = 1)
+\end{equation}
 
 Or in other words, the causal contrast of interest is the difference
 between the average outcome among the treated and the average outcome
@@ -640,46 +646,146 @@ among the treated had they, contrary to fact, remained untreated. When
 \(\mathbb{E}(Y_{0i}) = \mathbb{P}(Y_{xi})\), and the average causal
 contrast is:
 
-\[\mathbb{P}(Y_{1i}\ |\ X = 1) - \mathbb{P}(Y_{0i}\ |\ X = 1)\]
+\begin{equation}
+\mathbb{P}(Y_{1i}\ |\ X = 1) - \mathbb{P}(Y_{0i}\ |\ X = 1)
+\end{equation}
 
 Just as in the case of one subject the average counterfactual outcome is
-never actually observed.
+not observed for those subjects who actually received treatment.
+
+Among patients who received treatment \(Y_0\) is the outcome that would
+have occured, had the patient received \(x=0\).
 
     \subsection{Confounding}\label{confounding}
 
-Continuing the example, we could split the HIV patients into two groups,
-A and B, with thirty members in each group. If everyone in group A takes
-Zidovudine, we would ideally compare the quantity
-\(\mathbb{P}(Y_{x = 1}|X = 1) = \mu_{A_{x = 1}}\) with the quantity
-\(\mathbb{P}(Y_{x = 0}|X = 1) = \mu_{A_{x = 0}}\). But
-\(\mu_{A_{x = 0}}\) is not actually observed because the subjects in
-group A cannot be both observed and unobserved. Instead, we can compute
-the observable quantity \(\mathbb{P}(Y_{x = 0}|X = 0) = \mu_{B_{x=0}}\)
-from the remaining thirty subjects who were not exposed to Zidovudine
-and belong to group B. Replacing the comparison between
-\(\mu_{A_{x = 1}}\) and \(\mu_{A_{x = 0}}\) with the comparison between
-\(\mu_{A_{x = 1}}\) and \(\mu_{B_{x=0}}\) will have a causal
-interpretation if \(\mu_{A_{x = 0}} = \mu_{B_{x=0}}\). In other words,
-if a subject from group B can be viewed as an analogue of a subject from
-group A had they, contrary to fact, not received ibuprofen. \linebreak
+As the counterfactual is never observed subjects who are exposed to
+treatment are typically compared to those who are left unexposed. Among
+the exposed, the contrast that would ideally be made is (2). Instead the
+average outcome in the treated is typically compared to the average
+outcome in the untreated.
 
-On the other hand, if \(\mu_{A_{x = 1}} \neq \mu_{B_{x=0}}\) then the
-comparison \(\mu_{A_{x = 1}} - \mu_{B_{x=0}}\), a measure of
-association, is confounded for \(\mu_{A_{x = 1}} - \mu_{A_{x = 0}}\), a
-measure of causal effect (\citet{Greenland1999}). For example, if a
-certain geotype \(G\) the subjects in group A turn out to be male and
-all those in group B turn out to be female it would be reasonable to ask
-whether their sex influenced their decision to take ibuprofen. Suppose
-that males also tend to have headaches of a shorter duration so that at
-the end of one hour they are less likely to have a headache than
-females. The result is that both the decision to take ibuprofen and the
-probability of having a headache at the end of one hour are dependent on
-the sex of the subject. This obscures the causal effect of ibuprofen on
-headaches because there is a spurious association between \(X\) and
-\(Y\) through the subject's sex. We cannot establish whether the outcome
-is due to a causal relationship between ibuprofen and headache
-alleviation, a relationship between sex and headache alleviation or a
-mixture of the two. \linebreak
+\begin{equation}
+\mathbb{P}(Y_{1i}\ |\ X = 1) - \mathbb{P}(Y_{0i}\ |\ X = 0)
+\end{equation}
+
+This carries a causal interpretation as long as
+\(\mathbb{P}(Y_{0i}\ |\ X = 1) = \mathbb{P}(Y_{0i}\ |\ X = 0)\). In
+other words, if unexposed subjects can be viewed as analogues of the
+exposed subjects had they, contrary to fact, not been exposed. This
+property is referred to as exchangeability and will be discussed in more
+formal detail in subsequent sections\linebreak
+
+On the other hand, if
+\(\mathbb{P}(Y_{0i}\ |\ X = 1) \neq \mathbb{P}(Y_{0i}\ |\ X = 0)\) then
+(3), a measure of association, is confounded for (2), a measure of
+causal effect (\citet{Greenland1999}). One explanation for confounding
+is the existence of confounders, covariates which are common causes of
+both \(X\) and \(Y\). For example, in protocol doctor's base their
+decision to initiate AZT treatment on a subject's white blood cell count
+(WBC). But, WBC is also a risk factor for the outcome because subect's
+with low WBC are at a higher risk of experiencing the event. Suppose
+that \(Z\) is a binary variable equal to 1 if a subject's WBC count
+falls below some threshold, say 200, at which point treatment is
+initiated, and zero otherwise. Because treatment and death have a common
+cause through \(Z\) there will be a spurious correlation and therefore
+dependence between \(X\) and \(Y\). If a causal effect between \(X\) and
+\(Y\) exists it will be mixed with this spurious association. Even when
+no causal effect between \(X\) and \(Y\) exists we can still expect to
+see an association between \(X\) and \(Y\) as a result of their common
+cause \(Z\).
+
+Randomization of exposure to subjects in randomized trials ensures that
+exposure is not related to other variables like WBC. As a result,
+confounding is absent in expectation or, more formally, the degree of
+confounding has expectation zero and converges to zero under the
+randomization distribution \citet{Greenland1999}.
+
+In comparison, observational studies, or studies where violations of
+study protocols or loss to follw up occur, often exhibit confounding.
+Adjustment refers to ways in which the dependence of \(Y\) on \(X\) can
+be adjusted to take account of the relationship of confounding variables
+with \(X\) and \(Y\). The underlying intuition for adjustment is most
+readily seen by considering contrasts within levels of a binary
+confounder. Stated simply, the effect of \(X\) on \(Y\) is a
+subpopulation cannot be due to a variable \(Z\) if all members of that
+subpopulation share the same level of \(Z\). The effect of \(X\) on
+\(Y\) cannot be confounded for sex if all members of the subpopulation
+are female.
+
+Inyuitively, adjustments come at a cost. On the one hand, comparisons
+are made in smaller groups and averaged leading to a loss of efficiency.
+More pertinent to this thesis, contrasts with levels of confounders
+requires that there actually be both exposed and unexposed subjects
+within every level of the confounders. This may not be a problem in the
+case of one binary confounder but refined levels of confounders ...
+
+Contrasts between outcomes do not c As a result, naive analysis As a
+result of confounding variables, naive contrasts between exposed and
+unexposed subjects will not carry a causal interpretation. Instead, the
+relationship between \(X\) and \(Y\) can be examined within levels of
+\(Z\). For example, the contrast in outcome amongst exposed and
+unexposed subjects when \(z = 1\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Explain intuition of making comparisons within levels of confounders.
+  Use a dichotomized version of CD4 count \textless{} 200 and
+  \textgreater{}=200
+\item
+  Get positivity in somehow
+\end{enumerate}
+
+As \(Y_0\) is never observed for the exposed subjects it is typically
+evaluated from subjects who did not receive treatment. If group A
+contains subjects who receive treatment then we would ideally compare
+the quantity \(\mathbb{P}(Y_{x = 1}|X = 1) = \mu_{A_{x = 1}}\) with the
+quantity \(\mathbb{P}(Y_{x = 0}|X = 1) = \mu_{A_{x = 0}}\). Instead, we
+can compute the observabed quantity
+\(\mathbb{P}(Y_{x = 0}|X = 0) = \mu_{B_{x=0}}\) from group B, the
+subjects who were left unexposed. Replacing the contrast
+\(\mu_{A_{x = 1}} - \mu_{A_{x = 0}}\) with the contrast
+\(\mu_{A_{x = 1}} - \mu_{B_{x=0}}\) will have a causal interpretation if
+\(\mu_{A_{x = 0}} = \mu_{B_{x=0}}\). In other words, if subjects from
+group B can be viewed as an analogues of subjects from group A had they,
+contrary to fact, not received ibuprofen. \linebreak
+
+On the other hand, if \(\mu_{A_{x = 1}} \neq \mu_{B_{x=0}}\) One
+explanation for confounding is the existence of confounding covariates
+which affect both treatment and outcome. For example, if AZT is more
+often prescribed to subjects with low CD4 counts then unexposed subjects
+are not analogues of exposed subjects because they will tend to. The
+contrast in outcomes between exposed and unexposed subjects may be due
+to treatment, CD4 count or a mixture of the two. The existence of a
+confounding covariate prevents naive contrasts between
+\(\mu_{A_{x = 1}}\) and \(\mu_{B_{x=0}}\). The counterfactual values are
+therefore not missing by chance. From the perspetive of missing values,
+the counterfactual values are not missing by chance.
+
+Randomly assigning treatment ensures that treatment is not related to
+any other variables. - Explain that in a randomized experiment
+exchangeability is guaranteed because \(X\) is automatically not related
+to any other variables through randomization so that missing values
+occur by chance, or missing at random. So the counterfactual values that
+we don't see for some observations are missing randomly and not due to
+confounding through a covariate. In randomization, confounding is absent
+in expectation
+
+For example, if a certain geotype \(G\) the subjects in group A turn out
+to be male and all those in group B turn out to be female it would be
+reasonable to ask whether their sex influenced their decision to take
+ibuprofen. Suppose that males also tend to have headaches of a shorter
+duration so that at the end of one hour they are less likely to have a
+headache than females. The result is that both the decision to take
+ibuprofen and the probability of having a headache at the end of one
+hour are dependent on the sex of the subject. This obscures the causal
+effect of ibuprofen on headaches because there is a spurious association
+between \(X\) and \(Y\) through the subject's sex. We cannot establish
+whether the outcome is due to a causal relationship between ibuprofen
+and headache alleviation, a relationship between sex and headache
+alleviation or a mixture of the two. \linebreak
 
 One explanation for why confounding exists is that In other words, a
 confounding covariate limits our ability to draw a causal comparison.
@@ -712,13 +818,16 @@ unmeasured confounding". \linebreak
   fixed confounding work
 \item
   Hint that the finer the confounding control the more accurate the
-  analysis but this has consequences for positivty and efficiency.
+  analysis but this has consequences for positivty and efficiency. On
+  the one hand it is well known that finer covariate control leads to
+  less efficiency? On the other hand it is less well known how this
+  affects positivity.
 \item
   from pearl 2001: namely, that if we compare treated vs. untreated
   subjects having the same values of the selected factors, we get the
-  correct treatment effect in that subpopulation of subjects.
-\item
-  Explain clearly why it is a bias.
+  correct treatment effect in that subpopulation of subjects. The
+  inuition is simple, the effect of X on Y cannot be due to sex if all
+  subjects are female.
 \item
   Also explain why we want to be judicious in our choice of number
   confounders to control for. Can't include everything (Dawid 1979 on
@@ -732,15 +841,6 @@ unmeasured confounding". \linebreak
   knowing the value of Z gives us no more information about the
   distribution of the counterfactuals \(Y_x\)
 \item
-  Explain that in a randomized experiment exchangeability is guaranteed
-  because \(X\) is automatically not related to any other variables so
-  that missing values occur by chance. So the counterfactual values that
-  we don't see for some observations are missing randomly and not due to
-  confounding through a covariate.
-\item
-  Any residual confounding cannot be due to the variables that we have
-  conditioned on.
-\item
   hernan 2011 "we say that positivity does not hold because for some
   confounder values there are no treated and untreated subjects to be
   compared"
@@ -748,20 +848,12 @@ unmeasured confounding". \linebreak
   link to splines as a way of reducing residual confounding see cole
   2008
 \item
-  When confounding is present we cannot simply substitute or exchange
-  the exposed cohorts experience for the unexposed cohort.
-\item
-  confounders are simply covariates which explain why confounding is
-  present (see Greenland 1996)
-\item
   By conditioning on a variable (or a set of variables) C we will mean
   examining relations within levels of C (i.e. within strata defined by
   single values of C) (see Greenland 2011)
 \item
   conditioning and adjustment not the same thing. Control is used as a
   synonym for adjustment.
-\item
-  in randomization, confounding is absent in expectation
 \item
   explain how we standardize measures across strata but weighted
   combination and link to standardization itself
@@ -776,7 +868,7 @@ unmeasured confounding". \linebreak
   estimating weights - for example explaining why splines help to remove
   any residual confounding.
 \item
-  explain that we can use other effect measures not just the difference.
+  dichotomize Z and then link to residual confounding and bescher paper.
 \end{itemize}
 
     \subsection{Directed Acyclic Graphs: graphical representations of
@@ -790,50 +882,51 @@ joint probability distribution \(P(\nu)\). Edges in \(\epsilon\) consist
 of pairs of distinct vertices and denote a certain relationship that
 holds between the variables \citet{Pearl2009}. The absence of an edge
 between two variables indicates that the variables are independent of
-one another. The direction of the causal relationship is denoted by an
-arrow and is acyclic because causal relationships between two variables
-only proceed in one direction. There are no feedback loops or mutual
-causation because in a causal framework a variable cannot be a cause of
-itself directly or indirectly \citet{Hernan2004}.\linebreak
+one another and there is therefore no direct effect of the one variable
+on the other \citet{Cole2009}. The direction of the causal relationship
+is denoted by an arrow and is acyclic because causal relationships
+between two variables only proceed in one direction. There are no
+feedback loops or mutual causation because in a causal framework a
+variable cannot be a cause of itself either directly or indirectly
+\citet{Hernan2004}.\linebreak
 
-For example, figure ? represents the case where interest is in the
-causal relationship between treatment \(X\) and outcome \(Y\). Treatment
-is assigned according to conditional distributions \(P(treatment|male)\)
-and \(P(treatment|female)\). Once treatment has been assigned, the
-outcome \(Y\) is determined by both \(X\) and \(Z\) by the conditional
-distribution P(Y\textbar{}X, Z). \citet(Pearl2001\}, \citet(Pearl2014\}.
-Blocking or screening off \(Z\) has the same inuition as explained in
-the section on confounding. The causal effect of X and Y cannot be
-different between two subjects because of \(Z\) when everyone is that
-strata has the same value of \(Z\). Blocking is the same as holding
-\(Z\) constant. Intuition to drive forward is that difference in outcome
-cannot be due to strata when everyone shares that strata.
+For example, figure 1 (left) represents a causal relationship between
+treatment \(X\) and outcome \(Y\). Continuing the AZT example with a
+dichotomized confounder \(Z\), there is a third variable which is a
+common cause of both \(X\) and \(Y\) \citet{Hernan2004}. Treatment is
+assigned according to conditional distributions \(P(X\ |\ Z = z_1)\) and
+\(P(X\ |\ Z = z_2)\). Once treatment has been assigned, the outcome
+\(Y\) is determined by both \(X\) and \(Z\) by the conditional
+distribution \(P(Y\ |\ X, Z)\). \linebreak 
 
-Show the same graph without causal relationship between X and Y. There
-is a marginal dependence between X and Y through Z, but once we
-condition on Z this dependence dissapears as shown by the lack of an
-edge between X and Y. Once we condition on Z (i.e. we know that the
-subject was male of female.) then the margial dependence dissapears.
-Introduce idea of common cause here as well.
+The graph captures both the spurious correlation between \(X\) and \(Y\)
+through the "back door" \(X <- Z -> Y\) as well as a graphical
+representation of adjustment thrpugh conditioning on \(Z\) Because
+treatment decisions are made on the basis of \(Z\) which is also a risk
+factor for death, there is a spurious relationship between \(X\) and
+\(Y\). When \(z = 1\) is low, treatment is more likely - point here is
+that the causal structure of common causes can be seen in graphs. When
+\(z = 1\) CD4 count is below the threshold and treatment is initiated.
+But, a low CD4 count is also a risk factor for death. Thus, even when
+there is no edge between \(X\) and \(Y\) as in the right hand pane of
+figure 1, there remains an association between \(X\) and \(Y\) through
+\(Z\) because patients with low CD4 counts are at higher risk of
+receiving treatment and death. In other words, there is a spurious
+marginal dependence between \(X\) and \(Y\) through \(Z\). Adjusting for
+\(Z\) by conditioning is represented graphically in figure 1 by blocking
+the "back door" path between \(X\) and \(Y\)
+\citet{Pearl2009, Pearl2001}.
 
-Both treatment and outcome are determined by sex leading to a spurious
-association between \(X\) and \(Y\) through \(Z\). This is called a
-"back door" path between \(X\) and \(Y\). Conditioning on \(Z\) is
-reprsented graphically by blocking the back door and any spurious
-assocations to allow causal estimation
+DAG's also encode the factorization of the joint densities of the
+variables in the graph. In the graph above the joint density
+\(p(y, x, z)\) can be factorized as
+
+\[p(y, x, z) = p(y\ |\ x, z)p(x\ |\ z)p(z)\]
+
+Whereas the DAG on the
 
 \begin{itemize}
 \tightlist
-\item
-  use example of cause by just removing an arrow from the DAG to
-  illustrate the point that there must be a cause so adding back the
-  causal arrow of interest does not change the fact that part of the
-  cause comes through the confounder.
-\item
-  common cause and structural approach to selection bias paper.
-\item
-  the absense of an arrow means no direct effect between two variables
-  cole 2009 illustrating bias paper.
 \item
   Didelez 2010 and Pearl 2009 for connecting DAGs to probability
   distributions and factorizations.
@@ -993,6 +1086,9 @@ confoudning or stratification methods.
   explain that Z is a mediator variable and also explain colliders and
   why conditioning on a collider creates an association between A and U
   and hence A and Y
+\item
+  The question is whether treatment as a whole, the entire history of
+  treatments, has an effect on the outcome \citet{Gill2001}
 \end{itemize}
 
     \begin{figure}
@@ -1145,12 +1241,12 @@ confoudning or stratification methods.
     \subsection{Inverse Probability of Treatment
 Weighting}\label{inverse-probability-of-treatment-weighting}
 
-The previous section has highlighted how standard approaches for
-controlling for confounding in a time dependent context may lead to
-biased estimates. In this section we describe a technique called inverse
-probability of treatment weighting that can be used to obtain unbiased
-estimates of the causal effect of treatment on outcome in the presence
-of time dependent confounding.
+In the previous sections the issue of has highlighted how standard
+approaches for controlling for confounding in a time dependent context
+may lead to biased estimates. In this section we describe a technique
+called inverse probability of treatment weighting that can be used to
+obtain unbiased estimates of the causal effect of treatment on outcome
+in the presence of time dependent confounding.
 
 Inverse probability of treatment weighting is a technique that can be
 used to obtain unbiased estimates of the causal effect of treatment on
@@ -1415,6 +1511,9 @@ necessary for consistent inference from a marginal structural Cox model
 \item
   IPW cannot correctly adjust for all confounding under model
   miscpecification
+\item
+  could use cohran paper to give example of how model bias enters by
+  showing a true model and an incorrect model.
 \end{itemize}
 
 In this thesis we simulate data from a known weight and structural
